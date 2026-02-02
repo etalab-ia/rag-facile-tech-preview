@@ -14,59 +14,107 @@ app = typer.Typer()
 console = Console()
 
 
-def get_proto_paths() -> tuple[Path, Path]:
-    """Get proto bin and shims directories."""
+def setup_proto_paths() -> None:
+    """Add proto bin and shims directories to PATH for this session."""
     proto_home = Path(os.environ.get("PROTO_HOME", Path.home() / ".proto"))
-    return proto_home / "bin", proto_home / "shims"
+    proto_bin = proto_home / "bin"
+    proto_shims = proto_home / "shims"
 
-
-def ensure_proto_and_moon() -> bool:
-    """Ensure proto and moon are installed, installing them if needed."""
-    proto_bin, proto_shims = get_proto_paths()
-
-    # Add proto paths to PATH for this session (in case we just installed)
     proto_paths = f"{proto_shims}:{proto_bin}"
     if proto_paths not in os.environ.get("PATH", ""):
         os.environ["PATH"] = f"{proto_paths}:{os.environ.get('PATH', '')}"
 
-    # Check if moon is available
-    if shutil.which("moon"):
-        return True
 
-    # Check if proto is available
-    if not shutil.which("proto"):
-        console.print("[yellow]proto not found. Installing proto...[/yellow]")
-        console.print()
-
-        # Install proto with --yes to skip interactive prompts
+def verify_tool(name: str) -> str | None:
+    """Verify a tool is available and return its version, or None if not found."""
+    if not shutil.which(name):
+        return None
+    try:
         result = subprocess.run(
-            ["bash", "-c", "bash <(curl -fsSL https://moonrepo.dev/install/proto.sh) --yes"],
-            capture_output=False,
+            [name, "--version"], capture_output=True, text=True, timeout=10
         )
-        if result.returncode != 0:
-            console.print(
-                "[red]Failed to install proto. Please install manually:[/red]"
-            )
-            console.print(
-                "[dim]bash <(curl -fsSL https://moonrepo.dev/install/proto.sh) --yes[/dim]"
-            )
-            return False
+        if result.returncode == 0:
+            # Extract first line of version output
+            return result.stdout.strip().split("\n")[0]
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        pass
+    return None
 
-        console.print("[green]proto installed successfully![/green]")
-        console.print()
 
-        # Update PATH to include newly installed proto
-        os.environ["PATH"] = f"{proto_paths}:{os.environ.get('PATH', '')}"
-
-    # Install moon via proto
-    console.print("[yellow]Installing moon via proto...[/yellow]")
-    result = subprocess.run(["proto", "install", "moon"], capture_output=False)
+def install_proto() -> bool:
+    """Install proto using the official installer."""
+    console.print("[yellow]Installing proto...[/yellow]")
+    result = subprocess.run(
+        ["bash", "-c", "bash <(curl -fsSL https://moonrepo.dev/install/proto.sh) --yes"],
+        capture_output=False,
+    )
     if result.returncode != 0:
-        console.print("[red]Failed to install moon. Please install manually:[/red]")
-        console.print("[dim]proto install moon[/dim]")
+        console.print("[red]Failed to install proto. Please install manually:[/red]")
+        console.print(
+            "[dim]bash <(curl -fsSL https://moonrepo.dev/install/proto.sh) --yes[/dim]"
+        )
         return False
 
-    console.print("[green]moon installed successfully![/green]")
+    # Update PATH to find the newly installed proto
+    setup_proto_paths()
+    return True
+
+
+def install_via_proto(tool: str) -> bool:
+    """Install a tool using proto."""
+    console.print(f"[yellow]Installing {tool} via proto...[/yellow]")
+    result = subprocess.run(["proto", "install", tool], capture_output=False)
+    if result.returncode != 0:
+        console.print(f"[red]Failed to install {tool}. Please install manually:[/red]")
+        console.print(f"[dim]proto install {tool}[/dim]")
+        return False
+    return True
+
+
+def ensure_toolchain() -> bool:
+    """Ensure proto, moon, and uv are installed, installing them if needed."""
+    # Add proto paths to PATH (in case already installed)
+    setup_proto_paths()
+
+    # 1. Ensure proto is installed
+    version = verify_tool("proto")
+    if version:
+        console.print(f"[dim]✓ proto ({version})[/dim]")
+    else:
+        if not install_proto():
+            return False
+        version = verify_tool("proto")
+        if not version:
+            console.print("[red]proto installed but not working[/red]")
+            return False
+        console.print(f"[green]✓ proto installed ({version})[/green]")
+
+    # 2. Ensure moon is installed
+    version = verify_tool("moon")
+    if version:
+        console.print(f"[dim]✓ moon ({version})[/dim]")
+    else:
+        if not install_via_proto("moon"):
+            return False
+        version = verify_tool("moon")
+        if not version:
+            console.print("[red]moon installed but not working[/red]")
+            return False
+        console.print(f"[green]✓ moon installed ({version})[/green]")
+
+    # 3. Ensure uv is installed
+    version = verify_tool("uv")
+    if version:
+        console.print(f"[dim]✓ uv ({version})[/dim]")
+    else:
+        if not install_via_proto("uv"):
+            return False
+        version = verify_tool("uv")
+        if not version:
+            console.print("[red]uv installed but not working[/red]")
+            return False
+        console.print(f"[green]✓ uv installed ({version})[/green]")
+
     console.print()
     return True
 
@@ -84,12 +132,53 @@ MODULES = {
 }
 
 
+TEMPLATES_REPO = "https://github.com/etalab-ia/rag-facile.git"
+TEMPLATES_CACHE = Path.home() / ".cache" / "rag-facile" / "templates"
+
+
 def get_templates_dir() -> Path:
-    """Get the templates directory from the rag-facile repository."""
-    # When running from installed CLI, we need to find the templates
-    # For now, assume we're running from within the rag-facile repo
+    """Get the templates directory, downloading from GitHub if needed."""
+    # First check if we're in the rag-facile repo (development mode)
     repo_root = Path(__file__).resolve().parents[5]
-    return repo_root / ".moon" / "templates"
+    local_templates = repo_root / ".moon" / "templates"
+    if local_templates.exists():
+        return local_templates
+
+    # Otherwise, use cached templates (download if needed)
+    if not TEMPLATES_CACHE.exists():
+        console.print("[yellow]Downloading templates...[/yellow]")
+        TEMPLATES_CACHE.parent.mkdir(parents=True, exist_ok=True)
+
+        # Clone just the .moon/templates directory using sparse checkout
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmppath = Path(tmpdir) / "repo"
+            result = subprocess.run(
+                ["git", "clone", "--depth=1", "--filter=blob:none", "--sparse", TEMPLATES_REPO, str(tmppath)],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                console.print(f"[red]Failed to clone templates: {result.stderr}[/red]")
+                return local_templates  # Fall back, will fail later with clear error
+
+            subprocess.run(
+                ["git", "sparse-checkout", "set", ".moon/templates"],
+                cwd=tmppath,
+                capture_output=True,
+            )
+
+            # Copy templates to cache
+            src = tmppath / ".moon" / "templates"
+            if src.exists():
+                shutil.copytree(src, TEMPLATES_CACHE)
+                console.print("[green]✓ Templates downloaded[/green]")
+            else:
+                console.print("[red]Templates not found in repository[/red]")
+                return local_templates
+
+    return TEMPLATES_CACHE
 
 
 def run_command(cmd: list[str], description: str, cwd: Path | None = None) -> bool:
@@ -122,8 +211,8 @@ def workspace(
     2. Apply RAG Facile configuration
     3. Generate selected app and packages
     """
-    # 0. Ensure proto and moon are installed
-    if not ensure_proto_and_moon():
+    # 0. Ensure toolchain is installed (proto, moon, uv)
+    if not ensure_toolchain():
         raise typer.Exit(1)
 
     # 1. Gather inputs interactively

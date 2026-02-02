@@ -11,25 +11,21 @@ RAG Facile provides a foundation for building RAG (Retrieval-Augmented Generatio
 
 ### 1. Install Prerequisites
 
-Ensure you have `uv` and basic build tools installed:
+You need basic tools for unpacking archives:
 
 ```bash
-# macOS (most dependencies pre-installed)
-brew install uv
+# macOS (nothing extra needed)
 
 # Ubuntu/Debian
 sudo apt-get install -y git curl xz-utils
-curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-
-> **Note**: The CLI will automatically install `proto` and `moon` if needed. Proto requires `git` and `xz` for fetching and unpacking tools.
 
 ### 2. Install the CLI
 
-Install the RAG Facile CLI (`rf`) globally:
+One command installs the entire toolchain (proto, uv) and the CLI:
 
 ```bash
-uv tool install rag-facile-cli --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
 ```
 
 Verify the installation:
@@ -77,10 +73,10 @@ Your app will open in the browser, ready to use!
 
 ## Upgrading the CLI
 
-To upgrade to the latest version:
+To upgrade to the latest version, re-run the installer:
 
 ```bash
-uv tool install rag-facile-cli --force --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
 ```
 
 ## Generated Workspace Structure
