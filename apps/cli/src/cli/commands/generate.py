@@ -1,5 +1,6 @@
 """Generate command - orchestrates workspace generation using Init + Patch architecture."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -115,11 +116,45 @@ def workspace(
     # Filter to only available modules
     selected_modules = [m for m in module_choices if MODULES[m]["available"]]
 
+    # Prompt for environment configuration (use current env as defaults)
+    console.print()
+    console.print("[bold blue]Environment Configuration[/bold blue]")
+    console.print("[dim]These values will be saved to .env in your app directory.[/dim]")
+    console.print("[dim]Get an API key at https://albert.sites.beta.gouv.fr/access/[/dim]")
+    console.print()
+
+    env_config = {}
+
+    env_config["openai_api_key"] = questionary.text(
+        "OpenAI/Albert API Key:",
+        default=os.getenv("OPENAI_API_KEY", ""),
+    ).ask()
+    if env_config["openai_api_key"] is None:
+        console.print("[red]Aborted.[/red]")
+        raise typer.Exit(1)
+
+    env_config["openai_base_url"] = questionary.text(
+        "OpenAI Base URL:",
+        default=os.getenv("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1"),
+    ).ask()
+    if env_config["openai_base_url"] is None:
+        console.print("[red]Aborted.[/red]")
+        raise typer.Exit(1)
+
+    env_config["openai_model"] = questionary.text(
+        "Default model:",
+        default=os.getenv("OPENAI_MODEL", "openweight-large"),
+    ).ask()
+    if env_config["openai_model"] is None:
+        console.print("[red]Aborted.[/red]")
+        raise typer.Exit(1)
+
     console.print()
     console.print("[bold blue]Configuration Summary[/bold blue]")
     console.print(f"  Target: {target_display}")
     console.print(f"  Frontend: {frontend_choice}")
     console.print(f"  Modules: {', '.join(selected_modules) if selected_modules else 'None'}")
+    console.print(f"  API: {env_config['openai_base_url']}")
     console.print()
 
     # Confirm
@@ -203,21 +238,34 @@ def workspace(
     if force:
         app_cmd.append("--force")
 
-    # Add feature flags as boolean flags after --
-    # Boolean variables are passed as flags without values: -- --use_pdf --use_chroma
-    feature_flags = []
-    if "PDF" in selected_modules:
-        feature_flags.append("--use_pdf")
-    if "Chroma" in selected_modules:
-        feature_flags.append("--use_chroma")
+    # Add template variables and feature flags after --
+    app_cmd.append("--")
 
-    if feature_flags:
-        app_cmd.append("--")
-        app_cmd.extend(feature_flags)
+    # Pass env config values to moon template
+    app_cmd.append(f"--openai_api_key={env_config['openai_api_key']}")
+    app_cmd.append(f"--openai_base_url={env_config['openai_base_url']}")
+    app_cmd.append(f"--openai_model={env_config['openai_model']}")
+
+    # Add feature flags (boolean variables passed as flags)
+    if "PDF" in selected_modules:
+        app_cmd.append("--use_pdf")
+    if "Chroma" in selected_modules:
+        app_cmd.append("--use_chroma")
 
     if not run_command(app_cmd, f"generate {frontend_template}", cwd=target_path):
         raise typer.Exit(1)
     console.print(f"[green]✓[/green] {frontend_choice} app generated")
+
+    # Create .env file from template values
+    app_dir = target_path / "apps" / frontend_template
+    env_file = app_dir / ".env"
+    env_content = f"""\
+OPENAI_API_KEY={env_config['openai_api_key']}
+OPENAI_BASE_URL={env_config['openai_base_url']}
+OPENAI_MODEL={env_config['openai_model']}
+"""
+    env_file.write_text(env_content)
+    console.print(f"[green]✓[/green] Created .env file")
 
     # 5. Generate selected packages
     if selected_modules:
