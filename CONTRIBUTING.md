@@ -1,6 +1,66 @@
 # Contributing to RAG Facile
 
-Thank you for your interest in contributing to RAG Facile! This document provides information for developers and contributors who want to work on the monorepo.
+Thank you for your interest in contributing to RAG Facile! This document is for **maintainers** who want to understand the architecture and contribute to the project itself.
+
+> **Note**: If you just want to use RAG Facile to create a new app, see the [README](README.md).
+
+## Architecture Overview
+
+RAG Facile uses an **Init + Patch** architecture with **Golden Master** templates:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         RAG Facile Monorepo                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  apps/ (Golden Masters)          .moon/templates/ (Generated)       │
+│  ├── chainlit-chat/ ──────────►  ├── chainlit-chat/                │
+│  ├── reflex-chat/   ──────────►  ├── reflex-chat/                  │
+│  └── cli/                        ├── sys-config/                    │
+│                                  └── pdf-context/                   │
+│  packages/                                                          │
+│  └── pdf-context/   ──────────►  (copied to templates)             │
+│                                                                     │
+│  tools/                                                             │
+│  └── generate_templates.py  ◄── Transforms apps → templates        │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    User Workspace (Generated)                       │
+├─────────────────────────────────────────────────────────────────────┤
+│  rf generate workspace my-app                                       │
+│                                                                     │
+│  1. moon init          → Bootstrap workspace                        │
+│  2. moon generate      → Apply sys-config (toolchain, workspace)    │
+│  3. moon generate      → Generate selected app (chainlit/reflex)    │
+│  4. moon generate      → Generate selected modules (pdf, etc.)      │
+│  5. Create .env        → Write user's API credentials               │
+│  6. uv sync            → Install dependencies                       │
+│  7. moon run :dev      → Start development server                   │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Key Concepts
+
+#### Golden Masters
+The apps in `apps/` are **living, working applications** that serve as the source of truth. Maintainers develop and test features here first.
+
+#### Template Generation
+Running `moon run tools:generate-all` transforms Golden Masters into parameterized Moon templates:
+
+1. **LibCST transformation** - Python code is parsed and string literals are parameterized
+2. **Import parameterization** - Module imports are converted to use template variables
+3. **File renaming** - Directories/files are renamed with Tera template syntax
+
+#### Init + Patch
+Instead of generating everything from scratch, we:
+1. **Init** - Use `moon init` to bootstrap a standard Moon workspace
+2. **Patch** - Apply RAG Facile-specific configuration via `sys-config` template
+
+This leverages Moon's battle-tested scaffolding while adding our customizations.
 
 ## Development Setup
 
@@ -8,7 +68,7 @@ Thank you for your interest in contributing to RAG Facile! This document provide
 
 - **Python 3.13**
 - **uv** (package manager)
-- **just** (command runner)
+- **moon** (monorepo manager)
 - **git**
 
 ### 1. Clone the Repository
@@ -20,138 +80,134 @@ cd rag-facile
 
 ### 2. Install Dependencies
 
-The project uses `uv` for package management. Install all dependencies:
-
 ```bash
-just setup
+uv sync
 ```
-
-This will:
-- Create a Python 3.13 virtual environment
-- Install all dependencies for all apps and packages
-- Set up the development environment
 
 ### 3. Environment Variables
 
-For the chat apps, copy the example environment files and add your credentials:
+Copy the example environment file and add your Albert API credentials:
 
 ```bash
-cp apps/reflex-chat/.env.example apps/reflex-chat/.env
-cp apps/chainlit-chat/.env.example apps/chainlit-chat/.env
+cp .env.example .env
+# Edit .env with your OPENAI_API_KEY and OPENAI_BASE_URL
 ```
-
-Using the Albert API requires specifying both `OPENAI_API_KEY` and `OPENAI_BASE_URL`.
 
 ## Project Structure
 
-The project is organized as a monorepo with the following structure:
-
 ```
 rag-facile/
-├── apps/              # Application components
-│   ├── chainlit-chat/ # ChainLit chat interface
-│   ├── reflex-chat/  # Reflex chat interface
-│   ├── admin/        # Admin UI (Streamlit)
-│   ├── ingestion/    # Data ingestion pipeline
-│   └── cli/          # Command-line interface
-├── packages/         # Shared packages
-│   └── sample/       # Sample package
-├── .moon/templates/  # Generated project templates
-├── scripts/          # Utility scripts
-├── pyproject.toml    # Root workspace configuration
-└── justfile         # Command recipes
+├── apps/                    # Golden Master applications
+│   ├── chainlit-chat/       # ChainLit chat interface
+│   ├── reflex-chat/         # Reflex chat interface
+│   ├── admin/               # Admin UI (Streamlit)
+│   ├── ingestion/           # Data ingestion pipeline
+│   └── cli/                 # The `rf` command-line tool
+├── packages/                # Shared packages
+│   └── pdf-context/         # PDF processing module
+├── tools/                   # Development tools
+│   └── generate_templates.py  # Template generator
+├── .moon/
+│   └── templates/           # Generated Moon templates (do not edit directly!)
+├── pyproject.toml           # Root workspace configuration
+└── justfile                 # Command recipes
 ```
 
-## Tech Stack
+## Common Tasks
 
-- **Language**: Python 3.13
-- **Package Manager**: `uv`
-- **Monorepo Manager**: `moon`
-- **Command Runner**: `just`
-- **Linting**: `ruff`
-- **Type Checking**: `ty`
-
-## Development Workflow
-
-### Running Applications
-
-Use `just` to run any of the applications from the root directory:
+### Running Golden Master Apps
 
 ```bash
-just reflex-chat    # Runs at http://localhost:3000
-just chainlit-chat  # Runs at http://localhost:8000
-just admin          # Runs admin UI
+# Run apps directly from the monorepo
+moon run chainlit-chat:dev
+moon run reflex-chat:dev
 ```
 
-### Code Quality
+### Regenerating Templates
 
-Run linting and type checking:
+After making changes to Golden Master apps:
 
 ```bash
-# Lint all code
-just lint
-
-# Type check all code
-just type-check
-
-# Format code
-just format
+moon run tools:generate-all
 ```
 
-Parameterized project templates (using [Moon Codegen](https://moonrepo.dev/docs/guides/codegen)) are generated from the living "Golden Master" apps in the `apps/` directory.
+This regenerates all templates in `.moon/templates/`.
 
-To update all templates after making changes to the source apps:
+### Running CLI Tests
 
 ```bash
-just gen-templates
+moon run cli:test
 ```
 
-To instantiate a new project from a template:
+### Testing the Full Generation Flow
 
 ```bash
-# Default (chainlit-chat)
-just create-app
-
-# Specific template and destination
-just create-app reflex-chat my-new-project
+# Generate a test workspace
+rm -rf /tmp/test-app && rf generate workspace /tmp/test-app
 ```
 
-The generated project will include its own `Justfile` for local development:
-- `just sync`: Properly synchronizes dependencies using Python 3.13
-- `just run`: Runs the application
+## Making Changes
 
-## Testing
+### Modifying an App Template
 
-Run tests for the entire monorepo:
+1. **Edit the Golden Master** in `apps/<app-name>/`
+2. **Test locally** with `moon run <app-name>:dev`
+3. **Regenerate templates** with `moon run tools:generate-all`
+4. **Test generation** with `rf generate workspace /tmp/test`
+5. **Commit both** the Golden Master and generated templates
 
+### Adding a New Module
+
+1. Create the package in `packages/<module-name>/`
+2. Add template generation in `tools/generate_templates.py`
+3. Register in `apps/cli/src/cli/commands/generate.py` (MODULES dict)
+4. Regenerate templates
+
+### Modifying the CLI
+
+The CLI lives in `apps/cli/`. Key files:
+- `src/cli/main.py` - Entry point and command registration
+- `src/cli/commands/generate.py` - The `rf generate workspace` command
+
+## Template Parameterization
+
+Templates use [Tera](https://keats.github.io/tera/) syntax (similar to Jinja2):
+
+| Pattern | Description |
+|---------|-------------|
+| `{{ project_name }}` | User's project name (e.g., "my-app") |
+| `{{ project_name \| replace(from='-', to='_') }}` | Python-safe name (e.g., "my_app") |
+| `{{ description }}` | Project description |
+| `{{ openai_api_key }}` | User's API key |
+| `{% if use_pdf %}...{% endif %}` | Conditional content |
+
+### Boolean Flags
+
+Feature flags like `use_pdf` and `use_chroma` are passed to `moon generate` as:
 ```bash
-just test
+moon generate chainlit-chat --defaults -- --use_pdf --use_chroma
 ```
 
-Run tests for a specific app:
+## Gotchas
 
-```bash
-cd apps/cli
-uv run pytest
-```
+- **Typer CLI** - Collapses if only one command exists; maintain at least 2 commands
+- **macOS /tmp** - Resolves to `/private/tmp`; normalize for cleaner output
+- **moon init** - Must run FROM the target directory, not with path argument
+- **moon generate** - Needs `generator.templates` in workspace.yml to find templates
+- **Moon boolean vars** - Pass as `-- --flag` not `-- flag=true`
+- **Moon commands** - Run directly, not through venv; use `uv run` in task commands
+- **.python-version** - Add to pin Python version for generated workspaces
 
 ## Pull Request Process
 
 1. **Fork and clone** the repository
-2. **Create a branch** for your changes: `git checkout -b feature/your-feature`
-3. **Make your changes** following the coding conventions
-4. **Run tests** and ensure they pass
-5. **Commit** your changes with a clear message
-6. **Push** to your fork: `git push origin feature/your-feature`
-7. **Create a pull request** to the main repository
-
-## Coding Conventions
-
-- Follow PEP 8 style guidelines
-- Use type hints for all functions
-- Write docstrings for public functions and classes
-- Keep functions focused and small
-- Use descriptive variable names
+2. **Create a branch**: `git checkout -b feature/your-feature`
+3. **Make changes** to Golden Masters (not templates directly!)
+4. **Regenerate templates**: `moon run tools:generate-all`
+5. **Run tests**: `moon run cli:test`
+6. **Test generation**: `rf generate workspace /tmp/test`
+7. **Commit** both source and generated changes
+8. **Push** and create a pull request
 
 ## Getting Help
 
