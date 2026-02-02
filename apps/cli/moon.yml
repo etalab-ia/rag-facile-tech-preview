@@ -1,0 +1,11 @@
+type: application
+language: python
+
+tasks:
+  test:
+    command: uv run pytest apps/cli/tests/ -v
+    options:
+      runFromWorkspaceRoot: true
+    inputs:
+      - "src/**/*"
+      - "tests/**/*"

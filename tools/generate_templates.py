@@ -1,0 +1,505 @@
+#!/usr/bin/env python3
+"""Template generation script for RAG Facile.
+
+Generates Moon templates from golden master apps and packages.
+Uses LibCST for Python code parameterization.
+
+Usage:
+    python generate_templates.py --all
+    python generate_templates.py --template chainlit-chat
+"""
+
+import argparse
+import shutil
+from pathlib import Path
+
+import libcst as cst
+import yaml
+from rich.console import Console
+
+console = Console()
+
+# Repository root (tools/ is at repo/tools/)
+REPO_ROOT = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = REPO_ROOT / ".moon" / "templates"
+
+# Artifacts to ignore when copying
+ARTIFACTS = [
+    "__pycache__",
+    "*.egg-info",
+    ".venv",
+    ".env",
+    ".git",
+    ".DS_Store",
+    ".web",
+    ".states",
+    ".chainlit",
+]
+
+
+class JinjaTransformer(cst.CSTTransformer):
+    """LibCST Transformer to parameterize Python code with Tera/Jinja tags."""
+
+    def __init__(self, mappings: dict[str, str]):
+        self.mappings = mappings
+
+    def leave_SimpleString(
+        self, original_node: cst.SimpleString, updated_node: cst.SimpleString
+    ) -> cst.SimpleString:
+        val = updated_node.value
+        for golden, tag in self.mappings.items():
+            if golden in val:
+                new_val = val.replace(golden, tag)
+                return updated_node.with_changes(value=new_val)
+        return updated_node
+
+
+def generate_sys_config():
+    """Generate sys-config template (workspace configuration)."""
+    console.print("[bold]Generating sys-config template...[/bold]")
+
+    target = TEMPLATES_DIR / "sys-config"
+    if target.exists():
+        shutil.rmtree(target)
+    target.mkdir(parents=True)
+
+    # Create template.yml
+    template_yml = {
+        "title": "System Configuration",
+        "description": "RAG Facile workspace config (patches moon init defaults).",
+        "destination": ".",
+        "variables": {
+            "project_name": {
+                "type": "string",
+                "default": "my-rag-project",
+                "prompt": "What is the name of your project?",
+            },
+        },
+    }
+    (target / "template.yml").write_text(yaml.dump(template_yml, sort_keys=False))
+
+    # Create .moon directory with config files
+    moon_dir = target / ".moon"
+    moon_dir.mkdir()
+
+    toolchain = {
+        "$schema": "https://moonrepo.dev/schemas/toolchain.json",
+        "python": {"version": "3.13", "packageManager": "uv"},
+    }
+    (moon_dir / "toolchain.yml").write_text(yaml.dump(toolchain, sort_keys=False))
+
+    workspace = {
+        "projects": ["apps/*", "packages/*"],
+        "vcs": {"manager": "git", "defaultBranch": "main"},
+        "telemetry": False,
+        "generator": {"templates": [".moon/templates"]},
+    }
+    (moon_dir / "workspace.yml").write_text(yaml.dump(workspace, sort_keys=False))
+
+    # Create root pyproject.toml for uv workspace
+    pyproject = """\
+[project]
+name = "{{ project_name }}"
+version = "0.1.0"
+description = "RAG Facile workspace"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = []
+
+[tool.uv]
+managed = true
+
+[tool.uv.workspace]
+members = ["apps/*", "packages/*"]
+"""
+    (target / "pyproject.toml").write_text(pyproject)
+
+    # Pin Python version for uv
+    (target / ".python-version").write_text("3.13\n")
+
+    console.print("[green]✓[/green] sys-config generated")
+
+
+def generate_app_template(app_name: str, source_dir: Path):
+    """Generate an app template from source with parameterization."""
+    console.print(f"[bold]Generating {app_name} template...[/bold]")
+
+    target = TEMPLATES_DIR / app_name
+    if target.exists():
+        shutil.rmtree(target)
+
+    # Copy source to target, ignoring artifacts
+    shutil.copytree(source_dir, target, ignore=shutil.ignore_patterns(*ARTIFACTS))
+    console.print(f"  Copied {source_dir.name} to template")
+
+    # Determine parameterization mappings
+    slug = app_name  # e.g., "chainlit-chat"
+    slug_underscore = slug.replace("-", "_")
+
+    mappings = {
+        slug: "{{ project_name }}",
+        slug_underscore: "{{ project_name | replace(from='-', to='_') }}",
+    }
+
+    # App-specific mappings
+    if app_name == "chainlit-chat":
+        mappings.update(
+            {
+                "Chainlit Chat with OpenAI Functions Streaming": "{{ description }}",
+                "Welcome to Chainlit! 🚀🤖": "{{ welcome_message }}",
+                "You are a helpful assistant.": "{{ system_prompt }}",
+            }
+        )
+    elif app_name == "reflex-chat":
+        mappings.update(
+            {
+                "Reflex Chat Application": "{{ description }}",
+                "You are a friendly chatbot named Reflex. Respond in markdown.": (
+                    "{{ system_prompt }}"
+                ),
+            }
+        )
+
+    # Phase 1: LibCST transformation for Python files (handles string literals)
+    python_files = list(target.rglob("*.py"))
+    for py_file in python_files:
+        # Skip context_loader.py - it should not be parameterized
+        if py_file.name == "context_loader.py":
+            continue
+
+        code = py_file.read_text()
+        try:
+            tree = cst.parse_module(code)
+            transformer = JinjaTransformer(mappings)
+            modified_tree = tree.visit(transformer)
+            py_file.write_text(modified_tree.code)
+            console.print(f"  [green]✓[/green] LibCST: {py_file.name}")
+        except Exception as e:
+            console.print(f"  [yellow]⚠[/yellow] LibCST failed for {py_file.name}: {e}")
+
+    # Phase 1.5: Text-based replacement for import statements
+    # LibCST doesn't parameterize module names in imports, so we do text replace
+    for py_file in python_files:
+        if py_file.name == "context_loader.py":
+            continue
+        code = py_file.read_text()
+        modified = code
+        for golden, tag in mappings.items():
+            # Replace in import statements
+            modified = modified.replace(f"from {golden}.", f"from {tag}.")
+            modified = modified.replace(f"import {golden}.", f"import {tag}.")
+            modified = modified.replace(f"import {golden}\n", f"import {tag}\n")
+        if modified != code:
+            py_file.write_text(modified)
+            console.print(f"  [green]✓[/green] Imports: {py_file.name}")
+
+    # Phase 2: Parameterize pyproject.toml with conditional dependencies
+    pyproject_path = target / "pyproject.toml"
+    if pyproject_path.exists():
+        content = pyproject_path.read_text()
+        content = content.replace(f'"{slug}"', '"{{ project_name }}"')
+
+        # Replace description
+        if app_name == "chainlit-chat":
+            content = content.replace(
+                '"Chainlit Chat with OpenAI Functions Streaming"', '"{{ description }}"'
+            )
+        elif app_name == "reflex-chat":
+            content = content.replace(
+                '"Reflex Chat Application"', '"{{ description }}"'
+            )
+            # Also fix setuptools include pattern
+            content = content.replace(
+                f'["{slug_underscore}*"]',
+                "[\"{{ project_name | replace(from='-', to='_') }}*\"]",
+            )
+
+        # Make pdf-context dependency conditional
+        content = content.replace(
+            '    "pdf-context",', '{%- if use_pdf %}\n    "pdf-context",\n{%- endif %}'
+        )
+
+        # Update uv sources for conditional deps
+        old_sources = "[tool.uv.sources]\npdf-context = { workspace = true }"
+        new_sources = """{% if use_pdf or use_chroma %}
+[tool.uv.sources]
+{%- if use_pdf %}
+pdf-context = { workspace = true }
+{%- endif %}
+{%- if use_chroma %}
+chroma-context = { workspace = true }
+{%- endif %}
+{% endif %}"""
+        content = content.replace(old_sources, new_sources)
+
+        # Add [tool.uv] package = true if not present
+        if "[tool.uv]\npackage = true" not in content:
+            content += "\n[tool.uv]\npackage = true\n"
+
+        pyproject_path.write_text(content)
+        console.print("  [green]✓[/green] pyproject.toml parameterized")
+
+    # Phase 3: Generate modules.yml as Tera template
+    modules_yml_content = """# RAG Facile Module Configuration
+# Auto-generated based on selected modules
+
+context_providers:
+{%- if use_pdf %}
+  pdf: pdf_context
+{%- endif %}
+{%- if use_chroma %}
+  chroma: chroma_context
+{%- endif %}
+"""
+    (target / "modules.yml").write_text(modules_yml_content)
+    console.print("  [green]✓[/green] modules.yml template generated")
+
+    # Phase 4: Generate .env.template
+    env_content = (
+        "OPENAI_API_KEY={{ openai_api_key }}\n"
+        "OPENAI_BASE_URL={{ openai_base_url }}\n"
+        "OPENAI_MODEL={{ openai_model }}\n"
+    )
+    (target / ".env.template").write_text(env_content)
+    console.print("  [green]✓[/green] .env.template generated")
+
+    # Phase 5: App-specific parameterization
+    if app_name == "chainlit-chat":
+        # Parameterize chainlit.md
+        md_path = target / "chainlit.md"
+        if md_path.exists():
+            content = md_path.read_text()
+            content = content.replace(
+                "# Welcome to Chainlit! 🚀🤖", "# {{ welcome_message }}"
+            )
+            md_path.write_text(content)
+            console.print("  [green]✓[/green] chainlit.md parameterized")
+
+    elif app_name == "reflex-chat":
+        # Parameterize rxconfig.py
+        rxconfig_path = target / "rxconfig.py"
+        if rxconfig_path.exists():
+            content = rxconfig_path.read_text()
+            content = content.replace(
+                'app_name="reflex_chat"',
+                "app_name=\"{{ project_name | replace(from='-', to='_') }}\"",
+            )
+            rxconfig_path.write_text(content)
+            console.print("  [green]✓[/green] rxconfig.py parameterized")
+
+        # Rename package directory for Moon path interpolation
+        pkg_dir = target / "reflex_chat"
+        if pkg_dir.exists():
+            # Rename main app file
+            main_app = pkg_dir / "reflex_chat.py"
+            if main_app.exists():
+                new_app_name = "[project_name | replace(from='-', to='_')].py"
+                main_app.rename(pkg_dir / new_app_name)
+
+            # Rename package directory
+            new_pkg_dir_name = "[project_name | replace(from='-', to='_')]"
+            pkg_dir.rename(target / new_pkg_dir_name)
+            console.print("  [green]✓[/green] Reflex package structure parameterized")
+
+    # Phase 6: Generate template.yml
+    variables = {
+        "project_name": {
+            "type": "string",
+            "default": f"my-{app_name.split('-')[0]}-app",
+            "prompt": "What is the name of your project?",
+        },
+        "description": {
+            "type": "string",
+            "default": f"A {app_name.replace('-', ' ').title()}",
+            "prompt": "Short description of the project",
+        },
+        "openai_api_key": {
+            "type": "string",
+            "prompt": "What is your Albert API Key? (Get one at https://albert.sites.beta.gouv.fr/access/)",
+        },
+        "openai_base_url": {
+            "type": "string",
+            "default": "https://albert.api.etalab.gouv.fr/v1",
+            "prompt": "What is your OpenAI Base URL?",
+        },
+        "openai_model": {
+            "type": "string",
+            "default": "openweight-large",
+            "prompt": "Default OpenAI model to use",
+        },
+        "system_prompt": {
+            "type": "string",
+            "default": "You are a helpful assistant."
+            if app_name == "chainlit-chat"
+            else "You are a friendly chatbot named Reflex. Respond in markdown.",
+            "prompt": "Initial system prompt for the assistant",
+        },
+        "use_pdf": {
+            "type": "boolean",
+            "default": False,
+        },
+        "use_chroma": {
+            "type": "boolean",
+            "default": False,
+        },
+    }
+
+    if app_name == "chainlit-chat":
+        variables["welcome_message"] = {
+            "type": "string",
+            "default": "Welcome to Chainlit! 🚀🤖",
+            "prompt": "Header text for the welcome screen",
+        }
+
+    template_yml = {
+        "title": app_name.replace("-", " ").title(),
+        "description": f"A {app_name.replace('-', ' ').title()} Application",
+        "destination": f"apps/{app_name}",
+        "variables": variables,
+    }
+    (target / "template.yml").write_text(
+        yaml.dump(template_yml, sort_keys=False, allow_unicode=True)
+    )
+    console.print("  [green]✓[/green] template.yml generated")
+
+    console.print(f"[green]✓ {app_name} template complete![/green]")
+
+
+def generate_package_template(pkg_name: str, source_dir: Path):
+    """Generate a package template from source."""
+    console.print(f"[bold]Generating {pkg_name} template...[/bold]")
+
+    target = TEMPLATES_DIR / pkg_name
+    if target.exists():
+        shutil.rmtree(target)
+
+    # Copy source to target, ignoring artifacts
+    shutil.copytree(source_dir, target, ignore=shutil.ignore_patterns(*ARTIFACTS))
+    console.print(f"  Copied {source_dir.name} to template")
+
+    # Generate template.yml
+    template_yml = {
+        "title": pkg_name.replace("-", " ").title(),
+        "description": f"{pkg_name.replace('-', ' ').title()} package",
+        "destination": f"packages/{pkg_name}",
+        "variables": {},
+    }
+    (target / "template.yml").write_text(yaml.dump(template_yml, sort_keys=False))
+    console.print("  [green]✓[/green] template.yml generated")
+
+    console.print(f"[green]✓ {pkg_name} template complete![/green]")
+
+
+def generate_chroma_placeholder():
+    """Generate chroma-context placeholder template."""
+    console.print("[bold]Generating chroma-context placeholder...[/bold]")
+
+    target = TEMPLATES_DIR / "chroma-context"
+    if target.exists():
+        shutil.rmtree(target)
+    target.mkdir(parents=True)
+
+    # template.yml
+    template_yml = {
+        "title": "Chroma Context",
+        "description": "ChromaDB vector store integration (Coming Soon)",
+        "destination": "packages/chroma-context",
+        "variables": {},
+    }
+    (target / "template.yml").write_text(yaml.dump(template_yml, sort_keys=False))
+
+    # README.md
+    readme = """# Chroma Context
+
+> **Coming Soon!**
+
+This package will provide ChromaDB vector store integration for RAG applications.
+
+## Planned Features
+
+- Vector embeddings storage and retrieval
+- Semantic search capabilities
+- Integration with pdf-context for document indexing
+
+## Status
+
+This module is currently under development. Check back soon for updates!
+"""
+    (target / "README.md").write_text(readme)
+
+    # pyproject.toml
+    pyproject = """[project]
+name = "chroma-context"
+version = "0.1.0"
+description = "ChromaDB vector store integration (Coming Soon)"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+"""
+    (target / "pyproject.toml").write_text(pyproject)
+
+    console.print("[green]✓ chroma-context placeholder complete![/green]")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate RAG Facile templates")
+    parser.add_argument(
+        "--template",
+        choices=[
+            "sys-config",
+            "chainlit-chat",
+            "reflex-chat",
+            "pdf-context",
+            "chroma-context",
+        ],
+        help="Generate a specific template",
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Generate all templates",
+    )
+    args = parser.parse_args()
+
+    if not args.template and not args.all:
+        parser.print_help()
+        return
+
+    # Ensure templates directory exists
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+
+    templates_to_generate = []
+    if args.all:
+        templates_to_generate = [
+            "sys-config",
+            "chainlit-chat",
+            "reflex-chat",
+            "pdf-context",
+            "chroma-context",
+        ]
+    else:
+        templates_to_generate = [args.template]
+
+    for template in templates_to_generate:
+        console.print()
+        if template == "sys-config":
+            generate_sys_config()
+        elif template == "chainlit-chat":
+            generate_app_template("chainlit-chat", REPO_ROOT / "apps" / "chainlit-chat")
+        elif template == "reflex-chat":
+            generate_app_template("reflex-chat", REPO_ROOT / "apps" / "reflex-chat")
+        elif template == "pdf-context":
+            generate_package_template(
+                "pdf-context", REPO_ROOT / "packages" / "pdf-context"
+            )
+        elif template == "chroma-context":
+            generate_chroma_placeholder()
+
+    console.print()
+    console.print("[bold green]Template generation complete![/bold green]")
+
+
+if __name__ == "__main__":
+    main()

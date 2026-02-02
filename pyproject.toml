@@ -8,7 +8,7 @@ dependencies = [
     "chainlit-chat",
     "admin",
     "ingestion",
-    "cli",
+    "rag-facile-cli",
     "pdf-context",
     "reflex-chat",
 ]
@@ -17,7 +17,7 @@ dependencies = [
 chainlit-chat = { workspace = true }
 admin = { workspace = true }
 ingestion = { workspace = true }
-cli = { workspace = true }
+rag-facile-cli = { workspace = true }
 pdf-context = { workspace = true }
 reflex-chat = { workspace = true }
 
@@ -26,7 +26,14 @@ dev = [
     "ruff>=0.14.14",
     "ty>=0.0.1",
     "pre-commit>=4.0.1",
+    "pytest>=8.0.0",
+    "pytest-mock>=3.12.0",
 ]
 
 [tool.uv.workspace]
 members = ["apps/*", "packages/*"]
+
+[tool.ty.rules]
+# Disable rules with false positives from metaprogramming (Reflex, Chainlit)
+call-non-callable = "ignore"
+possibly-missing-attribute = "ignore"

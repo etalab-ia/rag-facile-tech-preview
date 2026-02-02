@@ -1,7 +1,7 @@
 [project]
-name = "cli"
+name = "rag-facile-cli"
 version = "0.1.0"
-description = "RAG Facile CLI"
+description = "RAG Facile CLI - Generate RAG workspaces for French Government"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -9,6 +9,13 @@ dependencies = [
     "rich>=13.0.0",
     "libcst>=1.8.6",
     "pyyaml>=6.0.2",
+    "questionary>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-mock>=3.12.0",
 ]
 
 [project.scripts]

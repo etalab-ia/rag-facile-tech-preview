@@ -8,6 +8,7 @@ dependencies = [
     "reflex>=0.7.11",
     "openai>=1.78.1",
     "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
     "pdf-context",
 ]
 
@@ -16,6 +17,9 @@ reflex-chat = "reflex.reflex:cli"
 
 [tool.setuptools.packages.find]
 include = ["reflex_chat*"]
+
+[tool.setuptools]
+py-modules = ["context_loader"]
 
 [tool.uv.sources]
 pdf-context = { workspace = true }

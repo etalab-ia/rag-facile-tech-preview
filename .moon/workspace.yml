@@ -1,6 +1,7 @@
 projects:
   - 'apps/*'
   - 'packages/*'
+  - 'tools'
 
 vcs:
   manager: 'git'

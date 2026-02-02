@@ -7,75 +7,117 @@
 
 RAG Facile provides a foundation for building RAG (Retrieval-Augmented Generation) applications in the French government, specifically using the [Albert API](https://albert.sites.beta.gouv.fr/). It is designed for exploratory greenfield projects.
 
-## Installation
-
-### Prerequisites
-
-Ensure you have `uv` installed on your system:
+**One command gets you to a running RAG app:**
 
 ```bash
-# macOS/Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Or with Homebrew
-brew install uv
-
-# Windows
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+rf generate workspace my-rag-app
 ```
 
-### Install the CLI
+## Quick Start
 
-Install the RAG Facile CLI (`rf`) globally using `uv`:
+### 1. Install Prerequisites
+
+Ensure you have `uv` installed:
 
 ```bash
-uv tool install rf --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+# Install uv (package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+> **Note**: The CLI will automatically install `proto` and `moon` if needed.
+
+### 2. Install the CLI
+
+Install the RAG Facile CLI (`rf`) globally:
+
+```bash
+uv tool install rag-facile-cli --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
 ```
 
 Verify the installation:
 
 ```bash
-rf version
+rf --help
 ```
+
+### 3. Generate Your Workspace
+
+Run the interactive workspace generator:
+
+```bash
+rf generate workspace my-rag-app
+```
+
+The CLI will guide you through:
+1. **Frontend selection** - Choose Chainlit or Reflex
+2. **Module selection** - Add PDF processing, vector stores, etc.
+3. **Environment configuration** - Set your Albert API key and preferences
+
+After configuration, the CLI automatically:
+- Generates your workspace with the selected components
+- Creates your `.env` file with your credentials
+- Installs all dependencies with `uv sync`
+- Starts the development server
+
+Your app will open in the browser, ready to use!
+
+## Available Components
+
+### Frontend Apps
+
+| App | Description | Port |
+|-----|-------------|------|
+| **Chainlit Chat** | Chat interface with file upload support | 8000 |
+| **Reflex Chat** | Interactive chat with modern UI | 3000 |
+
+### Modules
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| **PDF Context** | Extract and process PDF documents | ✅ Available |
+| **Chroma Context** | Vector store for semantic search | 🚧 Coming Soon |
+
+## Upgrading the CLI
 
 To upgrade to the latest version:
 
 ```bash
-uv tool install rf --force --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+uv tool install rag-facile-cli --force --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
 ```
 
-## Usage
+## Generated Workspace Structure
 
-The `rf` CLI provides commands for managing RAG applications:
+After running `rf generate workspace`, you'll have:
+
+```
+my-rag-app/
+├── .moon/              # Moon configuration
+│   ├── templates/      # Available templates for future expansion
+│   ├── toolchain.yml   # Python/uv configuration
+│   └── workspace.yml   # Workspace settings
+├── apps/
+│   └── chainlit-chat/  # Your selected frontend app
+│       ├── app.py
+│       ├── .env        # Your API credentials
+│       └── ...
+├── packages/
+│   └── pdf-context/    # Selected modules
+├── .python-version     # Pinned to Python 3.13
+└── pyproject.toml      # Workspace dependencies
+```
+
+## Running Your App
+
+After generation, use moon to run your app:
 
 ```bash
-# Show available commands
-rf --help
-
-# Generate a template
-rf template generate --app chainlit-chat
-
-# Check version
-rf version
+cd my-rag-app
+moon run chainlit-chat:dev  # or reflex-chat:dev
 ```
-
-## Components
-
-RAG Facile provides application templates for building RAG applications:
-
-### Currently Available
-
-- **ChainLit Chat**: A chat interface built with ChainLit
-- **Reflex Chat**: Interactive chat built with Reflex
-
-### Planned Templates
-
-- **Admin UI**: Administration interface (coming soon)
-- **Ingestion Pipeline**: Data processing pipeline (coming soon)
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution guidelines.
+Want to contribute to RAG Facile itself? See [CONTRIBUTING.md](CONTRIBUTING.md) for the architecture overview and development setup.
 
 ## License
 

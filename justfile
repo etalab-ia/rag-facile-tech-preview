@@ -28,7 +28,8 @@ admin:
 # Install all dependencies and setup the workspace
 setup:
         uv sync
-        uv lock
+        uv run pre-commit install
+        @echo "✓ Pre-commit hooks installed"
 
 # Generate all app templates
 gen-templates:

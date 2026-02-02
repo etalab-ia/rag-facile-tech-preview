@@ -1,0 +1,43 @@
+language: python
+
+tasks:
+  # Generate all templates from golden masters
+  # Note: Caching disabled because inputs come from outside this project
+  generate-all:
+    command: uv run python generate_templates.py --all
+    inputs:
+      - "generate_templates.py"
+    options:
+      cache: false
+
+  # Generate individual templates
+  generate-sys-config:
+    command: uv run python generate_templates.py --template sys-config
+    inputs:
+      - "generate_templates.py"
+
+  generate-chainlit-chat:
+    command: uv run python generate_templates.py --template chainlit-chat
+    inputs:
+      - "generate_templates.py"
+    options:
+      cache: false
+
+  generate-reflex-chat:
+    command: uv run python generate_templates.py --template reflex-chat
+    inputs:
+      - "generate_templates.py"
+    options:
+      cache: false
+
+  generate-pdf-context:
+    command: uv run python generate_templates.py --template pdf-context
+    inputs:
+      - "generate_templates.py"
+    options:
+      cache: false
+
+  generate-chroma-context:
+    command: uv run python generate_templates.py --template chroma-context
+    inputs:
+      - "generate_templates.py"
