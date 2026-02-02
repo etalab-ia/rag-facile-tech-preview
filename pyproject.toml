@@ -8,7 +8,7 @@ dependencies = [
     "chainlit-chat",
     "admin",
     "ingestion",
-    "cli",
+    "rag-facile-cli",
     "pdf-context",
     "reflex-chat",
 ]
@@ -17,7 +17,7 @@ dependencies = [
 chainlit-chat = { workspace = true }
 admin = { workspace = true }
 ingestion = { workspace = true }
-cli = { workspace = true }
+rag-facile-cli = { workspace = true }
 pdf-context = { workspace = true }
 reflex-chat = { workspace = true }
 

@@ -1,7 +1,7 @@
 [project]
-name = "cli"
+name = "rag-facile-cli"
 version = "0.1.0"
-description = "RAG Facile CLI"
+description = "RAG Facile CLI - Generate RAG workspaces for French Government"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
