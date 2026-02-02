@@ -14,8 +14,21 @@ app = typer.Typer()
 console = Console()
 
 
+def get_proto_paths() -> tuple[Path, Path]:
+    """Get proto bin and shims directories."""
+    proto_home = Path(os.environ.get("PROTO_HOME", Path.home() / ".proto"))
+    return proto_home / "bin", proto_home / "shims"
+
+
 def ensure_proto_and_moon() -> bool:
     """Ensure proto and moon are installed, installing them if needed."""
+    proto_bin, proto_shims = get_proto_paths()
+
+    # Add proto paths to PATH for this session (in case we just installed)
+    proto_paths = f"{proto_shims}:{proto_bin}"
+    if proto_paths not in os.environ.get("PATH", ""):
+        os.environ["PATH"] = f"{proto_paths}:{os.environ.get('PATH', '')}"
+
     # Check if moon is available
     if shutil.which("moon"):
         return True
@@ -41,6 +54,9 @@ def ensure_proto_and_moon() -> bool:
 
         console.print("[green]proto installed successfully![/green]")
         console.print()
+
+        # Update PATH to include newly installed proto
+        os.environ["PATH"] = f"{proto_paths}:{os.environ.get('PATH', '')}"
 
     # Install moon via proto
     console.print("[yellow]Installing moon via proto...[/yellow]")
