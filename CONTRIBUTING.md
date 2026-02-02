@@ -81,8 +81,10 @@ cd rag-facile
 ### 2. Install Dependencies
 
 ```bash
-uv sync
+just setup
 ```
+
+This installs all dependencies and sets up pre-commit hooks for linting/formatting.
 
 ### 3. Environment Variables
 
