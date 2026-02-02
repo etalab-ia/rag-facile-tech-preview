@@ -1,3 +1,5 @@
+exclude: ^\.moon/templates/
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.14
@@ -9,7 +11,7 @@ repos:
     hooks:
       - id: ty
         name: ty
-        entry: uv run ty check
+        entry: uv run ty check --exclude ".moon/templates"
         language: system
         types: [python]
         pass_filenames: false
