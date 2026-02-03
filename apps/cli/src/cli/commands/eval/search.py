@@ -14,7 +14,11 @@ from rich.table import Table
 load_dotenv()
 
 console = Console()
-app = typer.Typer(help="Search for evaluation datasets")
+app = typer.Typer(
+    help="Search for evaluation datasets",
+    invoke_without_command=True,
+    no_args_is_help=True,
+)
 
 
 @dataclass
