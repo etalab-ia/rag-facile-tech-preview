@@ -110,6 +110,17 @@ if ! check_tool uv; then
     fi
 fi
 
+# 4. Install just if needed
+if ! check_tool just; then
+    echo "Installing just..."
+    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "$LOCAL_BIN"
+    
+    if ! check_tool just; then
+        echo "ERROR: just installed but not working"
+        exit 1
+    fi
+fi
+
 # 5. Install rag-facile CLI via uv
 echo ""
 echo "Installing RAG Facile CLI..."
