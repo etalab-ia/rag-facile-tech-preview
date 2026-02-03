@@ -10,6 +10,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+* add Compar:IA datasets from ministere-culture ([c6ae5ee](https://github.com/etalab-ia/rag-facile/commit/c6ae5eed2aa31dab1d2321c3684f17b037731fdf))
+* add rag-eval CLI for dataset discovery ([7b7995d](https://github.com/etalab-ia/rag-facile/commit/7b7995d7771fcbb115189ff9647f0e8da49200ab))
+* add rag-eval CLI for dataset discovery ([f57d862](https://github.com/etalab-ia/rag-facile/commit/f57d862e35b5acbebb83b2bf3db73173181d41ad))
+* add standalone project structure option for simpler setup ([962ebd2](https://github.com/etalab-ia/rag-facile/commit/962ebd235b593da28764bb84a58d79e311a05209))
+
+
+### Bug Fixes
+
+* add explicit permissions to checks workflow ([5ce03f3](https://github.com/etalab-ia/rag-facile/commit/5ce03f3ca200000d309b7b59550680e758ea57c6))
+* add explicit permissions to checks workflow ([540b680](https://github.com/etalab-ia/rag-facile/commit/540b68042cee88561983a28a08573626c4fa845b))
+* add TypedDict for KNOWN_SOURCES to fix type checking ([4c049bd](https://github.com/etalab-ia/rag-facile/commit/4c049bd77c07329b7852c9f428e759a403224a1c))
+* address PR review feedback and tooling issues ([951d764](https://github.com/etalab-ia/rag-facile/commit/951d76423e71134fa11eec693561157b1abfa869))
+* ask project structure before frontend selection ([816c046](https://github.com/etalab-ia/rag-facile/commit/816c04662efb7f7f653505138791765a24d14ccf))
+* extract conventional commits from PR titles for release-please ([d2ac8d7](https://github.com/etalab-ia/rag-facile/commit/d2ac8d7df7ef61bd10589ca09d0e3ba718cf6dad))
+* extract conventional commits from PR titles for release-please ([a574351](https://github.com/etalab-ia/rag-facile/commit/a57435155659df6318052a6fcbc074043c849b70))
+* make standalone test more robust for CI ([a0f89e3](https://github.com/etalab-ia/rag-facile/commit/a0f89e309afed26661eb45df28c8842dfaa3302b))
+* remove pull-request-title-pattern from root config ([51058ae](https://github.com/etalab-ia/rag-facile/commit/51058ae81f178ea7536658d9c47e552a6950c6c2))
+* remove pull-request-title-pattern from root config ([1866551](https://github.com/etalab-ia/rag-facile/commit/18665519552b7957d25edd4512eb4f20932e4b49))
+* use named capture groups in pull-request-title-pattern ([2af79c5](https://github.com/etalab-ia/rag-facile/commit/2af79c5ddf2334cc31c08c5f75e1691cbd8ff921))
+* use named capture groups in pull-request-title-pattern ([30af21b](https://github.com/etalab-ia/rag-facile/commit/30af21b561fe2221594ba7875453c5d8e66298f3))
+
+
+### Documentation
+
+* add evaluation guide for end users ([15b9268](https://github.com/etalab-ia/rag-facile/commit/15b926859e805f6a400dbb71d78d3b791810fd9e))
+* add project structure comparison (Simple vs Monorepo) ([9a21910](https://github.com/etalab-ia/rag-facile/commit/9a219105a986d412e08606b73b7b19a41e809282))
+* add release and license badges to README ([d22e495](https://github.com/etalab-ia/rag-facile/commit/d22e49554d8dcccca67db6fdc64b2c1169208a6f))
+
+## [0.4.0](https://github.com/etalab-ia/rag-facile/compare/v0.3.0...v0.4.0) (2026-02-03)
+
+
+### Features
+
 * add standalone project structure option for simpler setup ([962ebd2](https://github.com/etalab-ia/rag-facile/commit/962ebd235b593da28764bb84a58d79e311a05209))
 
 
