@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/etalab-ia/rag-facile/compare/v0.4.0...v0.5.0) (2026-02-03)
+
+
+### Features
+
+* add dataset filtering by task and language to search commands ([bc5c52d](https://github.com/etalab-ia/rag-facile/commit/bc5c52d48cc9bec6daa88a6dfacf17176319bfcb))
+* add dataset filtering by task and language to search commands ([f3f95e2](https://github.com/etalab-ia/rag-facile/commit/f3f95e2f955d8cc3a75ac57e9f7d7b95e18ee4ce))
+
+
+### Bug Fixes
+
+* handle edge cases and follow PEP 8 in CLI ([b3cd4e3](https://github.com/etalab-ia/rag-facile/commit/b3cd4e3da31533a475744c08cd0853896fd573e7))
+* remove duplicate 0.4.0 from CHANGELOG ([1f903dd](https://github.com/etalab-ia/rag-facile/commit/1f903dd17248e2a060ec1df01f0436498dfe14b4))
+* show help when subcommands are missing ([bc3e862](https://github.com/etalab-ia/rag-facile/commit/bc3e862e7ed9419bd320c3363cfb52a1b3d23ac7))
+
 ## [0.4.0](https://github.com/etalab-ia/rag-facile/compare/v0.3.0...v0.4.0) (2026-02-03)
 
 
