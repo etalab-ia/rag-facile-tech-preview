@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/etalab-ia/rag-facile/compare/v0.3.0...v0.4.0) (2026-02-03)
+
+
+### Features
+
+* add standalone project structure option for simpler setup ([962ebd2](https://github.com/etalab-ia/rag-facile/commit/962ebd235b593da28764bb84a58d79e311a05209))
+
+
+### Bug Fixes
+
+* ask project structure before frontend selection ([816c046](https://github.com/etalab-ia/rag-facile/commit/816c04662efb7f7f653505138791765a24d14ccf))
+* make standalone test more robust for CI ([a0f89e3](https://github.com/etalab-ia/rag-facile/commit/a0f89e309afed26661eb45df28c8842dfaa3302b))
+
+
+### Documentation
+
+* add project structure comparison (Simple vs Monorepo) ([9a21910](https://github.com/etalab-ia/rag-facile/commit/9a219105a986d412e08606b73b7b19a41e809282))
+
 ## [0.3.0](https://github.com/etalab-ia/rag-facile/compare/v0.2.0...v0.3.0) (2026-02-03)
 
 
