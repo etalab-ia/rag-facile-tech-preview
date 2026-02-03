@@ -1,5 +1,14 @@
 # RAG Facile
 
+```
+ ██████╗  █████╗  ██████╗     ███████╗ █████╗  ██████╗██╗██╗     ███████╗
+ ██╔══██╗██╔══██╗██╔════╝     ██╔════╝██╔══██╗██╔════╝██║██║     ██╔════╝
+ ██████╔╝███████║██║  ███╗    █████╗  ███████║██║     ██║██║     █████╗
+ ██╔══██╗██╔══██║██║   ██║    ██╔══╝  ██╔══██║██║     ██║██║     ██╔══╝
+ ██║  ██║██║  ██║╚██████╔╝    ██║     ██║  ██║╚██████╗██║███████╗███████╗
+ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝╚══════╝╚══════╝
+```
+
 > [!IMPORTANT]
 > This project is a starter kit for RAG applications in the French government.
 
@@ -23,7 +32,7 @@ source ~/.bashrc  # or restart your terminal
 Verify the installation:
 
 ```bash
-rf --help
+rag-facile --help
 ```
 
 ### 2. Generate Your Workspace
@@ -31,7 +40,7 @@ rf --help
 One command gets you to a running RAG app:
 
 ```bash
-rf generate workspace my-rag-app
+rag-facile generate workspace my-rag-app
 ```
 
 The CLI will guide you through:
@@ -73,7 +82,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/in
 
 ## Generated Workspace Structure
 
-After running `rf generate workspace`, you'll have:
+After running `rag-facile generate workspace`, you'll have:
 
 ```
 my-rag-app/
