@@ -19,6 +19,17 @@ KNOWN_SOURCES = [
         ],
     },
     {
+        "name": "Compar:IA",
+        "type": "HuggingFace Organization",
+        "url": "https://huggingface.co/ministere-culture",
+        "description": "French Ministry of Culture chatbot arena - preferences & conversations",
+        "datasets": [
+            "ministere-culture/comparia-conversations",
+            "ministere-culture/comparia-votes",
+            "ministere-culture/comparia-reactions",
+        ],
+    },
+    {
         "name": "Letta Evals",
         "type": "GitHub Repository",
         "url": "https://github.com/letta-ai/letta-evals",
@@ -64,9 +75,13 @@ def list_sources():
 
     console.print(table)
 
-    # Show AgentPublic datasets specifically
+    # Show highlighted datasets from key sources
     console.print("\n[bold cyan]AgentPublic Datasets (MediaTech Collection):[/bold cyan]")
     for dataset in KNOWN_SOURCES[0]["datasets"]:
+        console.print(f"  • {dataset}")
+
+    console.print("\n[bold cyan]Compar:IA Datasets (Preference Data):[/bold cyan]")
+    for dataset in KNOWN_SOURCES[1]["datasets"]:
         console.print(f"  • {dataset}")
 
     console.print("\n[dim]Use 'rag-eval search hf <query>' to search HuggingFace datasets[/dim]")

@@ -194,3 +194,44 @@ def search_agent_public(
             raise typer.Exit(1)
 
     display_datasets(datasets, title="AgentPublic Datasets (MediaTech Collection)")
+
+
+@app.command(name="comparia")
+def search_comparia(
+    query: Annotated[
+        Optional[str],
+        typer.Argument(help="Optional search query within Compar:IA datasets"),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-n", help="Maximum number of results"),
+    ] = 50,
+):
+    """Search datasets from Compar:IA (French Ministry of Culture chatbot arena).
+
+    Compar:IA is a conversational AI comparison tool that collects user preferences
+    and conversations across 30+ models. Useful for preference tuning and evaluation.
+
+    Key datasets:
+    - comparia-conversations: 289k+ questions & answers from real users
+    - comparia-votes: 97k+ user preferences comparing two models
+    - comparia-reactions: 59k+ message-level reactions
+
+    Examples:
+        rag-eval search comparia
+        rag-eval search comparia "votes"
+    """
+    search_query = query or ""
+
+    with console.status("[cyan]Searching Compar:IA datasets..."):
+        try:
+            datasets = search_huggingface(
+                search_query,
+                author="ministere-culture",
+                limit=limit,
+            )
+        except httpx.HTTPError as e:
+            console.print(f"[red]Error searching HuggingFace: {e}[/red]")
+            raise typer.Exit(1)
+
+    display_datasets(datasets, title="Compar:IA Datasets (ministere-culture)")
