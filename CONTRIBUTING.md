@@ -112,6 +112,77 @@ rag-facile generate workspace my-rag-app
 
 The install script will automatically install other prerequisites (git, xz-utils) on Debian/Ubuntu.
 
+## Commit Messages
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for consistent versioning and changelogs. This enables automated release management via [release-please](https://github.com/googleapis/release-please).
+
+### Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types
+
+Use these prefixes to indicate how commits should affect versioning:
+
+- **`feat:`** - New feature (minor version bump)
+- **`fix:`** - Bug fix (patch version bump)
+- **`feat!:` or `fix!:`** - Breaking change (major version bump)
+- **`docs:`** - Documentation changes (no release)
+- **`chore:`** - Internal changes (no release)
+- **`refactor:`** - Code reorganization (no release unless with `!`)
+
+### Examples
+
+**Single feature:**
+```bash
+git commit -m "feat: add support for PDF annotations"
+```
+
+**Bug fix:**
+```bash
+git commit -m "fix: resolve memory leak in pdf-context"
+```
+
+**Multiple changes in one commit:**
+```bash
+git commit -m "feat: add PDF viewer
+
+This adds comprehensive PDF viewing capabilities
+to reflex-chat.
+
+fix: resolve rendering bug in pdf-context
+Fixes #245"
+```
+
+**Breaking change:**
+```bash
+git commit -m "feat!: redesign CLI command interface
+
+BREAKING CHANGE: the old 'rf init' command is now 'rf generate init'"
+```
+
+### Automated Releases
+
+When commits with conventional prefixes (`feat:`, `fix:`, etc.) are merged to main, release-please automatically:
+
+1. Creates a Release PR with:
+   - Version bumps for affected packages
+   - Generated changelog entries from commits
+   - Updated `CHANGELOG.md` files
+
+2. When the Release PR is merged:
+   - Versions are locked in `pyproject.toml`
+   - GitHub Release is created with release notes
+   - Commit is tagged with version number
+
+**No manual steps needed!** Just use conventional commits and release-please handles the rest.
+
 ## CI Checks
 
 The CI pipeline runs:

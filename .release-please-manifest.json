@@ -1,0 +1,6 @@
+{
+  "apps/cli": "0.1.0",
+  "apps/chainlit-chat": "0.1.0",
+  "apps/reflex-chat": "0.1.0",
+  "packages/pdf-context": "0.1.0"
+}
