@@ -62,7 +62,7 @@ moon run tools:type-check   # Run type checker
 ```
 rag-facile/
 ├── apps/                    # Applications
-│   ├── cli/                 # rf CLI tool
+│   ├── cli/                 # rag-facile CLI tool
 │   ├── chainlit-chat/       # Chainlit frontend
 │   └── reflex-chat/         # Reflex frontend
 ├── packages/                # Shared packages
@@ -102,7 +102,7 @@ curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/$RAG_FACILE_BR
 source ~/.bashrc
 
 # Test workspace generation
-rf generate workspace my-rag-app
+rag-facile generate workspace my-rag-app
 ```
 
 The install script will automatically install other prerequisites (git, xz-utils) on Debian/Ubuntu.

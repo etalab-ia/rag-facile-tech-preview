@@ -23,9 +23,8 @@
     ```
 
 ## 3. CLI Development Patterns
-- **Fact**: The project CLI is named `rf` (rag-facile), not `rag-cli`.
-- **Gotcha**: Typer collapses the CLI structure if only one command exists.
-- **Rule**: Maintain at least two commands (e.g., `hello` and `version`) in `apps/cli` to enforce standard subcommand routing (`rf <command>`).
+- **Fact**: The project CLI is named `rag-facile`.
+- **Fact**: CLI displays ASCII banner on every invocation (printed at module load time).
 
 ## 4. Configuration Specifics
 - **Gotcha**: The `ty` pre-commit hook requires the `entry` to be explicitly set to `uv run ty check`. The default entry may fail or lack the necessary context.

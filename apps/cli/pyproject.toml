@@ -19,7 +19,7 @@ dev = [
 ]
 
 [project.scripts]
-rf = "cli.main:app"
+rag-facile = "cli.main:app"
 
 [build-system]
 requires = ["hatchling"]

@@ -110,7 +110,7 @@ if ! check_tool uv; then
     fi
 fi
 
-# 5. Install rf CLI via uv
+# 5. Install rag-facile CLI via uv
 echo ""
 echo "Installing RAG Facile CLI..."
 BRANCH="${RAG_FACILE_BRANCH:-main}"
@@ -118,8 +118,8 @@ uv tool install rag-facile-cli --force --from "git+https://github.com/etalab-ia/
 
 # 6. Verify and handle PATH
 echo ""
-if [[ ! -f "$LOCAL_BIN/rf" ]]; then
-    echo "ERROR: rf installation failed"
+if [[ ! -f "$LOCAL_BIN/rag-facile" ]]; then
+    echo "ERROR: rag-facile installation failed"
     exit 1
 fi
 
@@ -128,9 +128,9 @@ if [[ ":$ORIGINAL_PATH:" == *":$LOCAL_BIN:"* ]]; then
     echo "✓ RAG Facile CLI installed successfully!"
     echo ""
     echo "Get started with:"
-    echo "  rf generate workspace my-rag-app"
+    echo "  rag-facile generate workspace my-rag-app"
 else
-    echo "rf was installed to $LOCAL_BIN which is not in your PATH."
+    echo "rag-facile was installed to $LOCAL_BIN which is not in your PATH."
     echo ""
     read -p "Would you like to add $LOCAL_BIN to your PATH? [Y/n] " -n 1 -r < /dev/tty
     echo ""
@@ -144,14 +144,14 @@ else
         echo ""
         echo "✓ RAG Facile CLI installed successfully!"
         echo ""
-        echo "Run this to use rf in your current terminal:"
+        echo "Run this to use rag-facile in your current terminal:"
         echo "  source $profile"
         echo ""
         echo "Or open a new terminal, then:"
-        echo "  rf generate workspace my-rag-app"
+        echo "  rag-facile generate workspace my-rag-app"
     else
         echo ""
-        echo "To use rf, add this to your shell profile:"
+        echo "To use rag-facile, add this to your shell profile:"
         echo "  export PATH=\"$PROTO_SHIMS:$PROTO_BIN:$LOCAL_BIN:\$PATH\""
     fi
 fi
