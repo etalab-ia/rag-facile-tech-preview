@@ -41,3 +41,29 @@ tasks:
     command: uv run python generate_templates.py --template chroma-context
     inputs:
       - "generate_templates.py"
+
+  # Code quality tasks (run from workspace root)
+  format:
+    command: uv run ruff format .
+    options:
+      runFromWorkspaceRoot: true
+
+  format-check:
+    command: uv run ruff format --check .
+    options:
+      runFromWorkspaceRoot: true
+
+  lint:
+    command: uv run ruff check .
+    options:
+      runFromWorkspaceRoot: true
+
+  lint-fix:
+    command: uv run ruff check --fix .
+    options:
+      runFromWorkspaceRoot: true
+
+  type-check:
+    command: uv run ty check .
+    options:
+      runFromWorkspaceRoot: true

@@ -7,32 +7,18 @@
 
 RAG Facile provides a foundation for building RAG (Retrieval-Augmented Generation) applications in the French government, specifically using the [Albert API](https://albert.sites.beta.gouv.fr/). It is designed for exploratory greenfield projects.
 
-**One command gets you to a running RAG app:**
-
-```bash
-rf generate workspace my-rag-app
-```
-
 ## Quick Start
 
-### 1. Install Prerequisites
+### 1. Install the CLI
 
-Ensure you have `uv` installed:
-
-```bash
-# Install uv (package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-> **Note**: The CLI will automatically install `proto` and `moon` if needed.
-
-### 2. Install the CLI
-
-Install the RAG Facile CLI (`rf`) globally:
+One command installs the entire toolchain (proto, moon, uv) and the CLI:
 
 ```bash
-uv tool install rag-facile-cli --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+source ~/.bashrc  # or restart your terminal
 ```
+
+> **Note**: On Ubuntu/Debian, the installer will automatically install prerequisites (git, curl, xz-utils) if needed.
 
 Verify the installation:
 
@@ -40,9 +26,9 @@ Verify the installation:
 rf --help
 ```
 
-### 3. Generate Your Workspace
+### 2. Generate Your Workspace
 
-Run the interactive workspace generator:
+One command gets you to a running RAG app:
 
 ```bash
 rf generate workspace my-rag-app
@@ -79,10 +65,10 @@ Your app will open in the browser, ready to use!
 
 ## Upgrading the CLI
 
-To upgrade to the latest version:
+To upgrade to the latest version, re-run the installer:
 
 ```bash
-uv tool install rag-facile-cli --force --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
 ```
 
 ## Generated Workspace Structure

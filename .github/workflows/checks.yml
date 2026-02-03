@@ -25,10 +25,10 @@ jobs:
         run: uv sync --frozen
 
       - name: Check formatting
-        run: uv run ruff format --check --exclude ".moon/templates" .
+        run: uv run ruff format --check .
 
       - name: Check linting
-        run: uv run ruff check --exclude ".moon/templates" .
+        run: uv run ruff check .
 
   typecheck:
     name: Type Check
@@ -48,7 +48,7 @@ jobs:
         run: uv sync --frozen
 
       - name: Run type checker
-        run: uv run ty check --exclude ".moon/templates" .
+        run: uv run ty check .
 
   test:
     name: Tests

@@ -33,7 +33,20 @@ dev = [
 [tool.uv.workspace]
 members = ["apps/*", "packages/*"]
 
+[tool.ty.src]
+exclude = [".moon/templates"]
+
 [tool.ty.rules]
 # Disable rules with false positives from metaprogramming (Reflex, Chainlit)
 call-non-callable = "ignore"
 possibly-missing-attribute = "ignore"
+
+[tool.ruff]
+# Exclude moon templates (contain Jinja2 syntax, not valid Python/TOML)
+extend-exclude = [".moon/templates"]
+
+[tool.ruff.lint]
+exclude = [".moon/templates"]
+
+[tool.ruff.format]
+exclude = [".moon/templates"]
