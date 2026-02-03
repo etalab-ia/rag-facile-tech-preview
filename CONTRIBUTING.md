@@ -85,6 +85,17 @@ Templates live in `.moon/templates/` and are automatically bundled into the CLI 
 moon run cli:test
 ```
 
+## Testing install.sh from a branch
+
+To test the install script from a feature branch:
+
+```bash
+export RAG_FACILE_BRANCH=my-feature-branch
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/$RAG_FACILE_BRANCH/install.sh | bash
+```
+
+This installs the CLI from the specified branch instead of main.
+
 ## CI Checks
 
 The CI pipeline runs:
