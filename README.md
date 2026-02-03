@@ -44,9 +44,10 @@ rag-facile generate workspace my-rag-app
 ```
 
 The CLI will guide you through:
-1. **Frontend selection** - Choose Chainlit or Reflex
-2. **Module selection** - Add PDF processing, vector stores, etc.
-3. **Environment configuration** - Set your Albert API key and preferences
+1. **Project structure** - Choose Simple or Monorepo (see below)
+2. **Frontend selection** - Choose Chainlit or Reflex
+3. **Module selection** - Add PDF processing, vector stores, etc.
+4. **Environment configuration** - Set your Albert API key and preferences
 
 After configuration, the CLI automatically:
 - Generates your workspace with the selected components
@@ -55,6 +56,83 @@ After configuration, the CLI automatically:
 - Starts the development server
 
 Your app will open in the browser, ready to use!
+
+## Project Structure Options
+
+When generating a workspace, you'll choose between two project structures:
+
+### Simple (Recommended for Getting Started)
+
+Best for: **Quick prototypes, single-app deployments, learning RAG Facile**
+
+```
+my-rag-app/
+├── pyproject.toml      # All dependencies in one place
+├── .env                # Your API credentials
+├── app.py              # Your application code
+├── context_loader.py   # Module loading logic
+├── modules.yml         # Enabled modules configuration
+├── chainlit.md         # Chat welcome message (Chainlit only)
+└── pdf_context/        # PDF module (if selected)
+```
+
+**Advantages:**
+- ✅ Familiar single-project structure
+- ✅ No build tools to learn (just `uv`)
+- ✅ Easy to understand and modify
+- ✅ Simple deployment
+
+**Run your app:**
+```bash
+cd my-rag-app
+uv run chainlit run app.py -w    # For Chainlit
+uv run reflex run                 # For Reflex
+```
+
+### Monorepo (For Multi-App Projects)
+
+Best for: **Team projects, multiple apps sharing code, production deployments**
+
+```
+my-rag-app/
+├── .moon/              # Moon workspace configuration
+│   ├── templates/      # Templates for adding new apps
+│   ├── toolchain.yml   # Python/uv configuration
+│   └── workspace.yml   # Workspace settings
+├── apps/
+│   └── chainlit-chat/  # Your selected frontend app
+│       ├── app.py
+│       ├── .env        # Your API credentials
+│       └── ...
+├── packages/
+│   └── pdf-context/    # Shared modules
+├── justfile            # Common commands
+└── pyproject.toml      # Workspace root
+```
+
+**Advantages:**
+- ✅ Multiple apps can share packages
+- ✅ Consistent tooling across apps
+- ✅ Easy to add new apps with `just add <template>`
+- ✅ Built-in task runner with Moon
+
+**Run your app:**
+```bash
+cd my-rag-app
+just run chainlit-chat    # Run specific app
+just run                  # Run all apps
+```
+
+### Which Should I Choose?
+
+| Scenario | Recommendation |
+|----------|----------------|
+| First time using RAG Facile | **Simple** |
+| Building a quick prototype | **Simple** |
+| Single application deployment | **Simple** |
+| Multiple related apps | **Monorepo** |
+| Team with shared components | **Monorepo** |
+| Need to add apps later | **Monorepo** |
 
 ## Available Components
 
@@ -80,39 +158,27 @@ To upgrade to the latest version, re-run the installer:
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
 ```
 
-## Generated Workspace Structure
-
-After running `rag-facile generate workspace`, you'll have:
-
-```
-my-rag-app/
-├── .moon/              # Moon configuration
-│   ├── templates/      # Available templates for future expansion
-│   ├── toolchain.yml   # Python/uv configuration
-│   └── workspace.yml   # Workspace settings
-├── apps/
-│   └── chainlit-chat/  # Your selected frontend app
-│       ├── app.py
-│       ├── .env        # Your API credentials
-│       └── ...
-├── packages/
-│   └── pdf-context/    # Selected modules
-├── .python-version     # Pinned to Python 3.13
-├── justfile            # Common commands (just dev, just check, etc.)
-└── pyproject.toml      # Workspace dependencies
-```
-
 ## Running Your App
 
-After generation, use the justfile commands:
+### Simple Structure
 
 ```bash
 cd my-rag-app
-just run                    # Run all apps
-just run chainlit-chat      # Run a specific app
+uv run chainlit run app.py -w    # Chainlit with hot-reload
+uv run reflex run                 # Reflex
 ```
 
-### Available Commands
+### Monorepo Structure
+
+Use the justfile commands:
+
+```bash
+cd my-rag-app
+just run chainlit-chat      # Run a specific app
+just run                    # Run all apps
+```
+
+#### Available Monorepo Commands
 
 | Command | Description |
 |---------|-------------|

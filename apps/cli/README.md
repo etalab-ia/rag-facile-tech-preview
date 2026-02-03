@@ -52,16 +52,21 @@ rag-facile version
 
 ### `generate workspace`
 
-Generates a new RAG workspace with your choice of frontend and modules.
+Generates a new RAG workspace with your choice of structure, frontend, and modules.
 
 ```bash
 rag-facile generate workspace <name>
 ```
 
 The CLI will guide you through:
-1. **Frontend selection** - Choose Chainlit or Reflex
-2. **Module selection** - Add PDF processing, vector stores, etc.
-3. **Environment configuration** - Set your Albert API key and preferences
+1. **Project structure** - Choose between:
+   - **Simple** - Flat structure, single app, easy to understand (recommended for getting started)
+   - **Monorepo** - Multi-app workspace with shared packages (for larger projects)
+2. **Frontend selection** - Choose Chainlit or Reflex
+3. **Module selection** - Add PDF processing, vector stores, etc.
+4. **Environment configuration** - Set your Albert API key and preferences
+
+See the main [README](../../README.md) for detailed comparison of project structures.
 
 ## Development
 
