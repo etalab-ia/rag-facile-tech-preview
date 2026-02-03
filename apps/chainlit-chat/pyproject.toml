@@ -1,6 +1,6 @@
 [project]
 name = "chainlit-chat"
-version = "0.1.0"
+version = "0.2.0"
 description = "Chainlit Chat with OpenAI Functions Streaming"
 readme = "README.md"
 requires-python = ">=3.13"
