@@ -221,47 +221,12 @@ This creates a Ragas-compatible JSONL file with French Q/A pairs:
 }
 ```
 
-### Explore Available Datasets
-
-```bash
-# List known dataset sources
-rag-facile eval sources
-
-# Search for French QA datasets
-rag-facile eval search hf "french QA"
-
-# Browse official French government datasets
-rag-facile eval search agent-public
-
-# Browse preference datasets from Compar:IA
-rag-facile eval search comparia
-```
-
-### Key Dataset Sources
-
-#### AgentPublic (MediaTech Collection)
-Official French government datasets:
-- **`AgentPublic/legi`** - French legislation
-- **`AgentPublic/travail-emploi`** - Labor code and employment
-- **`AgentPublic/service-public`** - Public service information
-
-#### Compar:IA (Preference Data)
-Real user interactions from the French Ministry of Culture:
-- **`ministere-culture/comparia-conversations`** - 289k+ real Q&A conversations
-- **`ministere-culture/comparia-votes`** - 97k+ user preferences
-- **`ministere-culture/comparia-reactions`** - 59k+ message-level reactions
-
 ### Basic Evaluation Workflow
-
-```bash
-# Find datasets matching your use case
-rag-facile eval search hf "french administrative" --sort downloads
-```
 
 ```python
 from datasets import load_dataset
 
-# Load a dataset
+# Load a dataset from HuggingFace
 dataset = load_dataset("AgentPublic/service-public")
 
 # Run your RAG pipeline on each question
