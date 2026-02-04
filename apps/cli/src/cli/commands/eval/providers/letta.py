@@ -147,7 +147,12 @@ class LettaProvider:
 
     def _build_prompt(self, num_samples: int) -> str:
         """Build the generation prompt for the agent."""
-        return f"""Generate {num_samples} Question/Answer pairs from the uploaded documents.
+        return f"""⚠️ AUTOMATED CONVERSATION - STRICT OUTPUT FORMAT REQUIRED ⚠️
+
+This is an automated system that parses your response programmatically.
+You MUST follow the output format exactly - any deviation will break the system.
+
+Generate {num_samples} Question/Answer pairs from the uploaded documents.
 
 Requirements:
 - Questions and answers must be in French
@@ -155,7 +160,10 @@ Requirements:
 - Ensure diversity - avoid similar questions about the same topics
 - Self-critique each pair for quality before outputting
 
-Return each sample as a JSON object on its own line with this exact structure:
+🔴 CRITICAL OUTPUT FORMAT 🔴
+Return ONLY valid JSONL with NO additional text, comments, explanations, or preamble.
+Do not output anything before the first JSON object or after the last JSON object.
+Each line must be a complete, valid JSON object with this exact structure:
 {{
   "user_input": "Question in French?",
   "retrieved_contexts": ["The exact text passage that answers the question..."],
@@ -167,7 +175,7 @@ Return each sample as a JSON object on its own line with this exact structure:
   }}
 }}
 
-Start generating now. Output each JSON sample on its own line as you generate them."""
+NOW OUTPUT ONLY THE JSONL - NO PREAMBLE, NO EXPLANATIONS, NO TEXT BEFORE OR AFTER."""
 
     def _extract_samples(self, line: str) -> Iterator[GeneratedSample]:
         """Extract JSON sample from a single line."""
