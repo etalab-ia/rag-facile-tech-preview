@@ -117,23 +117,17 @@ def run(
         base_url = os.getenv("OPENAI_BASE_URL")
         model = os.getenv("OPENAI_MODEL")
 
-        if not api_key:
-            console.print(
-                "[red]Error: OPENAI_API_KEY environment variable is required.[/red]"
-            )
-            raise typer.Exit(1)
-
-        if not base_url:
-            console.print(
-                "[red]Error: OPENAI_BASE_URL environment variable is required.[/red]"
-            )
-            raise typer.Exit(1)
-
-        if not model:
-            console.print(
-                "[red]Error: OPENAI_MODEL environment variable is required.[/red]"
-            )
-            raise typer.Exit(1)
+        env_vars_to_check = {
+            "OPENAI_API_KEY": api_key,
+            "OPENAI_BASE_URL": base_url,
+            "OPENAI_MODEL": model,
+        }
+        for var_name, value in env_vars_to_check.items():
+            if not value:
+                console.print(
+                    f"[red]Error: {var_name} environment variable is required.[/red]"
+                )
+                raise typer.Exit(1)
 
     # Find documents
     documents = [
