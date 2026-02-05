@@ -42,7 +42,7 @@ uvx --from git+https://github.com/etalab-ia/rag-facile.git#subdirectory=apps/cli
 rag-facile --help
 
 # Initialize a new workspace
-rag-facile init workspace my-rag-app
+rag-facile init my-rag-app
 
 # Check version
 rag-facile version
@@ -50,12 +50,12 @@ rag-facile version
 
 ## Commands
 
-### `init workspace`
+### `init`
 
 Initializes a new RAG workspace with your choice of structure, frontend, and modules.
 
 ```bash
-rag-facile init workspace <name>
+rag-facile init <name>
 ```
 
 The CLI will guide you through:

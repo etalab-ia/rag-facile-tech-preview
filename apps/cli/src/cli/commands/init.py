@@ -10,10 +10,6 @@ import questionary
 import typer
 from rich.console import Console
 
-app = typer.Typer(
-    invoke_without_command=True,
-    no_args_is_help=True,
-)
 console = Console()
 
 
@@ -447,8 +443,7 @@ def run_command(cmd: list[str], description: str, cwd: Path | None = None) -> bo
     return True
 
 
-@app.command()
-def workspace(
+def run(
     target: Annotated[
         str,
         typer.Argument(help="Target directory for the new workspace"),
@@ -765,7 +760,3 @@ OPENAI_MODEL={env_config["openai_model"]}
     # Run dev server (this will block and show output)
     dev_cmd = ["moon", "run", f"{FRONTENDS[frontend_choice]}:dev"]
     subprocess.run(dev_cmd, cwd=target_path)
-
-
-if __name__ == "__main__":
-    app()

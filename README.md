@@ -43,7 +43,7 @@ rag-facile --help
 One command gets you to a running RAG app:
 
 ```bash
-rag-facile init workspace my-rag-app
+rag-facile init my-rag-app
 ```
 
 The CLI will guide you through:

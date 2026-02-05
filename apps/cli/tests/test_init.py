@@ -635,17 +635,17 @@ class TestWorkspaceCommand:
     """Integration tests for workspace generation."""
 
     def test_workspace_command_exists(self):
-        """The workspace subcommand should be registered."""
-        result = runner.invoke(main_app, ["init", "workspace", "--help"])
+        """The init command should be registered."""
+        result = runner.invoke(main_app, ["init", "--help"])
         assert result.exit_code == 0
-        assert "Generate a new RAG Facile workspace" in result.output
+        assert "workspace" in result.output.lower()
 
     def test_workspace_requires_target(self):
         """Should show help when no target provided and not interactive."""
         # In non-interactive mode, questionary returns None
         with patch("cli.commands.init.questionary") as mock_q:
             mock_q.text.return_value.ask.return_value = None
-            result = runner.invoke(main_app, ["init", "workspace"])
+            result = runner.invoke(main_app, ["init"])
             assert result.exit_code == 1
 
     @pytest.fixture
@@ -730,7 +730,7 @@ class TestWorkspaceCommand:
         # Create the app directory structure that moon generate would create
         (target / "apps" / "chainlit-chat").mkdir(parents=True)
 
-        result = runner.invoke(main_app, ["init", "workspace", str(target)])
+        result = runner.invoke(main_app, ["init", str(target)])
 
         # Should complete successfully
         assert result.exit_code == 0, f"Failed with: {result.output}"
@@ -741,7 +741,7 @@ class TestWorkspaceCommand:
         target = tmp_path / "new-app"
         assert not target.exists()
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         assert target.exists()
 
@@ -749,7 +749,7 @@ class TestWorkspaceCommand:
         """Should run moon init in the target directory."""
         target = tmp_path / "test-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # Check moon init was called
         calls = mock_generation["subprocess_run"].call_args_list
@@ -760,7 +760,7 @@ class TestWorkspaceCommand:
         """Should run moon generate for templates."""
         target = tmp_path / "test-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # Check moon generate was called for sys-config and chainlit-chat
         calls = mock_generation["subprocess_run"].call_args_list
@@ -773,7 +773,7 @@ class TestWorkspaceCommand:
         """Should pass --force flag to moon generate."""
         target = tmp_path / "test-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target), "--force"])
+        runner.invoke(main_app, ["init", str(target), "--force"])
 
         calls = mock_generation["subprocess_run"].call_args_list
         force_calls = [c for c in calls if "--force" in c[0][0]]
@@ -783,7 +783,7 @@ class TestWorkspaceCommand:
         """Should copy templates to target workspace."""
         target = tmp_path / "test-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # copytree should be called for each template
         assert mock_generation["copytree"].call_count >= 1
@@ -828,7 +828,7 @@ class TestStandaloneWorkspaceCommand:
         """Should generate standalone project via CLI."""
         target = tmp_path / "standalone-app"
 
-        result = runner.invoke(main_app, ["init", "workspace", str(target)])
+        result = runner.invoke(main_app, ["init", str(target)])
 
         assert result.exit_code == 0, f"Failed with: {result.output}"
         assert "Project generation complete" in result.output
@@ -837,7 +837,7 @@ class TestStandaloneWorkspaceCommand:
         """Should create files at root, not in apps/ subdirectory."""
         target = tmp_path / "standalone-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # Files should be at root, not in apps/
         assert (target / "pyproject.toml").exists()
@@ -851,7 +851,7 @@ class TestStandaloneWorkspaceCommand:
         """Should not run moon init or generate commands in standalone mode."""
         target = tmp_path / "standalone-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # Check no moon init/generate commands were called
         # (moon --version is allowed for toolchain verification)
@@ -867,7 +867,7 @@ class TestStandaloneWorkspaceCommand:
         """Should run uv commands in standalone mode."""
         target = tmp_path / "standalone-app"
 
-        runner.invoke(main_app, ["init", "workspace", str(target)])
+        runner.invoke(main_app, ["init", str(target)])
 
         # Check uv sync was called
         calls = mock_standalone_cli["run_command"].call_args_list
@@ -880,7 +880,7 @@ class TestStandaloneWorkspaceCommand:
         """Should show 'Project generation complete' (standalone-specific message)."""
         target = tmp_path / "standalone-app"
 
-        result = runner.invoke(main_app, ["init", "workspace", str(target)])
+        result = runner.invoke(main_app, ["init", str(target)])
 
         # Standalone mode shows "Project generation complete"
         # Monorepo mode shows "Workspace generation complete"
@@ -904,7 +904,7 @@ class TestPathNormalization:
 
         # Use a path under /private/tmp if on macOS
         result = runner.invoke(
-            main_app, ["init", "workspace", "/private/tmp/test-app"]
+            main_app, ["init", "/private/tmp/test-app"]
         )
 
         # Output should show /tmp not /private/tmp
@@ -923,7 +923,7 @@ class TestStructureSelectionPrompt:
             None,  # Frontend - return None to abort
         ]
 
-        runner.invoke(main_app, ["init", "workspace", "/tmp/test"])
+        runner.invoke(main_app, ["init", "/tmp/test"])
 
         # Should have been called twice for select
         assert mock_q.select.call_count == 2
@@ -943,7 +943,7 @@ class TestStructureSelectionPrompt:
             None,  # No structure selected
         ]
 
-        result = runner.invoke(main_app, ["init", "workspace", "/tmp/test"])
+        result = runner.invoke(main_app, ["init", "/tmp/test"])
 
         assert result.exit_code == 1
         assert "Aborted" in result.output
