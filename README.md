@@ -38,12 +38,12 @@ Verify the installation:
 rag-facile --help
 ```
 
-### 2. Initialize Your Workspace
+### 2. Setup Your Workspace
 
 One command gets you to a running RAG app:
 
 ```bash
-rag-facile init my-rag-app
+rag-facile setup my-rag-app
 ```
 
 The CLI will guide you through:
@@ -53,7 +53,7 @@ The CLI will guide you through:
 4. **Environment configuration** - Set your Albert API key and preferences
 
 After configuration, the CLI automatically:
-- Generates your workspace with the selected components
+- Sets up your workspace with the selected components
 - Creates your `.env` file with your credentials
 - Installs all dependencies with `uv sync`
 - Starts the development server

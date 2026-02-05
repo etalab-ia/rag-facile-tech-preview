@@ -3,7 +3,7 @@ from importlib.metadata import version as get_version
 import typer
 from rich.console import Console
 
-from cli.commands import init, generate_dataset
+from cli.commands import setup, generate_dataset
 
 console = Console()
 
@@ -38,7 +38,7 @@ app.command(
     help="Generate synthetic Q/A evaluation dataset from documents",
 )(generate_dataset.run)
 
-app.command(name="init", help="Initialize a new workspace")(init.run)
+app.command(name="setup", help="Setup a new workspace")(setup.run)
 
 app.command()(version)
 

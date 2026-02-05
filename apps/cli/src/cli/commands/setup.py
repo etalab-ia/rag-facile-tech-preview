@@ -1,4 +1,4 @@
-"""Initialize new RAG Facile workspaces using Init + Patch architecture."""
+"""Setup new RAG Facile workspaces using Init + Patch architecture."""
 
 import os
 import shutil
@@ -453,7 +453,7 @@ def run(
         typer.Option("--force", "-f", help="Overwrite existing files"),
     ] = False,
 ):
-    """Generate a new RAG Facile workspace with interactive configuration.
+    """Setup a new RAG Facile workspace with interactive configuration.
 
     Uses the Init + Patch architecture:
     1. Bootstrap with `moon init`

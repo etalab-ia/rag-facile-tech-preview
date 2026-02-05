@@ -171,8 +171,8 @@ export RAG_FACILE_BRANCH=my-feature-branch
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/$RAG_FACILE_BRANCH/install.sh | bash
 source ~/.bashrc
 
-# Test workspace initialization
-rag-facile init my-rag-app
+# Test workspace setup
+rag-facile setup my-rag-app
 ```
 
 The install script will automatically install other prerequisites (git, xz-utils) on Debian/Ubuntu.
