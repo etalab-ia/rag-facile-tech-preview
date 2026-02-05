@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1](https://github.com/etalab-ia/rag-facile/compare/v0.6.0...v0.6.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* update remaining eval.providers references in test_document_preprocessor.py ([f0a423f](https://github.com/etalab-ia/rag-facile/commit/f0a423f1d1f5de28b07a0022a93edad649b8e29a))
+
 ## [0.6.0](https://github.com/etalab-ia/rag-facile/compare/v0.5.0...v0.6.0) (2026-02-04)
 
 
