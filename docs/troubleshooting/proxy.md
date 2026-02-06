@@ -182,7 +182,7 @@ ls -la ~/corporate-ca.pem
 powershell -Command "Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object {$_.Issuer -like '*company*'} | Export-Certificate -FilePath 'C:\Users\YourUsername\corporate-ca.crt'"
 
 # Copy to WSL home:
-cp /mnt/c/Users/YourUsername/corporate-ca.pem ~/corporate-ca.pem
+cp /mnt/c/Users/YourUsername/corporate-ca.crt ~/corporate-ca.pem
 ```
 
 **If you don't have the certificate**:

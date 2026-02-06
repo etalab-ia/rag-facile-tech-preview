@@ -42,8 +42,9 @@ setup_proxy_config() {
         # Create .proto directory if it doesn't exist
         mkdir -p "$PROTO_HOME"
         
-        # Create .prototools with proxy configuration
-        cat > "$PROTOTOOLS_FILE" << EOF
+        # Only create .prototools if it doesn't already exist (preserve user config)
+        if [[ ! -f "$PROTOTOOLS_FILE" ]]; then
+            cat > "$PROTOTOOLS_FILE" << EOF
 # Proto configuration created by RAG Facile installer
 # For corporate/restricted networks and VPN environments
 
@@ -55,8 +56,10 @@ proxies = ["$proxy_url"]
 # Increase timeout for network checks when behind proxy
 timeout = 5000
 EOF
-        
-        echo "✓ Created proto configuration at $PROTOTOOLS_FILE"
+            echo "✓ Created proto configuration at $PROTOTOOLS_FILE"
+        else
+            echo "✓ Proto configuration already exists at $PROTOTOOLS_FILE (preserving existing config)"
+        fi
         echo ""
         
         # Check for corporate proxy (likely to use SSL inspection)

@@ -17,8 +17,7 @@ Welcome to the RAG Facile documentation. This directory contains guides, trouble
 ### For Developers & IT Teams
 
 **Technical Deep-Dives**
-- [Issue #46 Investigation](technical/issue-46-investigation.md) - Technical analysis of the proxy issue
-- [Issue #46 Research](technical/issue-46-research.md) - Comprehensive research findings
+- [Issue #46 Investigation](technical/issue-46-investigation.md) - Technical analysis and research findings
 - [Issue #46 Summary](technical/issue-46-summary.md) - Complete implementation summary
 
 ## Documentation by Topic
@@ -38,12 +37,12 @@ RAG Facile supports installation on corporate networks, restricted networks, and
 - **Standard HTTP proxy**: See [Quick Start section](guides/proxy-setup.md#quick-start) of Proxy Setup Guide
 - **Corporate proxy with SSL inspection**: See [SSL Certificate Configuration](guides/proxy-setup.md#troubleshooting-ssl-certificate-error)
 - **Network blocked**: See [Troubleshooting: Connection Timeout](troubleshooting/proxy.md#symptom-connection-timeout)
-- **Advanced configuration
-- Network**: See [Advanced Configuration](guides/proxy-setup.md#advanced-url-rewriting-for-internal-mirrors)
+- **Advanced configuration**: See [Advanced Configuration](guides/proxy-setup.md#advanced-url-rewriting-for-internal-mirrors)
 
 ### For IT Teams & System Administrators
 
-See [Proxy Setup Guide: For IT Teams](guides/proxy-setup.md#for-it-teams--system-administrators) for guidance on: whitelisting requirements
+See [Proxy Setup Guide: For IT Teams](guides/proxy-setup.md#for-it-teams--system-administrators) for guidance on:
+- Whitelisting requirements
 - Proxy configuration recommendations
 - Root CA certificate distribution
 - Setup for your organization
@@ -68,8 +67,7 @@ When something goes wrong, start here.
 
 Research, investigation, and implementation details (primarily of historical interest).
 
-- **issue-46-investigation.md**: Technical analysis of the proxy problem
-- **issue-46-research.md**: Research findings and implementation details
+- **issue-46-investigation.md**: Technical analysis, research findings, and proto configuration reference
 - **issue-46-summary.md**: Complete implementation summary with testing instructions
 
 ---
