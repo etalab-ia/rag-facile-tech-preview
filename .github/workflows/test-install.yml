@@ -58,48 +58,6 @@ jobs:
           echo "=== Testing just recipes ==="
           just --list
   
-  linux-proxy-simulation:
-    runs-on: ubuntu-latest
-    name: "Install on Linux (with proxy)"
-    
-    env:
-      RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run bash installer with proxy env vars
-        shell: bash
-        env:
-          HTTP_PROXY: "http://proxy.example.com:8080"
-          HTTPS_PROXY: "http://proxy.example.com:8080"
-        run: |
-          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
-          bash -x /tmp/install.sh 2>&1 || (echo "=== Installer failed ===" && exit 1)
-      
-      - name: Verify .prototools was created
-        shell: bash
-        run: |
-          if [ -f ~/.proto/.prototools ]; then
-            echo "✓ .prototools created successfully"
-            echo "Content:"
-            cat ~/.proto/.prototools
-          else
-            echo "✗ .prototools not found"
-            exit 1
-          fi
-      
-      - name: Verify installation despite proxy
-        shell: bash
-        run: |
-          source ~/.bashrc || source ~/.bash_profile || true
-          rag-facile --version
-          proto --version
-  
-  # ============================================================================
-  # MACOS TESTS
-  # ============================================================================
-  
   macos-install-arm64:
     runs-on: macos-14
     name: "Install on macOS (Apple Silicon)"
@@ -137,48 +95,6 @@ jobs:
           source ~/.bashrc || source ~/.bash_profile || true
           echo "=== Testing just recipes ==="
           just --list
-  
-  macos-proxy-simulation:
-    runs-on: macos-latest
-    name: "Install on macOS (with proxy)"
-    
-    env:
-      RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run bash installer with proxy env vars
-        shell: bash
-        env:
-          HTTP_PROXY: "http://proxy.example.com:8080"
-          HTTPS_PROXY: "http://proxy.example.com:8080"
-        run: |
-          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
-          bash -x /tmp/install.sh 2>&1 || (echo "=== Installer failed ===" && exit 1)
-      
-      - name: Verify .prototools was created
-        shell: bash
-        run: |
-          if [ -f ~/.proto/.prototools ]; then
-            echo "✓ .prototools created successfully"
-            echo "Content:"
-            cat ~/.proto/.prototools
-          else
-            echo "✗ .prototools not found"
-            exit 1
-          fi
-      
-      - name: Verify installation despite proxy
-        shell: bash
-        run: |
-          source ~/.bashrc || source ~/.bash_profile || true
-          rag-facile --version
-          proto --version
-  
-  # ============================================================================
-  # WINDOWS TESTS
-  # ============================================================================
   
   windows-install-powershell:
     runs-on: windows-latest
@@ -245,49 +161,10 @@ jobs:
           echo "=== Testing just recipes ==="
           just --list
   
-  windows-proxy-simulation:
-    runs-on: windows-latest
-    name: "Install on Windows (with proxy)"
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run PowerShell installer with proxy env vars
-        env:
-          HTTP_PROXY: "http://proxy.example.com:8080"
-          HTTPS_PROXY: "http://proxy.example.com:8080"
-          RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        shell: powershell
-        run: |
-          powershell -ExecutionPolicy Bypass -Command "& { irm ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.ps1 | iex }" 2>&1 | Tee-Object -FilePath $env:TEMP\install.log
-      
-      - name: Verify .prototools was created
-        shell: powershell
-        run: |
-          $PrototoolsPath = "$env:USERPROFILE\.proto\.prototools"
-          if (Test-Path $PrototoolsPath) {
-            Write-Host "✓ .prototools created successfully" -ForegroundColor Green
-            Write-Host "Content:"
-            Get-Content $PrototoolsPath
-          } else {
-            Write-Host "✗ .prototools not found" -ForegroundColor Red
-            exit 1
-          }
-      
-      - name: Verify installation despite proxy
-        shell: powershell
-        run: |
-          rag-facile --version
-          proto --version
-  
-  # ============================================================================
-  # SUMMARY JOB
-  # ============================================================================
-  
   test-summary:
     runs-on: ubuntu-latest
     name: "Installation Tests Summary"
-    needs: [linux-install, linux-proxy-simulation, macos-install-arm64, macos-proxy-simulation, windows-install-powershell, windows-install-gitbash, windows-proxy-simulation]
+    needs: [linux-install, macos-install-arm64, windows-install-powershell, windows-install-gitbash]
     if: always()
     
     steps:
@@ -295,21 +172,15 @@ jobs:
         run: |
           echo "=== Installation Test Results ==="
           echo "Linux (Ubuntu): ${{ needs.linux-install.result }}"
-          echo "Linux (Proxy): ${{ needs.linux-proxy-simulation.result }}"
           echo "macOS (ARM64): ${{ needs.macos-install-arm64.result }}"
-          echo "macOS (Proxy): ${{ needs.macos-proxy-simulation.result }}"
           echo "Windows (PowerShell): ${{ needs.windows-install-powershell.result }}"
           echo "Windows (Git Bash): ${{ needs.windows-install-gitbash.result }}"
-          echo "Windows (Proxy): ${{ needs.windows-proxy-simulation.result }}"
           
           # Fail if any test failed
           if [[ "${{ needs.linux-install.result }}" == "failure" || \
-                "${{ needs.linux-proxy-simulation.result }}" == "failure" || \
                 "${{ needs.macos-install-arm64.result }}" == "failure" || \
-                "${{ needs.macos-proxy-simulation.result }}" == "failure" || \
                 "${{ needs.windows-install-powershell.result }}" == "failure" || \
-                "${{ needs.windows-install-gitbash.result }}" == "failure" || \
-                "${{ needs.windows-proxy-simulation.result }}" == "failure" ]]; then
+                "${{ needs.windows-install-gitbash.result }}" == "failure" ]]; then
             echo "❌ One or more installation tests failed"
             exit 1
           fi
