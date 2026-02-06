@@ -35,7 +35,8 @@ jobs:
       - name: Run bash installer
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify installation
         shell: bash
@@ -70,7 +71,8 @@ jobs:
       - name: Run bash installer with proxy env vars
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify .prototools was created
         shell: bash
@@ -104,7 +106,8 @@ jobs:
       - name: Run bash installer
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify installation
         shell: bash
@@ -139,7 +142,8 @@ jobs:
       - name: Run bash installer
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify installation
         shell: bash
@@ -178,7 +182,8 @@ jobs:
       - name: Run bash installer with proxy env vars
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify .prototools was created
         shell: bash
@@ -243,7 +248,8 @@ jobs:
       - name: Run bash installer
         shell: bash
         run: |
-          bash <(curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh)
+          curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
+          bash /tmp/install.sh
       
       - name: Verify installation
         shell: bash
