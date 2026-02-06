@@ -42,7 +42,7 @@ function Setup-ProxyConfig {
     }
     
     if ($ProxyUrl) {
-        Write-Host "==> Detected proxy configuration: $ProxyUrl" -ForegroundColor Yellow
+        Write-Host "==> Detected proxy configuration: $($ProxyUrl)" -ForegroundColor Yellow
         Write-Host "Creating proto configuration for proxy support..." -ForegroundColor Yellow
         Write-Host ""
         
@@ -69,9 +69,9 @@ proxies = ["$ProxyUrl"]
 timeout = 5000
 "@
             Set-Content -Path $PrototoolsFile -Value $ProtoConfig -Force
-            Write-Host "✓ Created proto configuration at $PrototoolsFile" -ForegroundColor Green
+            Write-Host "✓ Created proto configuration at $($PrototoolsFile)" -ForegroundColor Green
         } else {
-            Write-Host "✓ Proto configuration already exists at $PrototoolsFile (preserving existing config)" -ForegroundColor Green
+            Write-Host "✓ Proto configuration already exists at $($PrototoolsFile) (preserving existing config)" -ForegroundColor Green
         }
         Write-Host ""
         
@@ -83,12 +83,12 @@ timeout = 5000
             Write-Host ""
             Write-Host "Option 1: Export your corporate root certificate" -ForegroundColor Cyan
             Write-Host "  1. Export the root certificate from your proxy/firewall as a .pem file" -ForegroundColor Cyan
-            Write-Host "  2. Add to $PrototoolsFile:" -ForegroundColor Cyan
+            Write-Host "  2. Add to ~/.proto/.prototools:" -ForegroundColor Cyan
             Write-Host "     [settings.http]" -ForegroundColor Cyan
             Write-Host "     root-cert = `"/path/to/corporate-cert.pem`"" -ForegroundColor Cyan
             Write-Host ""
             Write-Host "Option 2: Allow invalid certificates (not recommended)" -ForegroundColor Cyan
-            Write-Host "  Add to $PrototoolsFile:" -ForegroundColor Cyan
+            Write-Host "  Add to ~/.proto/.prototools:" -ForegroundColor Cyan
             Write-Host "  [settings.http]" -ForegroundColor Cyan
             Write-Host "  allow-invalid-certs = true" -ForegroundColor Cyan
             Write-Host ""
@@ -102,7 +102,7 @@ function Test-Command {
     $cmd = Get-Command $Name -ErrorAction SilentlyContinue
     if ($cmd) {
         $version = & $Name --version 2>$null | Select-Object -First 1
-        Write-Host "✓ $Name ($version)" -ForegroundColor Green
+        Write-Host "✓ $($Name) ($($version))" -ForegroundColor Green
         return $true
     }
     return $false
@@ -152,7 +152,7 @@ if (-not (Test-Command moon)) {
         Write-Host ""
         Write-Host "1. Check proto logs for details" -ForegroundColor Red
         Write-Host "2. Verify proxy configuration:" -ForegroundColor Red
-        Write-Host "   cat $ProtoHome\.prototools" -ForegroundColor Red
+        Write-Host "   cat ~/.proto/.prototools" -ForegroundColor Red
         Write-Host ""
         Write-Host "For more help, see: https://moonrepo.dev/docs/proto/config" -ForegroundColor Red
         exit 1
