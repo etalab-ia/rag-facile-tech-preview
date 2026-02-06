@@ -32,6 +32,8 @@ source ~/.bashrc  # or restart your terminal
 
 > **Note**: On Ubuntu/Debian, the installer will automatically install prerequisites (git, curl, xz-utils, unzip) if needed.
 
+> **Behind a corporate proxy or VPN?** The installer automatically detects and configures proxy support. If you encounter issues, see [Proxy Setup Guide](PROXY_SETUP_GUIDE.md) for detailed troubleshooting steps.
+
 Verify the installation:
 
 ```bash

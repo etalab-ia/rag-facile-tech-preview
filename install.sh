@@ -9,9 +9,83 @@ PROTO_BIN="$PROTO_HOME/bin"
 PROTO_SHIMS="$PROTO_HOME/shims"
 LOCAL_BIN="$HOME/.local/bin"
 ORIGINAL_PATH="$PATH"
+PROTOTOOLS_FILE="$PROTO_HOME/.prototools"
 
 echo "==> Installing RAG Facile CLI"
 echo ""
+
+# Check for proxy configuration
+setup_proxy_config() {
+    local has_proxy=0
+    local proxy_url=""
+    
+    # Check for common proxy environment variables
+    if [[ -n "${HTTP_PROXY:-}" ]]; then
+        proxy_url="$HTTP_PROXY"
+        has_proxy=1
+    elif [[ -n "${http_proxy:-}" ]]; then
+        proxy_url="$http_proxy"
+        has_proxy=1
+    elif [[ -n "${HTTPS_PROXY:-}" ]]; then
+        proxy_url="$HTTPS_PROXY"
+        has_proxy=1
+    elif [[ -n "${https_proxy:-}" ]]; then
+        proxy_url="$https_proxy"
+        has_proxy=1
+    fi
+    
+    if [[ $has_proxy -eq 1 ]]; then
+        echo "==> Detected proxy configuration: $proxy_url"
+        echo "Creating proto configuration for proxy support..."
+        echo ""
+        
+        # Create .proto directory if it doesn't exist
+        mkdir -p "$PROTO_HOME"
+        
+        # Create .prototools with proxy configuration
+        cat > "$PROTOTOOLS_FILE" << EOF
+# Proto configuration created by RAG Facile installer
+# For corporate/restricted networks and VPN environments
+
+[settings.http]
+# Proxy configuration
+proxies = ["$proxy_url"]
+
+[settings.offline]
+# Increase timeout for network checks when behind proxy
+timeout = 5000
+EOF
+        
+        echo "✓ Created proto configuration at $PROTOTOOLS_FILE"
+        echo ""
+        
+        # Check for corporate proxy (likely to use SSL inspection)
+        if [[ "$proxy_url" =~ "corp" ]] || [[ "$proxy_url" =~ "internal" ]]; then
+            echo "⚠️  Corporate proxy detected (based on URL)"
+            echo ""
+            echo "If you encounter SSL certificate errors, you have two options:"
+            echo ""
+            echo "Option 1: Export your corporate root certificate"
+            echo "  1. Export the root certificate from your proxy/firewall as a .pem file"
+            echo "  2. Add to $PROTOTOOLS_FILE:"
+            echo "     [settings.http]"
+            echo "     root-cert = \"/path/to/corporate-cert.pem\""
+            echo ""
+            echo "Option 2: Allow invalid certificates (not recommended)"
+            echo "  Add to $PROTOTOOLS_FILE:"
+            echo "  [settings.http]"
+            echo "  allow-invalid-certs = true"
+            echo ""
+        fi
+        
+        return 0
+    fi
+    
+    return 1
+}
+
+# Setup proxy configuration if detected
+setup_proxy_config
 
 # Install prerequisites on Linux if needed
 if [[ "$(uname)" == "Linux" ]] && command -v apt-get &> /dev/null; then
@@ -91,7 +165,31 @@ fi
 # 2. Install moon via proto if needed
 if ! check_tool moon; then
     echo "Installing moon via proto..."
-    proto install moon
+    if ! proto install moon; then
+        echo "ERROR: Failed to install moon via proto"
+        echo ""
+        echo "This often happens behind corporate proxies or VPNs."
+        echo "Troubleshooting steps:"
+        echo ""
+        echo "1. Check proto logs for details:"
+        echo "   Check ~/.proto logs for more information"
+        echo ""
+        echo "2. Verify proxy configuration:"
+        echo "   cat $PROTOTOOLS_FILE"
+        echo ""
+        echo "3. Test connectivity to GitHub:"
+        echo "   curl -I https://github.com"
+        echo "   curl -I https://ghcr.io"
+        echo ""
+        echo "4. If you're behind a corporate proxy with SSL inspection:"
+        echo "   a) Export your root certificate as a .pem file"
+        echo "   b) Add this to $PROTOTOOLS_FILE:"
+        echo "      [settings.http]"
+        echo "      root-cert = \"/path/to/your/cert.pem\""
+        echo ""
+        echo "5. For more help, see: https://moonrepo.dev/docs/proto/config"
+        exit 1
+    fi
     
     if ! check_tool moon; then
         echo "ERROR: moon installed but not working"
@@ -102,7 +200,13 @@ fi
 # 3. Install uv via proto if needed
 if ! check_tool uv; then
     echo "Installing uv via proto..."
-    proto install uv
+    if ! proto install uv; then
+        echo "ERROR: Failed to install uv via proto"
+        echo ""
+        echo "This often happens behind corporate proxies or VPNs."
+        echo "See troubleshooting steps from 'moon' installation above."
+        exit 1
+    fi
     
     if ! check_tool uv; then
         echo "ERROR: uv installed but not working"
