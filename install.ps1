@@ -212,6 +212,19 @@ try {
     exit 1
 }
 
+# Add uv tools directory to PATH for current session and system
+$UvToolsPath = "$env:USERPROFILE\AppData\Roaming\Python\Scripts"
+if (Test-Path $UvToolsPath) {
+    $env:PATH = "$UvToolsPath;$env:PATH"
+    
+    # Also add to User PATH in registry for future sessions
+    $UserPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
+    if ($UserPath -notlike "*$UvToolsPath*") {
+        [System.Environment]::SetEnvironmentVariable("Path", "$UvToolsPath;$UserPath", "User")
+        Write-Host "Added uv tools directory to system PATH" -ForegroundColor Green
+    }
+}
+
 Write-Host ""
 Write-Host "✓ RAG Facile CLI installed successfully!" -ForegroundColor Green
 Write-Host ""

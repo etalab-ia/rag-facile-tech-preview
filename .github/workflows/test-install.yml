@@ -119,6 +119,15 @@ jobs:
       - name: Verify installation
         shell: powershell
         run: |
+          # Refresh PATH from system environment (proto updates it during install)
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+          
+          # Add uv tools directory (where uv tool install puts executables)
+          $uvToolsDir = "$env:USERPROFILE\AppData\Roaming\Python\Scripts"
+          if (Test-Path $uvToolsDir) {
+            $env:Path = "$uvToolsDir;$env:Path"
+          }
+          
           Write-Host "=== Verifying tools ===" -ForegroundColor Cyan
           rag-facile --version
           proto --version
@@ -129,6 +138,9 @@ jobs:
       - name: Test just commands
         shell: powershell
         run: |
+          # Refresh PATH from system environment
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+          
           Write-Host "=== Testing just recipes ===" -ForegroundColor Cyan
           just --list
           just format-check
