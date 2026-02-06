@@ -7,6 +7,11 @@ set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 default:
     @just --list
 
+# Sync dependencies and install pre-commit hooks
+sync:
+    uv sync
+    uv run pre-commit install
+
 # Format code (write changes)
 format:
     moon run tools:format

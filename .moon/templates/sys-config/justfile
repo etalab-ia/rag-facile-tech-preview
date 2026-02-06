@@ -35,9 +35,10 @@ type-check:
 # Run all checks (format-check, lint, type-check)
 check: format-check lint type-check
 
-# Sync dependencies
+# Sync dependencies and install pre-commit hooks
 sync:
     uv sync
+    uv run pre-commit install
 
 # Add a new app from template (e.g., just add chainlit-chat)
 add template:

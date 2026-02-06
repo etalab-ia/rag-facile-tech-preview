@@ -46,6 +46,15 @@ This installs:
 
 Proto updates `PATH` automatically, so restart your terminal for changes to take effect.
 
+### 4. Install Dependencies
+
+```bash
+cd rag-facile
+just sync  # Installs dependencies and pre-commit hooks
+```
+
+> **Note:** `just sync` runs `uv sync` to install dependencies and `uv run pre-commit install` to set up automatic code quality checks on commit.
+
 ## Development Workflow
 
 ### Available Commands

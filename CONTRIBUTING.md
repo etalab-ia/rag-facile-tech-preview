@@ -34,8 +34,10 @@ brew install unzip
 ```bash
 git clone https://github.com/etalab-ia/rag-facile.git
 cd rag-facile
-uv sync
+just sync  # Installs dependencies and pre-commit hooks
 ```
+
+> **Note:** `just sync` runs `uv sync` to install dependencies and `uv run pre-commit install` to set up automatic code quality checks on commit.
 
 ## Code Quality
 
