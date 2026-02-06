@@ -63,8 +63,6 @@ jobs:
     name: "Install on Linux (with proxy)"
     
     env:
-      HTTP_PROXY: "http://proxy.example.com:8080"
-      HTTPS_PROXY: "http://proxy.example.com:8080"
       RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
     
     steps:
@@ -72,6 +70,9 @@ jobs:
       
       - name: Run bash installer with proxy env vars
         shell: bash
+        env:
+          HTTP_PROXY: "http://proxy.example.com:8080"
+          HTTPS_PROXY: "http://proxy.example.com:8080"
         run: |
           curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
           bash -x /tmp/install.sh 2>&1 || (echo "=== Installer failed ===" && exit 1)
@@ -142,8 +143,6 @@ jobs:
     name: "Install on macOS (with proxy)"
     
     env:
-      HTTP_PROXY: "http://proxy.example.com:8080"
-      HTTPS_PROXY: "http://proxy.example.com:8080"
       RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
     
     steps:
@@ -151,6 +150,9 @@ jobs:
       
       - name: Run bash installer with proxy env vars
         shell: bash
+        env:
+          HTTP_PROXY: "http://proxy.example.com:8080"
+          HTTPS_PROXY: "http://proxy.example.com:8080"
         run: |
           curl -fsSL ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.sh -o /tmp/install.sh
           bash -x /tmp/install.sh 2>&1 || (echo "=== Installer failed ===" && exit 1)
@@ -247,15 +249,13 @@ jobs:
     runs-on: windows-latest
     name: "Install on Windows (with proxy)"
     
-    env:
-      HTTP_PROXY: "http://proxy.example.com:8080"
-      HTTPS_PROXY: "http://proxy.example.com:8080"
-    
     steps:
       - uses: actions/checkout@v4
       
       - name: Run PowerShell installer with proxy env vars
         env:
+          HTTP_PROXY: "http://proxy.example.com:8080"
+          HTTPS_PROXY: "http://proxy.example.com:8080"
           RAG_FACILE_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         shell: powershell
         run: |
