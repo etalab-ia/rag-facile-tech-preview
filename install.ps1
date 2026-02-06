@@ -4,10 +4,15 @@
 # Or:    powershell -ExecutionPolicy Bypass -Command "& { irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex }"
 
 param(
-    [string]$Branch = "main"
+    [string]$Branch = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+# Use environment variable if set, otherwise use parameter, otherwise default to main
+if ([string]::IsNullOrEmpty($Branch)) {
+    $Branch = if ($env:RAG_FACILE_BRANCH) { $env:RAG_FACILE_BRANCH } else { "main" }
+}
 
 Write-Host "==> Installing RAG Facile CLI (Windows PowerShell)" -ForegroundColor Green
 Write-Host ""
