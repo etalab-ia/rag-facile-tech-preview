@@ -16,6 +16,10 @@ on:
       - '.prototools'
       - '.github/workflows/test-install.yml'
 
+# Minimal permissions: workflow only needs to read repo contents
+permissions:
+  contents: read
+
 jobs:
   # ============================================================================
   # LINUX TESTS
