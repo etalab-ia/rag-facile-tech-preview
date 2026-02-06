@@ -39,7 +39,7 @@ uv sync
 
 ## Code Quality
 
-### Using Just
+### Using `just`
 
 With [just](https://github.com/casey/just) installed:
 
@@ -52,7 +52,7 @@ just type-check   # Run type checker
 just check        # Run all checks
 ```
 
-### Using Moon directly
+### Using `moon run` Directly
 
 ```bash
 moon run tools:format       # Format code

@@ -81,7 +81,7 @@ my-rag-app/
 
 **Advantages:**
 - ✅ Familiar single-project structure
-- ✅ No build tools to learn (just `uv`)
+- ✅ No build tools to learn
 - ✅ Easy to understand and modify
 - ✅ Simple deployment
 
@@ -173,7 +173,7 @@ uv run reflex run                 # Reflex
 
 ### Monorepo Structure
 
-Use the justfile commands:
+Use the `just` commands:
 
 ```bash
 cd my-rag-app
@@ -181,7 +181,7 @@ just run chainlit-chat      # Run a specific app
 just run                    # Run all apps
 ```
 
-#### Available Monorepo Commands
+#### Available `just` Commands
 
 | Command | Description |
 |---------|-------------|
