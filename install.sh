@@ -139,7 +139,7 @@ if [[ ":$ORIGINAL_PATH:" == *":$LOCAL_BIN:"* ]]; then
     echo "✓ RAG Facile CLI installed successfully!"
     echo ""
     echo "Get started with:"
-    echo "  rag-facile generate workspace my-rag-app"
+    echo "  rag-facile setup my-rag-app"
 else
     echo "rag-facile was installed to $LOCAL_BIN which is not in your PATH."
     echo ""
@@ -159,7 +159,7 @@ else
         echo "  source $profile"
         echo ""
         echo "Or open a new terminal, then:"
-        echo "  rag-facile generate workspace my-rag-app"
+        echo "  rag-facile setup my-rag-app"
     else
         echo ""
         echo "To use rag-facile, add this to your shell profile:"
