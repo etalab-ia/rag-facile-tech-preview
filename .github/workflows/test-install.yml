@@ -110,7 +110,11 @@ jobs:
       - name: Run PowerShell installer
         shell: powershell
         run: |
-          powershell -ExecutionPolicy Bypass -Command "& { irm ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.ps1 | iex }" 2>&1 | Tee-Object -FilePath $env:TEMP\install.log
+          irm ${{ github.server_url }}/${{ github.repository }}/raw/refs/heads/${{ github.event.pull_request.head.ref || github.ref_name }}/install.ps1 | iex
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Installer failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
       
       - name: Verify installation
         shell: powershell
