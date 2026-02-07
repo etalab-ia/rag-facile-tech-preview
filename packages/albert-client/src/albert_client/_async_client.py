@@ -8,7 +8,19 @@ from typing import TYPE_CHECKING
 from openai import AsyncOpenAI
 
 if TYPE_CHECKING:
-    from albert_client.types import RerankResponse, SearchResponse
+    from pathlib import Path
+
+    from albert_client.types import (
+        Chunk,
+        ChunkList,
+        Collection,
+        CollectionList,
+        CollectionVisibility,
+        Document,
+        DocumentList,
+        RerankResponse,
+        SearchResponse,
+    )
 
 
 class AsyncAlbertClient:
@@ -215,3 +227,307 @@ class AsyncAlbertClient:
 
         # Parse and return Pydantic model
         return RerankResponse(**response.json())
+
+    # Phase 3: Collections methods (async)
+
+    async def create_collection(
+        self,
+        name: str,
+        description: str | None = None,
+        visibility: CollectionVisibility = "private",
+    ) -> Collection:
+        """Create a new RAG collection (async).
+
+        Collections organize documents for semantic search. Each collection has its
+        own embedding model and access permissions.
+
+        Args:
+            name: Name of the collection (required).
+            description: Optional description of the collection.
+            visibility: "private" (owner only) or "public" (all users). Defaults to "private".
+
+        Returns:
+            Collection object with ID and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                collection = await client.create_collection(
+                    name="French Legal Documents",
+                    visibility="private"
+                )
+            ```
+        """
+        from albert_client.types import Collection
+
+        body = {"name": name, "visibility": visibility}
+        if description is not None:
+            body["description"] = description
+
+        response = await self._client._client.post("/collections", json=body)
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    async def list_collections(self) -> CollectionList:
+        """List all accessible collections (async).
+
+        Returns collections owned by the user plus any public collections.
+
+        Returns:
+            CollectionList containing all accessible collections.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                collections = await client.list_collections()
+                for collection in collections.data:
+                    print(f"{collection.name}: {collection.documents} documents")
+            ```
+        """
+        from albert_client.types import CollectionList
+
+        response = await self._client._client.get("/collections")
+        response.raise_for_status()
+
+        return CollectionList(**response.json())
+
+    async def get_collection(self, collection_id: int) -> Collection:
+        """Get a specific collection by ID (async).
+
+        Args:
+            collection_id: The collection ID.
+
+        Returns:
+            Collection object with full metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the collection doesn't exist or isn't accessible.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                collection = await client.get_collection(123)
+            ```
+        """
+        from albert_client.types import Collection
+
+        response = await self._client._client.get(f"/collections/{collection_id}")
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    async def update_collection(
+        self,
+        collection_id: int,
+        name: str | None = None,
+        description: str | None = None,
+        visibility: CollectionVisibility | None = None,
+    ) -> Collection:
+        """Update a collection's metadata (async).
+
+        Only the collection owner can update it. At least one field must be provided.
+
+        Args:
+            collection_id: The collection ID to update.
+            name: New name for the collection (optional).
+            description: New description (optional).
+            visibility: New visibility setting (optional).
+
+        Returns:
+            Updated Collection object.
+
+        Raises:
+            httpx.HTTPStatusError: If the update fails or user lacks permission.
+        """
+        from albert_client.types import Collection
+
+        body = {}
+        if name is not None:
+            body["name"] = name
+        if description is not None:
+            body["description"] = description
+        if visibility is not None:
+            body["visibility"] = visibility
+
+        response = await self._client._client.patch(f"/collections/{collection_id}", json=body)
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    async def delete_collection(self, collection_id: int) -> None:
+        """Delete a collection and all its documents (async).
+
+        Only the collection owner can delete it. This action is irreversible.
+
+        Args:
+            collection_id: The collection ID to delete.
+
+        Raises:
+            httpx.HTTPStatusError: If the deletion fails or user lacks permission.
+        """
+        response = await self._client._client.delete(f"/collections/{collection_id}")
+        response.raise_for_status()
+
+    # Phase 3: Documents methods (async)
+
+    async def upload_document(
+        self,
+        file_path: str | Path,
+        collection_id: int,
+        chunk_size: int = 2048,
+        chunk_overlap: int = 0,
+        **kwargs,
+    ) -> Document:
+        """Upload a document to a collection (async).
+
+        The document will be parsed, chunked, and embedded according to the collection's
+        settings. Supports PDF, DOCX, TXT, and other common formats.
+
+        Args:
+            file_path: Path to the file to upload.
+            collection_id: The collection ID to add the document to.
+            chunk_size: Size of text chunks for embedding (default: 2048).
+            chunk_overlap: Overlap between chunks (default: 0).
+            **kwargs: Additional upload parameters (page_range, force_ocr, etc.).
+
+        Returns:
+            Document object with ID and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the upload fails.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                doc = await client.upload_document(
+                    file_path="./legal_doc.pdf",
+                    collection_id=123,
+                    chunk_size=1024
+                )
+            ```
+        """
+        from pathlib import Path
+
+        from albert_client.types import Document
+
+        file_path = Path(file_path)
+
+        form_data = {
+            "collection": collection_id,
+            "chunk_size": chunk_size,
+            "chunk_overlap": chunk_overlap,
+        }
+        form_data.update(kwargs)
+
+        with open(file_path, "rb") as f:
+            files = {"file": (file_path.name, f, "application/octet-stream")}
+            response = await self._client._client.post("/documents", data=form_data, files=files)
+            response.raise_for_status()
+
+        return Document(**response.json())
+
+    async def list_documents(self, collection_id: int | None = None) -> DocumentList:
+        """List documents in a collection or all accessible documents (async).
+
+        Args:
+            collection_id: Filter to specific collection. If None, returns all accessible documents.
+
+        Returns:
+            DocumentList containing matching documents.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+        """
+        from albert_client.types import DocumentList
+
+        params = {}
+        if collection_id is not None:
+            params["collection"] = collection_id
+
+        response = await self._client._client.get("/documents", params=params)
+        response.raise_for_status()
+
+        return DocumentList(**response.json())
+
+    async def get_document(self, document_id: int) -> Document:
+        """Get a specific document by ID (async).
+
+        Args:
+            document_id: The document ID.
+
+        Returns:
+            Document object with metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the document doesn't exist or isn't accessible.
+        """
+        from albert_client.types import Document
+
+        response = await self._client._client.get(f"/documents/{document_id}")
+        response.raise_for_status()
+
+        return Document(**response.json())
+
+    async def delete_document(self, document_id: int) -> None:
+        """Delete a document and all its chunks (async).
+
+        This action is irreversible. The document's embeddings will also be removed.
+
+        Args:
+            document_id: The document ID to delete.
+
+        Raises:
+            httpx.HTTPStatusError: If the deletion fails.
+        """
+        response = await self._client._client.delete(f"/documents/{document_id}")
+        response.raise_for_status()
+
+    # Phase 3: Chunks methods (async)
+
+    async def list_chunks(self, document_id: int) -> ChunkList:
+        """List all chunks for a specific document (async).
+
+        Returns the text chunks that were created when the document was uploaded.
+
+        Args:
+            document_id: The document ID.
+
+        Returns:
+            ChunkList containing all chunks for the document.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+        """
+        from albert_client.types import ChunkList
+
+        response = await self._client._client.get(f"/chunks/{document_id}")
+        response.raise_for_status()
+
+        return ChunkList(**response.json())
+
+    async def get_chunk(self, document_id: int, chunk_id: int) -> Chunk:
+        """Get a specific chunk by document and chunk ID (async).
+
+        Args:
+            document_id: The document ID.
+            chunk_id: The chunk ID.
+
+        Returns:
+            Chunk object with content and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the chunk doesn't exist.
+        """
+        from albert_client.types import Chunk
+
+        response = await self._client._client.get(f"/chunks/{document_id}/{chunk_id}")
+        response.raise_for_status()
+
+        return Chunk(**response.json())

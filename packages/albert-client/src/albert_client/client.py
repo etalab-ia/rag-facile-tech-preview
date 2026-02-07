@@ -8,7 +8,19 @@ from typing import TYPE_CHECKING
 from openai import OpenAI
 
 if TYPE_CHECKING:
-    from albert_client.types import RerankResponse, SearchResponse
+    from pathlib import Path
+
+    from albert_client.types import (
+        Chunk,
+        ChunkList,
+        Collection,
+        CollectionList,
+        CollectionVisibility,
+        Document,
+        DocumentList,
+        RerankResponse,
+        SearchResponse,
+    )
 
 
 class AlbertClient:
@@ -214,3 +226,368 @@ class AlbertClient:
 
         # Parse and return Pydantic model
         return RerankResponse(**response.json())
+
+    # Phase 3: Collections methods
+
+    def create_collection(
+        self,
+        name: str,
+        description: str | None = None,
+        visibility: CollectionVisibility = "private",
+    ) -> Collection:
+        """Create a new RAG collection.
+
+        Collections organize documents for semantic search. Each collection has its
+        own embedding model and access permissions.
+
+        Args:
+            name: Name of the collection (required).
+            description: Optional description of the collection.
+            visibility: "private" (owner only) or "public" (all users). Defaults to "private".
+
+        Returns:
+            Collection object with ID and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            collection = client.create_collection(
+                name="French Legal Documents",
+                description="Collection of French government legal texts",
+                visibility="private"
+            )
+            print(f"Created collection {collection.id}")
+            ```
+        """
+        from albert_client.types import Collection
+
+        # Build request body
+        body = {"name": name, "visibility": visibility}
+        if description is not None:
+            body["description"] = description
+
+        # Make request
+        response = self._client._client.post("/collections", json=body)
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    def list_collections(self) -> CollectionList:
+        """List all accessible collections.
+
+        Returns collections owned by the user plus any public collections.
+
+        Returns:
+            CollectionList containing all accessible collections.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            collections = client.list_collections()
+            for collection in collections.data:
+                print(f"{collection.name}: {collection.documents} documents")
+            ```
+        """
+        from albert_client.types import CollectionList
+
+        response = self._client._client.get("/collections")
+        response.raise_for_status()
+
+        return CollectionList(**response.json())
+
+    def get_collection(self, collection_id: int) -> Collection:
+        """Get a specific collection by ID.
+
+        Args:
+            collection_id: The collection ID.
+
+        Returns:
+            Collection object with full metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the collection doesn't exist or isn't accessible.
+
+        Example:
+            ```python
+            collection = client.get_collection(123)
+            print(f"Collection: {collection.name}")
+            print(f"Documents: {collection.documents}")
+            ```
+        """
+        from albert_client.types import Collection
+
+        response = self._client._client.get(f"/collections/{collection_id}")
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    def update_collection(
+        self,
+        collection_id: int,
+        name: str | None = None,
+        description: str | None = None,
+        visibility: CollectionVisibility | None = None,
+    ) -> Collection:
+        """Update a collection's metadata.
+
+        Only the collection owner can update it. At least one field must be provided.
+
+        Args:
+            collection_id: The collection ID to update.
+            name: New name for the collection (optional).
+            description: New description (optional).
+            visibility: New visibility setting (optional).
+
+        Returns:
+            Updated Collection object.
+
+        Raises:
+            httpx.HTTPStatusError: If the update fails or user lacks permission.
+
+        Example:
+            ```python
+            updated = client.update_collection(
+                123,
+                name="Updated Collection Name",
+                visibility="public"
+            )
+            ```
+        """
+        from albert_client.types import Collection
+
+        # Build request body with only provided fields
+        body = {}
+        if name is not None:
+            body["name"] = name
+        if description is not None:
+            body["description"] = description
+        if visibility is not None:
+            body["visibility"] = visibility
+
+        response = self._client._client.patch(f"/collections/{collection_id}", json=body)
+        response.raise_for_status()
+
+        return Collection(**response.json())
+
+    def delete_collection(self, collection_id: int) -> None:
+        """Delete a collection and all its documents.
+
+        Only the collection owner can delete it. This action is irreversible.
+
+        Args:
+            collection_id: The collection ID to delete.
+
+        Raises:
+            httpx.HTTPStatusError: If the deletion fails or user lacks permission.
+
+        Example:
+            ```python
+            client.delete_collection(123)
+            print("Collection deleted")
+            ```
+        """
+        response = self._client._client.delete(f"/collections/{collection_id}")
+        response.raise_for_status()
+
+    # Phase 3: Documents methods
+
+    def upload_document(
+        self,
+        file_path: str | Path,
+        collection_id: int,
+        chunk_size: int = 2048,
+        chunk_overlap: int = 0,
+        **kwargs,
+    ) -> Document:
+        """Upload a document to a collection.
+
+        The document will be parsed, chunked, and embedded according to the collection's
+        settings. Supports PDF, DOCX, TXT, and other common formats.
+
+        Args:
+            file_path: Path to the file to upload.
+            collection_id: The collection ID to add the document to.
+            chunk_size: Size of text chunks for embedding (default: 2048).
+            chunk_overlap: Overlap between chunks (default: 0).
+            **kwargs: Additional upload parameters (page_range, force_ocr, etc.).
+
+        Returns:
+            Document object with ID and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the upload fails.
+
+        Example:
+            ```python
+            doc = client.upload_document(
+                file_path="./legal_doc.pdf",
+                collection_id=123,
+                chunk_size=1024
+            )
+            print(f"Uploaded document {doc.id} with {doc.chunks} chunks")
+            ```
+        """
+        from pathlib import Path
+
+        from albert_client.types import Document
+
+        # Convert to Path object
+        file_path = Path(file_path)
+
+        # Build form data
+        form_data = {
+            "collection": collection_id,
+            "chunk_size": chunk_size,
+            "chunk_overlap": chunk_overlap,
+        }
+        # Add any additional parameters
+        form_data.update(kwargs)
+
+        # Open and upload file
+        with open(file_path, "rb") as f:
+            files = {"file": (file_path.name, f, "application/octet-stream")}
+            response = self._client._client.post("/documents", data=form_data, files=files)
+            response.raise_for_status()
+
+        return Document(**response.json())
+
+    def list_documents(self, collection_id: int | None = None) -> DocumentList:
+        """List documents in a collection or all accessible documents.
+
+        Args:
+            collection_id: Filter to specific collection. If None, returns all accessible documents.
+
+        Returns:
+            DocumentList containing matching documents.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+
+        Example:
+            ```python
+            # List all documents in a collection
+            docs = client.list_documents(collection_id=123)
+            for doc in docs.data:
+                print(f"{doc.name}: {doc.chunks} chunks")
+
+            # List all accessible documents
+            all_docs = client.list_documents()
+            ```
+        """
+        from albert_client.types import DocumentList
+
+        params = {}
+        if collection_id is not None:
+            params["collection"] = collection_id
+
+        response = self._client._client.get("/documents", params=params)
+        response.raise_for_status()
+
+        return DocumentList(**response.json())
+
+    def get_document(self, document_id: int) -> Document:
+        """Get a specific document by ID.
+
+        Args:
+            document_id: The document ID.
+
+        Returns:
+            Document object with metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the document doesn't exist or isn't accessible.
+
+        Example:
+            ```python
+            doc = client.get_document(456)
+            print(f"Document: {doc.name}")
+            print(f"Chunks: {doc.chunks}")
+            ```
+        """
+        from albert_client.types import Document
+
+        response = self._client._client.get(f"/documents/{document_id}")
+        response.raise_for_status()
+
+        return Document(**response.json())
+
+    def delete_document(self, document_id: int) -> None:
+        """Delete a document and all its chunks.
+
+        This action is irreversible. The document's embeddings will also be removed.
+
+        Args:
+            document_id: The document ID to delete.
+
+        Raises:
+            httpx.HTTPStatusError: If the deletion fails.
+
+        Example:
+            ```python
+            client.delete_document(456)
+            print("Document deleted")
+            ```
+        """
+        response = self._client._client.delete(f"/documents/{document_id}")
+        response.raise_for_status()
+
+    # Phase 3: Chunks methods
+
+    def list_chunks(self, document_id: int) -> ChunkList:
+        """List all chunks for a specific document.
+
+        Returns the text chunks that were created when the document was uploaded.
+
+        Args:
+            document_id: The document ID.
+
+        Returns:
+            ChunkList containing all chunks for the document.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+
+        Example:
+            ```python
+            chunks = client.list_chunks(document_id=456)
+            for chunk in chunks.data:
+                print(f"Chunk {chunk.id}: {chunk.content[:100]}...")
+            ```
+        """
+        from albert_client.types import ChunkList
+
+        response = self._client._client.get(f"/chunks/{document_id}")
+        response.raise_for_status()
+
+        return ChunkList(**response.json())
+
+    def get_chunk(self, document_id: int, chunk_id: int) -> Chunk:
+        """Get a specific chunk by document and chunk ID.
+
+        Args:
+            document_id: The document ID.
+            chunk_id: The chunk ID.
+
+        Returns:
+            Chunk object with content and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the chunk doesn't exist.
+
+        Example:
+            ```python
+            chunk = client.get_chunk(document_id=456, chunk_id=123)
+            print(chunk.content)
+            print(chunk.metadata)
+            ```
+        """
+        from albert_client.types import Chunk
+
+        response = self._client._client.get(f"/chunks/{document_id}/{chunk_id}")
+        response.raise_for_status()
+
+        return Chunk(**response.json())

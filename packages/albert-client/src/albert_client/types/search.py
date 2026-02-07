@@ -19,6 +19,13 @@ class Chunk(BaseModel):
     content: str
 
 
+class ChunkList(BaseModel):
+    """Response from listing chunks."""
+
+    object: Literal["list"] = "list"
+    data: list[Chunk]
+
+
 SearchMethod = Literal["hybrid", "semantic", "lexical"]
 """Search method: hybrid (semantic + lexical), semantic only, or lexical only."""
 

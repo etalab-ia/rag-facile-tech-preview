@@ -10,6 +10,12 @@ from albert_client._version import __version__
 from albert_client.client import AlbertClient
 from albert_client.types import (
     Chunk,
+    ChunkList,
+    Collection,
+    CollectionList,
+    CollectionVisibility,
+    Document,
+    DocumentList,
     RerankResponse,
     RerankResult,
     SearchMethod,
@@ -24,12 +30,19 @@ __all__ = [
     "AsyncAlbertClient",
     # Search & Rerank types
     "Chunk",
+    "ChunkList",
     "RerankResult",
     "RerankResponse",
     "SearchMethod",
     "SearchResult",
     "SearchResponse",
     "Usage",
+    # Collections & Documents types
+    "Collection",
+    "CollectionList",
+    "CollectionVisibility",
+    "Document",
+    "DocumentList",
     # Metadata
     "__version__",
 ]
