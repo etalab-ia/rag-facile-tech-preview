@@ -1,8 +1,14 @@
 """Async Albert Client implementation."""
 
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 from openai import AsyncOpenAI
+
+if TYPE_CHECKING:
+    from albert_client.types import RerankResponse, SearchResponse
 
 
 class AsyncAlbertClient:
@@ -91,4 +97,121 @@ class AsyncAlbertClient:
         """Async context manager exit."""
         await self.close()
 
-    # Phase 2: search() and rerank() async methods will be added here
+    # Phase 2: Search and Rerank async methods
+
+    async def search(
+        self,
+        prompt: str,
+        collections: list[str | int] | None = None,
+        limit: int = 10,
+        offset: int = 0,
+        method: str = "semantic",
+        score_threshold: float | None = None,
+        rff_k: int = 20,
+    ) -> SearchResponse:
+        """Async hybrid RAG search across collections.
+
+        Searches for relevant chunks in the specified collections using the given prompt.
+        Supports semantic, lexical, or hybrid search methods.
+
+        Args:
+            prompt: Search query to find relevant chunks.
+            collections: List of collection IDs to search in. Defaults to all collections.
+            limit: Maximum number of results to return (1-200). Defaults to 10.
+            offset: Pagination offset. Defaults to 0.
+            method: Search method - "semantic", "lexical", or "hybrid". Defaults to "semantic".
+            score_threshold: Minimum cosine similarity score (0.0-1.0). Only for semantic search.
+            rff_k: RFF algorithm constant. Defaults to 20.
+
+        Returns:
+            SearchResponse with results, usage info, and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                results = await client.search(
+                    prompt="Loi Énergie Climat",
+                    collections=["col_123"],
+                    limit=5,
+                    method="hybrid"
+                )
+                for result in results.data:
+                    print(f"Score: {result.score:.3f}")
+            ```
+        """
+        from albert_client.types import SearchResponse
+
+        # Build request body
+        body = {
+            "prompt": prompt,
+            "collections": collections or [],
+            "limit": limit,
+            "offset": offset,
+            "method": method,
+            "rff_k": rff_k,
+        }
+        if score_threshold is not None:
+            body["score_threshold"] = score_threshold
+
+        # Make request using internal httpx client
+        response = await self._client._client.post("/search", json=body)
+        response.raise_for_status()
+
+        # Parse and return Pydantic model
+        return SearchResponse(**response.json())
+
+    async def rerank(
+        self,
+        query: str,
+        documents: list[str],
+        model: str,
+        top_n: int | None = None,
+    ) -> RerankResponse:
+        """Async rerank documents by relevance to a query.
+
+        Takes a list of documents and reorders them by relevance to the query.
+        Useful for improving RAG retrieval quality.
+
+        Args:
+            query: The search query to rank documents against.
+            documents: List of document texts to rerank.
+            model: Reranker model to use (e.g., "BAAI/bge-reranker-v2-m3").
+            top_n: Return only top N results. If None, returns all documents.
+
+        Returns:
+            RerankResponse with reranked results and scores.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            async with AsyncAlbertClient(api_key="albert_...") as client:
+                results = await client.rerank(
+                    query="transition énergétique",
+                    documents=["doc1", "doc2", "doc3"],
+                    model="BAAI/bge-reranker-v2-m3",
+                    top_n=2
+                )
+            ```
+        """
+        from albert_client.types import RerankResponse
+
+        # Build request body
+        body = {
+            "query": query,
+            "documents": documents,
+            "model": model,
+        }
+        if top_n is not None:
+            body["top_n"] = top_n
+
+        # Make request using internal httpx client
+        response = await self._client._client.post("/rerank", json=body)
+        response.raise_for_status()
+
+        # Parse and return Pydantic model
+        return RerankResponse(**response.json())
