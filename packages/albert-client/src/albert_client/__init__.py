@@ -9,6 +9,7 @@ from albert_client._async_client import AsyncAlbertClient
 from albert_client._version import __version__
 from albert_client.client import AlbertClient
 from albert_client.types import (
+    BoundingBox,
     Chunk,
     ChunkList,
     Collection,
@@ -16,12 +17,24 @@ from albert_client.types import (
     CollectionVisibility,
     Document,
     DocumentList,
+    FileUploadResponse,
+    HealthStatus,
+    MetricsData,
+    OCRPageObject,
+    OCRResponse,
+    OCRText,
+    OCRUsage,
+    ParsedDocument,
+    ParsedDocumentOutputFormat,
+    ParsedDocumentPage,
     RerankResponse,
     RerankResult,
     SearchMethod,
     SearchResponse,
     SearchResult,
     Usage,
+    UsageList,
+    UsageRecord,
 )
 
 __all__ = [
@@ -43,6 +56,20 @@ __all__ = [
     "CollectionVisibility",
     "Document",
     "DocumentList",
+    # Tools, Parsing & Monitoring types
+    "BoundingBox",
+    "FileUploadResponse",
+    "HealthStatus",
+    "MetricsData",
+    "OCRPageObject",
+    "OCRResponse",
+    "OCRText",
+    "OCRUsage",
+    "ParsedDocument",
+    "ParsedDocumentOutputFormat",
+    "ParsedDocumentPage",
+    "UsageList",
+    "UsageRecord",
     # Metadata
     "__version__",
 ]

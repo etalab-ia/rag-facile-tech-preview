@@ -17,6 +17,21 @@ from albert_client.types.search import (
     SearchResult,
     Usage,
 )
+from albert_client.types.tools import (
+    BoundingBox,
+    FileUploadResponse,
+    HealthStatus,
+    MetricsData,
+    OCRPageObject,
+    OCRResponse,
+    OCRText,
+    OCRUsage,
+    ParsedDocument,
+    ParsedDocumentOutputFormat,
+    ParsedDocumentPage,
+    UsageList,
+    UsageRecord,
+)
 
 __all__ = [
     # Search & Rerank
@@ -34,4 +49,18 @@ __all__ = [
     "CollectionVisibility",
     "Document",
     "DocumentList",
+    # Tools, Parsing & Monitoring
+    "BoundingBox",
+    "FileUploadResponse",
+    "HealthStatus",
+    "MetricsData",
+    "OCRPageObject",
+    "OCRResponse",
+    "OCRText",
+    "OCRUsage",
+    "ParsedDocument",
+    "ParsedDocumentOutputFormat",
+    "ParsedDocumentPage",
+    "UsageList",
+    "UsageRecord",
 ]

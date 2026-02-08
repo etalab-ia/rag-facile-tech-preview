@@ -18,8 +18,15 @@ if TYPE_CHECKING:
         CollectionVisibility,
         Document,
         DocumentList,
+        FileUploadResponse,
+        HealthStatus,
+        MetricsData,
+        OCRResponse,
+        ParsedDocument,
+        ParsedDocumentOutputFormat,
         RerankResponse,
         SearchResponse,
+        UsageList,
     )
 
 
@@ -591,3 +598,320 @@ class AlbertClient:
         response.raise_for_status()
 
         return Chunk(**response.json())
+
+    # Phase 4: Usage tracking
+
+    def get_usage(self, start_date: str | None = None, end_date: str | None = None) -> UsageList:
+        """Get API usage statistics.
+
+        Returns usage data (tokens, cost, carbon) aggregated by date.
+
+        Args:
+            start_date: Filter from this date (ISO format YYYY-MM-DD). Optional.
+            end_date: Filter until this date (ISO format YYYY-MM-DD). Optional.
+
+        Returns:
+            UsageList with usage records per date.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+
+        Example:
+            ```python
+            # Get all usage
+            usage = client.get_usage()
+            for record in usage.data:
+                print(f"{record.date}: {record.total_tokens} tokens, ${record.cost}")
+
+            # Get usage for date range
+            usage = client.get_usage(start_date="2024-01-01", end_date="2024-01-31")
+            ```
+        """
+        from albert_client.types import UsageList
+
+        params = {}
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+
+        response = self._client._client.get("/me/usage", params=params)
+        response.raise_for_status()
+
+        return UsageList(**response.json())
+
+    # Phase 4: OCR & Parsing methods
+
+    def ocr(
+        self,
+        document: dict[str, str] | str,
+        model: str | None = None,
+        pages: list[int] | None = None,
+        include_image_base64: bool = False,
+        **kwargs,
+    ) -> OCRResponse:
+        """Perform OCR on a document with advanced options.
+
+        Advanced OCR with support for JSON mode, bounding boxes, and image extraction.
+
+        Args:
+            document: Document to OCR. Can be:
+                - Dict with 'url' key for document URL
+                - Dict with 'image_url' key for image URL
+                - Direct URL string
+            model: Model to use for OCR (optional).
+            pages: Specific pages to process (0-indexed). If None, processes all pages.
+            include_image_base64: Include base64-encoded images in response.
+            **kwargs: Additional OCR options (bbox_annotation_format,
+                document_annotation_format, etc.).
+
+        Returns:
+            OCRResponse with pages, text, and optional bounding boxes.
+
+        Raises:
+            httpx.HTTPStatusError: If the OCR request fails.
+
+        Example:
+            ```python
+            # OCR from URL
+            result = client.ocr(
+                document="https://example.com/doc.pdf",
+                pages=[0, 1, 2],
+                include_image_base64=True
+            )
+            for page in result.pages:
+                print(f"Page {page.page}: {page.text}")
+            ```
+        """
+        from albert_client.types import OCRResponse
+
+        # Build request body
+        body = {}
+
+        # Handle document parameter
+        if isinstance(document, str):
+            body["document"] = {"url": document}
+        else:
+            body["document"] = document
+
+        if model is not None:
+            body["model"] = model
+        if pages is not None:
+            body["pages"] = pages
+        if include_image_base64:
+            body["include_image_base64"] = include_image_base64
+
+        # Add any additional kwargs
+        body.update(kwargs)
+
+        response = self._client._client.post("/ocr", json=body)
+        response.raise_for_status()
+
+        return OCRResponse(**response.json())
+
+    def ocr_beta(
+        self,
+        file_path: str | Path,
+        model: str,
+        dpi: int = 150,
+        prompt: str | None = None,
+    ) -> ParsedDocument:
+        """Perform simple file-based OCR (beta).
+
+        Simpler OCR method that takes a file and returns parsed text.
+
+        Args:
+            file_path: Path to the file to OCR.
+            model: Model to use for OCR (required).
+            dpi: DPI for rendering pages as images (100-600, default: 150).
+            prompt: Custom prompt for OCR extraction (optional).
+
+        Returns:
+            ParsedDocument with OCR results per page.
+
+        Raises:
+            httpx.HTTPStatusError: If the OCR request fails.
+
+        Example:
+            ```python
+            result = client.ocr_beta(
+                file_path="./scanned_doc.pdf",
+                model="gpt-4o-mini",
+                dpi=300
+            )
+            for page in result.data:
+                print(f"Page {page.page}: {page.content}")
+            ```
+        """
+        from pathlib import Path
+
+        from albert_client.types import ParsedDocument
+
+        file_path = Path(file_path)
+
+        # Build form data
+        form_data = {"model": model, "dpi": dpi}
+        if prompt is not None:
+            form_data["prompt"] = prompt
+
+        # Open and upload file
+        with open(file_path, "rb") as f:
+            files = {"file": (file_path.name, f, "application/octet-stream")}
+            response = self._client._client.post("/ocr-beta", data=form_data, files=files)
+            response.raise_for_status()
+
+        return ParsedDocument(**response.json())
+
+    def parse(
+        self,
+        file_path: str | Path,
+        output_format: ParsedDocumentOutputFormat = "markdown",
+        force_ocr: bool = False,
+        page_range: str = "",
+        paginate_output: bool = False,
+    ) -> ParsedDocument:
+        """Parse a document to markdown, JSON, or HTML.
+
+        Extract and convert document content to structured format.
+
+        Args:
+            file_path: Path to the file to parse.
+            output_format: Output format - "markdown", "json", or "html" (default: "markdown").
+            force_ocr: Force OCR on all pages (default: False).
+            page_range: Page range to convert (e.g., "0,5-10,20"). Empty = all pages.
+            paginate_output: Separate pages with horizontal rules containing page numbers.
+
+        Returns:
+            ParsedDocument with parsed pages.
+
+        Raises:
+            httpx.HTTPStatusError: If the parsing fails.
+
+        Example:
+            ```python
+            # Parse to markdown
+            result = client.parse(
+                file_path="./document.pdf",
+                output_format="markdown",
+                page_range="0-5"
+            )
+            for page in result.data:
+                print(f"Page {page.page}:")
+                print(page.content)
+            ```
+        """
+        from pathlib import Path
+
+        from albert_client.types import ParsedDocument
+
+        file_path = Path(file_path)
+
+        # Build form data
+        form_data = {
+            "output_format": output_format,
+            "force_ocr": force_ocr,
+            "page_range": page_range,
+            "paginate_output": paginate_output,
+        }
+
+        # Open and upload file
+        with open(file_path, "rb") as f:
+            files = {"file": (file_path.name, f, "application/octet-stream")}
+            response = self._client._client.post("/parse-beta", data=form_data, files=files)
+            response.raise_for_status()
+
+        return ParsedDocument(**response.json())
+
+    # Phase 4: File management
+
+    def upload_file(self, file_path: str | Path, purpose: str | None = None) -> FileUploadResponse:
+        """Upload a file to Albert API.
+
+        Generic file upload (different from uploading documents to collections).
+
+        Args:
+            file_path: Path to the file to upload.
+            purpose: Purpose of the file upload (optional).
+
+        Returns:
+            FileUploadResponse with file ID and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the upload fails.
+
+        Example:
+            ```python
+            result = client.upload_file(
+                file_path="./data.json",
+                purpose="analysis"
+            )
+            print(f"Uploaded file ID: {result.id}")
+            ```
+        """
+        from pathlib import Path
+
+        from albert_client.types import FileUploadResponse
+
+        file_path = Path(file_path)
+
+        # Build form data
+        form_data = {}
+        if purpose is not None:
+            form_data["purpose"] = purpose
+
+        # Open and upload file
+        with open(file_path, "rb") as f:
+            files = {"file": (file_path.name, f, "application/octet-stream")}
+            response = self._client._client.post("/files", data=form_data, files=files)
+            response.raise_for_status()
+
+        return FileUploadResponse(**response.json())
+
+    # Phase 4: Health & Monitoring
+
+    def health_check(self) -> HealthStatus:
+        """Check API health status.
+
+        Returns:
+            HealthStatus with current API status.
+
+        Raises:
+            httpx.HTTPStatusError: If the health check fails.
+
+        Example:
+            ```python
+            health = client.health_check()
+            print(f"API Status: {health.status}")
+            ```
+        """
+        from albert_client.types import HealthStatus
+
+        response = self._client._client.get("/health")
+        response.raise_for_status()
+
+        return HealthStatus(**response.json())
+
+    def get_metrics(self) -> MetricsData:
+        """Get API metrics.
+
+        Returns performance and usage metrics for the API.
+
+        Returns:
+            MetricsData with API metrics.
+
+        Raises:
+            httpx.HTTPStatusError: If the metrics request fails.
+
+        Example:
+            ```python
+            metrics = client.get_metrics()
+            print(f"Requests/sec: {metrics.requests_per_second}")
+            print(f"Avg latency: {metrics.average_latency_ms}ms")
+            ```
+        """
+        from albert_client.types import MetricsData
+
+        response = self._client._client.get("/metrics")
+        response.raise_for_status()
+
+        return MetricsData(**response.json())
