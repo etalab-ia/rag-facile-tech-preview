@@ -187,7 +187,7 @@ from albert_client import AlbertClient
 
 client = AlbertClient(
     api_key="votre-clé-api",
-    base_url="https://albert.api.etalab.gouv.fr"
+    base_url="https://albert.api.etalab.gouv.fr/v1"
 )
 
 # Compatible OpenAI

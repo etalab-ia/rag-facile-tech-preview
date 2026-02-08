@@ -49,7 +49,7 @@ from albert_client import AlbertClient
 
 client = AlbertClient(
     api_key="albert_...",  # Or set OPENAI_API_KEY env var
-    base_url="https://albert.api.etalab.gouv.fr"
+    base_url="https://albert.api.etalab.gouv.fr/v1"
 )
 
 response = client.chat.completions.create(
@@ -75,7 +75,7 @@ results = client.search(
 # Rerank for better precision
 reranked = client.rerank(
     query="énergies renouvelables",
-    documents=[r.chunk.content for r in results.results],
+    documents=[doc.chunk.content for doc in results.data],
     top_n=3
 )
 ```
@@ -133,12 +133,20 @@ doc = client.upload_document(
 **3. Search + rerank:**
 ```python
 results = client.search(query="...", collections=[collection.id])
-reranked = client.rerank(query="...", documents=[...])
+reranked = client.rerank(
+    query="...", 
+    documents=[doc.chunk.content for doc in results.data]
+)
 ```
 
 **4. Generate answer with context:**
 ```python
-context = "\n".join([r.chunk.content for r in reranked.results])
+# Build context from reranked results
+context = "\n".join([
+    results.data[r.index].chunk.content 
+    for r in reranked.results
+])
+
 response = client.chat.completions.create(
     model="openweight-small",
     messages=[
