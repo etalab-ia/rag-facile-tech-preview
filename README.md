@@ -172,6 +172,40 @@ just run                  # Run all apps
 
 ## Available Components
 
+### Albert Client SDK
+
+SDK Python officiel pour l'API Albert. Compatible OpenAI avec des fonctionnalités spécifiques pour l'administration française.
+
+**Installation:**
+```bash
+pip install albert-client
+```
+
+**Exemple d'utilisation:**
+```python
+from albert_client import AlbertClient
+
+client = AlbertClient(
+    api_key="votre-clé-api",
+    base_url="https://albert.api.etalab.gouv.fr/v1"
+)
+
+# Compatible OpenAI
+response = client.chat.completions.create(
+    model="openweight-small",
+    messages=[{"role": "user", "content": "Bonjour!"}]
+)
+
+# Recherche hybride avec reranking
+results = client.search(
+    query="transition énergétique",
+    collections=[1, 2],
+    method="hybrid"
+)
+```
+
+**Documentation complète:** [Albert Client SDK](packages/albert-client/README.md)
+
 ### Frontend Apps
 
 | App | Description | Port |
