@@ -19,5 +19,5 @@ chainlit-chat = "chainlit.cli:run"
 py-modules = ["app", "context_loader"]
 
 [tool.uv.sources]
-pdf-context = { workspace = true }
 albert-client = { workspace = true }
+pdf-context = { workspace = true }
