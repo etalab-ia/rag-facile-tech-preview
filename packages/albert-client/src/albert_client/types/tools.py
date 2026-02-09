@@ -7,6 +7,7 @@ from typing import Any, Literal
 
 from albert_client._models import BaseModel
 
+
 # Usage tracking types
 
 

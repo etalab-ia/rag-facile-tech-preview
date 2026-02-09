@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from openai import AsyncOpenAI
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -363,7 +364,9 @@ class AsyncAlbertClient:
         if visibility is not None:
             body["visibility"] = visibility
 
-        response = await self._client._client.patch(f"/collections/{collection_id}", json=body)
+        response = await self._client._client.patch(
+            f"/collections/{collection_id}", json=body
+        )
         response.raise_for_status()
 
         return Collection(**response.json())
@@ -435,7 +438,9 @@ class AsyncAlbertClient:
 
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = await self._client._client.post("/documents", data=form_data, files=files)
+            response = await self._client._client.post(
+                "/documents", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return Document(**response.json())
@@ -665,7 +670,9 @@ class AsyncAlbertClient:
 
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = await self._client._client.post("/ocr-beta", data=form_data, files=files)
+            response = await self._client._client.post(
+                "/ocr-beta", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return ParsedDocument(**response.json())
@@ -710,7 +717,9 @@ class AsyncAlbertClient:
 
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = await self._client._client.post("/parse-beta", data=form_data, files=files)
+            response = await self._client._client.post(
+                "/parse-beta", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return ParsedDocument(**response.json())
@@ -746,7 +755,9 @@ class AsyncAlbertClient:
 
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = await self._client._client.post("/files", data=form_data, files=files)
+            response = await self._client._client.post(
+                "/files", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return FileUploadResponse(**response.json())

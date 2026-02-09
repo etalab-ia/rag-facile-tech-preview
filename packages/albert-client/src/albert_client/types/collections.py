@@ -7,6 +7,7 @@ from typing import Literal
 
 from albert_client._models import BaseModel
 
+
 # Collection types
 
 CollectionVisibility = Literal["private", "public"]

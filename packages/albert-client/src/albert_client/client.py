@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from openai import OpenAI
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -375,7 +376,9 @@ class AlbertClient:
         if visibility is not None:
             body["visibility"] = visibility
 
-        response = self._client._client.patch(f"/collections/{collection_id}", json=body)
+        response = self._client._client.patch(
+            f"/collections/{collection_id}", json=body
+        )
         response.raise_for_status()
 
         return Collection(**response.json())
@@ -457,7 +460,9 @@ class AlbertClient:
         # Open and upload file
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = self._client._client.post("/documents", data=form_data, files=files)
+            response = self._client._client.post(
+                "/documents", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return Document(**response.json())
@@ -601,7 +606,9 @@ class AlbertClient:
 
     # Phase 4: Usage tracking
 
-    def get_usage(self, start_date: str | None = None, end_date: str | None = None) -> UsageList:
+    def get_usage(
+        self, start_date: str | None = None, end_date: str | None = None
+    ) -> UsageList:
         """Get API usage statistics.
 
         Returns usage data (tokens, cost, carbon) aggregated by date.
@@ -757,7 +764,9 @@ class AlbertClient:
         # Open and upload file
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = self._client._client.post("/ocr-beta", data=form_data, files=files)
+            response = self._client._client.post(
+                "/ocr-beta", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return ParsedDocument(**response.json())
@@ -817,14 +826,18 @@ class AlbertClient:
         # Open and upload file
         with open(file_path, "rb") as f:
             files = {"file": (file_path.name, f, "application/octet-stream")}
-            response = self._client._client.post("/parse-beta", data=form_data, files=files)
+            response = self._client._client.post(
+                "/parse-beta", data=form_data, files=files
+            )
             response.raise_for_status()
 
         return ParsedDocument(**response.json())
 
     # Phase 4: File management
 
-    def upload_file(self, file_path: str | Path, purpose: str | None = None) -> FileUploadResponse:
+    def upload_file(
+        self, file_path: str | Path, purpose: str | None = None
+    ) -> FileUploadResponse:
         """Upload a file to Albert API.
 
         Generic file upload (different from uploading documents to collections).
