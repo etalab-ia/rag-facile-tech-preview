@@ -348,9 +348,8 @@ package = true
 
     # For Reflex, we also need to copy the app package directory
     if frontend_choice == "Reflex":
-        # The template uses [project_name | replace(from='-', to='_')] as dir name
-        template_app_dir_name = "[project_name | replace(from='-', to='_')]"
-        template_app_dir = template_dir / template_app_dir_name
+        # The template uses static "app" directory (moon doesn't support filters in paths)
+        template_app_dir = template_dir / "app"
         if template_app_dir.exists():
             snake_name = project_name.replace("-", "_")
             target_app_dir = target_path / snake_name
@@ -359,10 +358,12 @@ package = true
             for src_file in template_app_dir.rglob("*"):
                 if src_file.is_file():
                     rel_path = src_file.relative_to(template_app_dir)
-                    # Rename files/dirs that contain the placeholder
-                    rel_path_str = str(rel_path).replace(
-                        "[project_name | replace(from='-', to='_')]", snake_name
-                    )
+                    rel_path_str = str(rel_path)
+
+                    # Rename app.py to {snake_name}.py (Reflex expects {app_name}/{app_name}.py)
+                    if rel_path_str == "app.py":
+                        rel_path_str = f"{snake_name}.py"
+
                     target_file = target_app_dir / rel_path_str
                     target_file.parent.mkdir(parents=True, exist_ok=True)
                     content = render_template_file(src_file, variables)
