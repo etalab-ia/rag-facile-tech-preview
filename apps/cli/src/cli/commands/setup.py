@@ -944,6 +944,11 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
     generate_config_file(target_path, preset, preset_config)
     console.print("[green]✓[/green] Created ragfacile.toml at workspace root")
 
+    # Create .env at workspace root (in addition to app-level .env)
+    root_env_file = target_path / ".env"
+    root_env_file.write_text(env_content)
+    console.print("[green]✓[/green] Created .env file at workspace root")
+
     # 4. Generate albert package (always required)
     console.print()
     console.print("[bold green]Step 4:[/bold green] Generating albert package...")
