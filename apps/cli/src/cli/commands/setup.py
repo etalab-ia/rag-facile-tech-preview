@@ -13,6 +13,12 @@ from rich.console import Console
 
 console = Console()
 
+# Path constants for locating source files in development vs bundled mode
+REPO_ROOT = Path(__file__).resolve().parents[5]  # Root of rag-facile repository
+BUNDLED_ROOT = (
+    Path(__file__).resolve().parent.parent
+)  # cli/ directory in installed package
+
 
 def setup_proto_paths() -> None:
     """Add proto bin and shims directories to PATH for this session."""
@@ -161,81 +167,70 @@ def get_templates_dir() -> Path:
     )
 
 
-def get_retrieval_full_context_source() -> Path:
-    """Get the retrieval-full-context source directory for inline copying."""
-    # In development mode, use the packages directory
-    repo_root = Path(__file__).resolve().parents[5]
-    local_source = (
-        repo_root / "packages" / "retrieval-full-context" / "src" / "full_context"
-    )
+def _get_source_path(
+    dev_path_parts: tuple[str, ...],
+    bundle_path_parts: tuple[str, ...],
+    error_message: str,
+) -> Path:
+    """Helper to find a source path in development or bundled mode.
+
+    Args:
+        dev_path_parts: Path components relative to REPO_ROOT for development mode
+        bundle_path_parts: Path components relative to BUNDLED_ROOT for installed CLI
+        error_message: Error message to show if neither path exists
+
+    Returns:
+        Path to the source file/directory
+
+    Raises:
+        FileNotFoundError: If neither development nor bundled path exists
+    """
+    # In development mode, use the packages directory from repo root
+    local_source = REPO_ROOT.joinpath(*dev_path_parts)
     if local_source.exists():
         return local_source
 
-    # For installed CLI, full_context is bundled at cli/full_context_src
-    package_source = Path(__file__).resolve().parent.parent / "full_context_src"
+    # For installed CLI, source is bundled at cli/<name>_src
+    package_source = BUNDLED_ROOT.joinpath(*bundle_path_parts)
     if package_source.exists():
         return package_source
 
-    raise FileNotFoundError(
-        "retrieval-full-context source not found. This is a packaging error - please reinstall the CLI."
+    raise FileNotFoundError(error_message)
+
+
+def get_retrieval_full_context_source() -> Path:
+    """Get the retrieval-full-context source directory for inline copying."""
+    return _get_source_path(
+        ("packages", "retrieval-full-context", "src", "full_context"),
+        ("full_context_src",),
+        "retrieval-full-context source not found. This is a packaging error - please reinstall the CLI.",
     )
 
 
 def get_core_albert_source() -> Path:
     """Get the core-albert source directory for inline copying."""
-    # In development mode, use the packages directory
-    repo_root = Path(__file__).resolve().parents[5]
-    local_source = repo_root / "packages" / "core-albert" / "src" / "albert"
-    if local_source.exists():
-        return local_source
-
-    # For installed CLI, albert is bundled at cli/albert_src
-    package_source = Path(__file__).resolve().parent.parent / "albert_src"
-    if package_source.exists():
-        return package_source
-
-    raise FileNotFoundError(
-        "core-albert source not found. This is a packaging error - please reinstall the CLI."
+    return _get_source_path(
+        ("packages", "core-albert", "src", "albert"),
+        ("albert_src",),
+        "core-albert source not found. This is a packaging error - please reinstall the CLI.",
     )
 
 
 def get_core_config_source() -> Path:
     """Get the core-config source directory for inline copying."""
-    # In development mode, use the packages directory
-    repo_root = Path(__file__).resolve().parents[5]
-    local_source = repo_root / "packages" / "core-config" / "src" / "config"
-    if local_source.exists():
-        return local_source
-
-    # For installed CLI, config is bundled at cli/config_src
-    package_source = Path(__file__).resolve().parent.parent / "config_src"
-    if package_source.exists():
-        return package_source
-
-    raise FileNotFoundError(
-        "core-config source not found. This is a packaging error - please reinstall the CLI."
+    return _get_source_path(
+        ("packages", "core-config", "src", "config"),
+        ("config_src",),
+        "core-config source not found. This is a packaging error - please reinstall the CLI.",
     )
 
 
 def get_default_config_template() -> Path:
     """Get the default ragfacile.toml template."""
-    # In development mode, use the templates directory
-    repo_root = Path(__file__).resolve().parents[5]
-    local_template = (
-        repo_root / "apps" / "cli" / "src" / "cli" / "templates" / "ragfacile.toml"
-    )
-    if local_template.exists():
-        return local_template
-
-    # For installed CLI, template is bundled at cli/templates/ragfacile.toml
-    bundled_template = (
-        Path(__file__).resolve().parent.parent / "templates" / "ragfacile.toml"
-    )
-    if bundled_template.exists():
-        return bundled_template
-
-    raise FileNotFoundError(
-        "ragfacile.toml template not found. This is a packaging error - please reinstall the CLI."
+    return _get_source_path(
+        ("apps", "cli", "src", "cli", "templates", "ragfacile.toml"),
+        ("templates", "ragfacile.toml"),
+        "ragfacile.toml template not found. This is a packaging error - please reinstall the CLI.",
     )
 
 
