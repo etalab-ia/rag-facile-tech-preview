@@ -15,6 +15,8 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
+from config import get_config
+
 
 console = Console()
 
@@ -42,19 +44,19 @@ def run(
         ),
     ] = Path("golden_dataset.jsonl"),
     samples: Annotated[
-        int,
+        int | None,
         typer.Option(
             "--samples",
             "-n",
-            help="Target number of Q/A pairs to generate",
+            help="Target number of Q/A pairs to generate (default: from config)",
         ),
-    ] = 50,
+    ] = None,
     provider: Annotated[
         str,
         typer.Option(
             "--provider",
             "-p",
-            help="Data Foundry provider to use (letta or albert)",
+            help="Data Foundry provider to use (letta or albert, default: from config)",
         ),
     ] = "",
     agent_id: Annotated[
@@ -84,7 +86,16 @@ def run(
     Example with Albert API:
         rag-facile generate-dataset ./docs -o golden_dataset.jsonl -n 50 --provider albert
     """
-    # Validate and determine provider
+    # Load config for defaults
+    rag_config = get_config()
+
+    # Use config defaults if CLI args not provided
+    if not provider:
+        provider = rag_config.eval.provider
+    if samples is None:
+        samples = rag_config.eval.target_samples
+
+    # Validate provider is specified (either from CLI or config)
     if not provider:
         console.print("Error: --provider is required (letta or albert)")
         raise typer.Exit(1)

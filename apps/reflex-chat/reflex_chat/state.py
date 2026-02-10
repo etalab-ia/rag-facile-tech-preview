@@ -6,10 +6,14 @@ from context_loader import process_bytes
 from dotenv import load_dotenv
 
 from albert import AlbertClient, ChatCompletionMessageParam
+from config import get_config
 
 
 # Load .env file
 load_dotenv()
+
+# Load RAG configuration
+rag_config = get_config()
 
 # Checking if the API keys are set properly
 if not os.getenv("OPENAI_API_KEY"):
@@ -174,13 +178,11 @@ class State(rx.State):
         self.processing = True
         yield
 
-        # Build the messages.
+        # Build the messages (uses config system prompt)
         messages: list[ChatCompletionMessageParam] = [
             {
                 "role": "system",
-                "content": (
-                    "You are a friendly chatbot named Reflex. Respond in markdown."
-                ),
+                "content": rag_config.generation.system_prompt,
             }
         ]
 
@@ -202,13 +204,17 @@ class State(rx.State):
         # Remove the last mock answer.
         messages = messages[:-1]
 
-        # Start a new session to answer the question.
+        # Start a new session to answer the question (uses config values)
+        # Model comes from config with env var override
+        model = os.getenv("OPENAI_MODEL") or rag_config.generation.model
         session = AlbertClient(
             base_url=os.getenv("OPENAI_BASE_URL"),
         ).chat.completions.create(
-            model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
+            model=model,
             messages=messages,
-            stream=True,
+            stream=rag_config.generation.streaming,
+            temperature=rag_config.generation.temperature,
+            max_tokens=rag_config.generation.max_tokens,
         )
 
         # Stream the results, yielding after every word.

@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "albert",
+    "config",
     "full-context",
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0.0",
@@ -23,6 +24,7 @@ py-modules = ["context_loader"]
 
 [tool.uv.sources]
 albert = { workspace = true }
+config = { workspace = true }
 full-context = { workspace = true }
 
 [tool.uv]
