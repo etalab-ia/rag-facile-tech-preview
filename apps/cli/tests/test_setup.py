@@ -22,6 +22,16 @@ from cli.main import app as main_app
 runner = CliRunner()
 
 
+@pytest.fixture
+def preset_config():
+    """Default preset config for testing."""
+    return {
+        "model_alias": "openweight-medium",
+        "retrieval_module": "PDF",
+        "temperature": 0.7,
+    }
+
+
 class TestGetTemplatesDir:
     """Tests for get_templates_dir function."""
 
@@ -259,9 +269,17 @@ class TestGenerateStandalone:
         mock_run = mocker.patch("cli.commands.setup.run_command", return_value=True)
         # Mock subprocess.run for dev server (doesn't matter, we won't wait for it)
         mock_subprocess = mocker.patch("subprocess.run")
-        return {"run_command": mock_run, "subprocess": mock_subprocess}
+        # Mock generate_config_file to avoid config generation
+        mock_config = mocker.patch("cli.commands.setup.generate_config_file")
+        return {
+            "run_command": mock_run,
+            "subprocess": mock_subprocess,
+            "generate_config_file": mock_config,
+        }
 
-    def test_creates_target_directory(self, standalone_target, mock_standalone_deps):
+    def test_creates_target_directory(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create the target directory."""
         from cli.commands.setup import generate_standalone
 
@@ -275,14 +293,17 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
         assert standalone_target.exists()
 
-    def test_creates_pyproject_toml(self, standalone_target, mock_standalone_deps):
+    def test_creates_pyproject_toml(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create pyproject.toml with correct content."""
         from cli.commands.setup import generate_standalone
 
@@ -294,8 +315,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -306,7 +328,9 @@ class TestGenerateStandalone:
         assert "openai>=1.0.0" in content
         assert "python-dotenv>=1.0.0" in content
 
-    def test_creates_app_files(self, standalone_target, mock_standalone_deps):
+    def test_creates_app_files(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create app.py and context_loader.py."""
         from cli.commands.setup import generate_standalone
 
@@ -318,15 +342,18 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
         assert (standalone_target / "app.py").exists()
         assert (standalone_target / "context_loader.py").exists()
 
-    def test_creates_env_file(self, standalone_target, mock_standalone_deps):
+    def test_creates_env_file(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create .env file with provided config."""
         from cli.commands.setup import generate_standalone
 
@@ -338,8 +365,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "my-secret-key",
                 "openai_base_url": "https://custom.api.com",
-                "openai_model": "custom-model",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -348,9 +376,12 @@ class TestGenerateStandalone:
         content = env_file.read_text()
         assert "OPENAI_API_KEY=my-secret-key" in content
         assert "OPENAI_BASE_URL=https://custom.api.com" in content
-        assert "OPENAI_MODEL=custom-model" in content
+        # OPENAI_MODEL is now in ragfacile.toml, not .env
+        assert "OPENAI_MODEL" not in content
 
-    def test_creates_modules_yml(self, standalone_target, mock_standalone_deps):
+    def test_creates_modules_yml(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create modules.yml."""
         from cli.commands.setup import generate_standalone
 
@@ -362,15 +393,18 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
         modules_yml = standalone_target / "modules.yml"
         assert modules_yml.exists()
 
-    def test_creates_python_version_file(self, standalone_target, mock_standalone_deps):
+    def test_creates_python_version_file(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create .python-version file."""
         from cli.commands.setup import generate_standalone
 
@@ -382,8 +416,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -392,7 +427,7 @@ class TestGenerateStandalone:
         assert "3.13" in python_version.read_text()
 
     def test_copies_full_context_when_selected(
-        self, standalone_target, mock_standalone_deps
+        self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should copy full_context module when PDF is selected."""
         from cli.commands.setup import generate_standalone
@@ -405,8 +440,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -417,7 +453,7 @@ class TestGenerateStandalone:
         assert (full_context / "formatter.py").exists()
 
     def test_full_context_not_copied_when_not_selected(
-        self, standalone_target, mock_standalone_deps
+        self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should not copy full_context when PDF is not selected."""
         from cli.commands.setup import generate_standalone
@@ -430,8 +466,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -439,7 +476,7 @@ class TestGenerateStandalone:
         assert not full_context.exists()
 
     def test_pyproject_includes_pypdf_when_pdf_selected(
-        self, standalone_target, mock_standalone_deps
+        self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should include pypdf dependency when PDF module is selected."""
         from cli.commands.setup import generate_standalone
@@ -452,8 +489,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -465,7 +503,7 @@ class TestGenerateStandalone:
         assert "'full_context'" in content or '"full_context"' in content
 
     def test_modules_yml_includes_pdf_provider(
-        self, standalone_target, mock_standalone_deps
+        self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should configure pdf provider in modules.yml when PDF selected."""
         from cli.commands.setup import generate_standalone
@@ -478,8 +516,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -488,7 +527,7 @@ class TestGenerateStandalone:
         assert "pdf: full_context" in content
 
     def test_creates_chainlit_md_for_chainlit(
-        self, standalone_target, mock_standalone_deps
+        self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should create chainlit.md for Chainlit frontend."""
         from cli.commands.setup import generate_standalone
@@ -501,14 +540,17 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
         assert (standalone_target / "chainlit.md").exists()
 
-    def test_calls_uv_sync(self, standalone_target, mock_standalone_deps):
+    def test_calls_uv_sync(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should call uv sync to install dependencies."""
         from cli.commands.setup import generate_standalone
 
@@ -520,8 +562,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -530,7 +573,9 @@ class TestGenerateStandalone:
         uv_sync_calls = [c for c in calls if c[0][0] == ["uv", "sync"]]
         assert len(uv_sync_calls) == 1
 
-    def test_starts_chainlit_dev_server(self, standalone_target, mock_standalone_deps):
+    def test_starts_chainlit_dev_server(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should start Chainlit dev server with uv run."""
         from cli.commands.setup import generate_standalone
 
@@ -542,8 +587,9 @@ class TestGenerateStandalone:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -570,7 +616,9 @@ class TestGenerateStandaloneReflex:
         mock_subprocess = mocker.patch("subprocess.run")
         return {"run_command": mock_run, "subprocess": mock_subprocess}
 
-    def test_creates_reflex_pyproject(self, standalone_target, mock_standalone_deps):
+    def test_creates_reflex_pyproject(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create pyproject.toml with Reflex dependencies."""
         from cli.commands.setup import generate_standalone
 
@@ -582,8 +630,9 @@ class TestGenerateStandaloneReflex:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -593,7 +642,9 @@ class TestGenerateStandaloneReflex:
         assert "reflex>=0.7.0" in content
         assert "chainlit" not in content.lower()
 
-    def test_creates_rxconfig(self, standalone_target, mock_standalone_deps):
+    def test_creates_rxconfig(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should create rxconfig.py for Reflex frontend."""
         from cli.commands.setup import generate_standalone
 
@@ -605,14 +656,17 @@ class TestGenerateStandaloneReflex:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
         assert (standalone_target / "rxconfig.py").exists()
 
-    def test_starts_reflex_dev_server(self, standalone_target, mock_standalone_deps):
+    def test_starts_reflex_dev_server(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
         """Should start Reflex dev server with uv run."""
         from cli.commands.setup import generate_standalone
 
@@ -624,8 +678,9 @@ class TestGenerateStandaloneReflex:
             env_config={
                 "openai_api_key": "test-key",
                 "openai_base_url": "https://api.test.com",
-                "openai_model": "gpt-4",
             },
+            preset="balanced",
+            preset_config=preset_config,
             force=False,
         )
 
@@ -663,9 +718,9 @@ class TestWorkspaceCommand:
         # Use side_effect to return different values for different select calls
         mock_q.select.return_value.ask.side_effect = [
             "Monorepo (for multi-app projects)",  # First call: structure selection
-            "Chainlit",  # Second call: frontend selection
+            "balanced",  # Second call: preset selection
+            "Chainlit",  # Third call: frontend selection
         ]
-        mock_q.checkbox.return_value.ask.return_value = ["PDF"]
         mock_q.confirm.return_value.ask.return_value = True
         mock_q.text.return_value.ask.return_value = "test-value"
 
@@ -700,9 +755,9 @@ class TestWorkspaceCommand:
         mock_q = mocker.patch("cli.commands.setup.questionary")
         mock_q.select.return_value.ask.side_effect = [
             "Simple (recommended for getting started)",  # First call: structure selection
-            "Chainlit",  # Second call: frontend selection
+            "balanced",  # Second call: preset selection
+            "Chainlit",  # Third call: frontend selection
         ]
-        mock_q.checkbox.return_value.ask.return_value = ["PDF"]
         mock_q.confirm.return_value.ask.return_value = True
         mock_q.text.return_value.ask.return_value = "test-value"
 
@@ -804,9 +859,9 @@ class TestStandaloneWorkspaceCommand:
         mock_q = mocker.patch("cli.commands.setup.questionary")
         mock_q.select.return_value.ask.side_effect = [
             "Simple (recommended for getting started)",  # First call: structure selection
-            "Chainlit",  # Second call: frontend selection
+            "balanced",  # Second call: preset selection
+            "Chainlit",  # Third call: frontend selection
         ]
-        mock_q.checkbox.return_value.ask.return_value = []  # No modules
         mock_q.confirm.return_value.ask.return_value = True
         mock_q.text.return_value.ask.return_value = "test-value"
 
@@ -914,25 +969,30 @@ class TestStructureSelectionPrompt:
     """Tests for the project structure selection prompt."""
 
     def test_structure_prompt_appears_before_frontend(self, mocker):
-        """Should ask for structure before frontend selection."""
+        """Should ask for structure, then preset, then frontend."""
         mock_q = mocker.patch("cli.commands.setup.questionary")
         mock_q.select.return_value.ask.side_effect = [
             "Simple (recommended for getting started)",  # Structure
+            "balanced",  # Preset
             None,  # Frontend - return None to abort
         ]
 
         runner.invoke(main_app, ["setup", "/tmp/test"])
 
-        # Should have been called twice for select
-        assert mock_q.select.call_count == 2
+        # Should have been called three times for select
+        assert mock_q.select.call_count == 3
 
         # First call should be for structure
         first_call_prompt = mock_q.select.call_args_list[0][0][0]
         assert "structure" in first_call_prompt.lower()
 
-        # Second call should be for frontend
+        # Second call should be for preset
         second_call_prompt = mock_q.select.call_args_list[1][0][0]
-        assert "frontend" in second_call_prompt.lower()
+        assert "preset" in second_call_prompt.lower()
+
+        # Third call should be for frontend
+        third_call_prompt = mock_q.select.call_args_list[2][0][0]
+        assert "frontend" in third_call_prompt.lower()
 
     def test_aborts_when_structure_not_selected(self, mocker):
         """Should abort when user doesn't select a structure."""

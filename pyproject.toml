@@ -37,7 +37,7 @@ dev = [
 members = ["apps/*", "packages/*"]
 
 [tool.ty.src]
-exclude = [".moon/templates"]
+exclude = [".moon/templates", "apps/chainlit-chat/app.py"]
 
 [tool.ty.rules]
 # Disable rules with false positives from metaprogramming (Reflex, Chainlit)

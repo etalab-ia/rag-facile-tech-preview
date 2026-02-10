@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, TypedDict
 
 import questionary
 import typer
@@ -12,6 +12,16 @@ from rich.console import Console
 
 
 console = Console()
+
+
+class PresetConfig(TypedDict):
+    """Type definition for preset configuration."""
+
+    description: str
+    model_alias: str
+    retrieval_module: str
+    temperature: float
+
 
 # Path constants for locating source files in development vs bundled mode
 REPO_ROOT = Path(__file__).resolve().parents[5]  # Root of rag-facile repository
@@ -147,6 +157,40 @@ PROJECT_STRUCTURES = {
     "Monorepo (for multi-app projects)": "monorepo",
 }
 
+# Configuration presets
+PRESET_CONFIGS: dict[str, PresetConfig] = {
+    "fast": {
+        "description": "Fast responses, lower accuracy",
+        "model_alias": "openweight-small",
+        "retrieval_module": "PDF",
+        "temperature": 0.7,
+    },
+    "balanced": {
+        "description": "Balanced speed and accuracy (recommended)",
+        "model_alias": "openweight-medium",
+        "retrieval_module": "PDF",
+        "temperature": 0.7,
+    },
+    "accurate": {
+        "description": "Best accuracy, slower responses",
+        "model_alias": "openweight-large",
+        "retrieval_module": "PDF",
+        "temperature": 0.7,
+    },
+    "legal": {
+        "description": "Optimized for legal documents",
+        "model_alias": "openweight-large",
+        "retrieval_module": "PDF",
+        "temperature": 0.3,
+    },
+    "hr": {
+        "description": "Optimized for HR documents",
+        "model_alias": "openweight-medium",
+        "retrieval_module": "PDF",
+        "temperature": 0.7,
+    },
+}
+
 
 def get_templates_dir() -> Path:
     """Get the templates directory bundled with the CLI package."""
@@ -273,12 +317,66 @@ def render_template_file(template_path: Path, variables: dict[str, str | bool]) 
     return content
 
 
+def generate_config_file(
+    workspace_root: Path, preset: str, preset_config: PresetConfig
+) -> None:
+    """Generate ragfacile.toml at workspace root using config package.
+
+    Args:
+        workspace_root: Root directory where ragfacile.toml will be created
+        preset: Name of the preset (fast, balanced, accurate, legal, hr)
+        preset_config: Preset configuration dict with model_alias, temperature, etc.
+    """
+    from config import RAGConfig
+    from config.loader import save_config
+    from config.schema import (
+        ChunkingConfig,
+        EvalConfig,
+        FormattingConfig,
+        GenerationConfig,
+        IngestionConfig,
+        MetaConfig,
+        OCRConfig,
+        RetrievalConfig,
+    )
+
+    # Create config with preset values
+    config = RAGConfig(
+        meta=MetaConfig(preset=preset, schema_version="1.0.0"),
+        generation=GenerationConfig(
+            model=preset_config["model_alias"],
+            temperature=preset_config["temperature"],
+            max_tokens=1024,
+            streaming=True,
+            system_prompt="You are a helpful assistant.",
+        ),
+        retrieval=RetrievalConfig(method="hybrid"),
+        eval=EvalConfig(provider="albert", target_samples=50),
+        ingestion=IngestionConfig(
+            ocr=OCRConfig(enabled=True, dpi=300),
+        ),
+        chunking=ChunkingConfig(strategy="semantic", chunk_size=512, chunk_overlap=50),
+        formatting=FormattingConfig(
+            output_format="markdown",
+            include_sources=True,
+            include_confidence=False,
+            language="fr",
+        ),
+    )
+
+    # Write to ragfacile.toml
+    config_path = workspace_root / "ragfacile.toml"
+    save_config(config, config_path)
+
+
 def generate_standalone(
     target_path: Path,
     target_display: str,
     frontend_choice: str,
     selected_modules: list[str],
     env_config: dict[str, str],
+    preset: str,
+    preset_config: PresetConfig,
     force: bool,
 ) -> None:
     """Generate a standalone (non-monorepo) project structure."""
@@ -293,7 +391,6 @@ def generate_standalone(
         "description": f"{project_name} - RAG application",
         "openai_api_key": env_config["openai_api_key"],
         "openai_base_url": env_config["openai_base_url"],
-        "openai_model": env_config["openai_model"],
         "system_prompt": "You are a helpful assistant.",
         "use_pdf": "PDF" in selected_modules,
         "use_chroma": "Chroma" in selected_modules,
@@ -512,10 +609,14 @@ package = true
     env_content = f"""\
 OPENAI_API_KEY={env_config["openai_api_key"]}
 OPENAI_BASE_URL={env_config["openai_base_url"]}
-OPENAI_MODEL={env_config["openai_model"]}
 """
     (target_path / ".env").write_text(env_content)
     console.print("[green]✓[/green] Created .env file")
+
+    # Generate ragfacile.toml with preset configuration
+    console.print("[dim]  ✓ Generating configuration...[/dim]")
+    generate_config_file(target_path, preset, preset_config)
+    console.print("[green]✓[/green] Created ragfacile.toml")
 
     # Step 5: Create .python-version
     (target_path / ".python-version").write_text("3.13\n")
@@ -570,6 +671,10 @@ def run(
         str,
         typer.Argument(help="Target directory for the new workspace"),
     ] = "",
+    preset: Annotated[
+        str | None,
+        typer.Option(help="Configuration preset (fast, balanced, accurate, legal, hr)"),
+    ] = None,
     force: Annotated[
         bool,
         typer.Option("--force", "-f", help="Overwrite existing files"),
@@ -621,6 +726,30 @@ def run(
 
     is_standalone = PROJECT_STRUCTURES[structure_choice] == "standalone"
 
+    # Select preset
+    if not preset:
+        preset = questionary.select(
+            "Choose a configuration preset:",
+            choices=[
+                questionary.Choice(
+                    f"{name} - {config['description']}",
+                    value=name,
+                )
+                for name, config in PRESET_CONFIGS.items()
+            ],
+        ).ask()
+        if not preset:
+            console.print("[red]Aborted.[/red]")
+            raise typer.Exit(1)
+
+    # Validate preset if provided via flag
+    if preset not in PRESET_CONFIGS:
+        console.print(f"[red]Error: Invalid preset '{preset}'[/red]")
+        console.print(f"[dim]Valid presets: {', '.join(PRESET_CONFIGS.keys())}[/dim]")
+        raise typer.Exit(1)
+
+    preset_config = PRESET_CONFIGS[preset]
+
     # Select frontend
     frontend_choice = questionary.select(
         "Select your frontend app:",
@@ -630,24 +759,8 @@ def run(
         console.print("[red]Aborted.[/red]")
         raise typer.Exit(1)
 
-    # Select modules (multi-select)
-    module_choices = questionary.checkbox(
-        "Select modules to include:",
-        choices=[
-            questionary.Choice(
-                f"{name} {'(Coming Soon)' if not info['available'] else ''}",
-                value=name,
-                disabled="Coming Soon" if not info["available"] else None,
-            )
-            for name, info in MODULES.items()
-        ],
-    ).ask()
-    if module_choices is None:
-        console.print("[red]Aborted.[/red]")
-        raise typer.Exit(1)
-
-    # Filter to only available modules
-    selected_modules = [m for m in module_choices if MODULES[m]["available"]]
+    # Use preset's retrieval module (skip interactive selection)
+    selected_modules = [preset_config["retrieval_module"]]
 
     # Prompt for environment configuration (use current env as defaults)
     console.print()
@@ -670,21 +783,8 @@ def run(
         console.print("[red]Aborted.[/red]")
         raise typer.Exit(1)
 
-    env_config["openai_base_url"] = questionary.text(
-        "OpenAI Base URL:",
-        default=os.getenv("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1"),
-    ).ask()
-    if env_config["openai_base_url"] is None:
-        console.print("[red]Aborted.[/red]")
-        raise typer.Exit(1)
-
-    env_config["openai_model"] = questionary.text(
-        "Default model:",
-        default=os.getenv("OPENAI_MODEL", "openweight-large"),
-    ).ask()
-    if env_config["openai_model"] is None:
-        console.print("[red]Aborted.[/red]")
-        raise typer.Exit(1)
+    # Use standard base URL for all presets
+    env_config["openai_base_url"] = "https://albert.api.etalab.gouv.fr/v1"
 
     console.print()
     console.print("[bold blue]Configuration Summary[/bold blue]")
@@ -692,10 +792,10 @@ def run(
     console.print(
         f"  Structure: {'Simple (standalone)' if is_standalone else 'Monorepo'}"
     )
+    console.print(f"  Preset: {preset} ({preset_config['description']})")
     console.print(f"  Frontend: {frontend_choice}")
-    console.print(
-        f"  Modules: {', '.join(selected_modules) if selected_modules else 'None'}"
-    )
+    console.print(f"  Model: {preset_config['model_alias']}")
+    console.print(f"  Retrieval: {preset_config['retrieval_module']}")
     console.print(f"  API: {env_config['openai_base_url']}")
     console.print()
 
@@ -712,6 +812,8 @@ def run(
             frontend_choice=frontend_choice,
             selected_modules=selected_modules,
             env_config=env_config,
+            preset=preset,
+            preset_config=preset_config,
             force=force,
         )
         return  # Exit after standalone generation
@@ -816,7 +918,6 @@ def run(
     # Pass env config values to moon template
     app_cmd.append(f"--openai_api_key={env_config['openai_api_key']}")
     app_cmd.append(f"--openai_base_url={env_config['openai_base_url']}")
-    app_cmd.append(f"--openai_model={env_config['openai_model']}")
 
     # Add feature flags (boolean variables passed as flags)
     if "PDF" in selected_modules:
@@ -834,10 +935,14 @@ def run(
     env_content = f"""\
 OPENAI_API_KEY={env_config["openai_api_key"]}
 OPENAI_BASE_URL={env_config["openai_base_url"]}
-OPENAI_MODEL={env_config["openai_model"]}
 """
     env_file.write_text(env_content)
     console.print("[green]✓[/green] Created .env file")
+
+    # Generate ragfacile.toml at workspace root with preset configuration
+    console.print("[dim]  ✓ Generating configuration...[/dim]")
+    generate_config_file(target_path, preset, preset_config)
+    console.print("[green]✓[/green] Created ragfacile.toml at workspace root")
 
     # 4. Generate albert package (always required)
     console.print()
