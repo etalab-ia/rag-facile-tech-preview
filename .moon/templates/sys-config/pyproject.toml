@@ -25,4 +25,4 @@ exclude = [".moon/templates"]
 managed = true
 
 [tool.uv.workspace]
-members = ["apps/*", "packages/core/*", "packages/retrieval/*"]
+members = ["apps/*", "packages/*"]

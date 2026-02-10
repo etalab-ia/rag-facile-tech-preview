@@ -8,7 +8,7 @@ import engineio.payload
 from context_loader import process_file
 from dotenv import load_dotenv
 
-from albert_client import AsyncAlbertClient
+from albert import AsyncAlbertClient
 
 
 # Increase the number of packets allowed in a single payload to prevent "Too

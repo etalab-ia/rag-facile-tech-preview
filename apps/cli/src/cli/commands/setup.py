@@ -131,7 +131,7 @@ FRONTENDS = {
 
 # Available modules (packages)
 MODULES = {
-    "PDF": {"template": "pdf-context", "available": True},
+    "PDF": {"template": "full-context", "available": True},
     "Chroma": {"template": "chroma-context", "available": False},
 }
 
@@ -161,61 +161,59 @@ def get_templates_dir() -> Path:
     )
 
 
-def get_pdf_context_source() -> Path:
-    """Get the pdf-context source directory for inline copying."""
+def get_retrieval_full_context_source() -> Path:
+    """Get the retrieval-full-context source directory for inline copying."""
     # In development mode, use the packages directory
     repo_root = Path(__file__).resolve().parents[5]
     local_source = (
-        repo_root / "packages" / "retrieval" / "pdf-context" / "src" / "pdf_context"
+        repo_root / "packages" / "retrieval-full-context" / "src" / "full_context"
     )
     if local_source.exists():
         return local_source
 
-    # For installed CLI, pdf_context is bundled at cli/pdf_context_src
-    package_source = Path(__file__).resolve().parent.parent / "pdf_context_src"
+    # For installed CLI, full_context is bundled at cli/full_context_src
+    package_source = Path(__file__).resolve().parent.parent / "full_context_src"
     if package_source.exists():
         return package_source
 
     raise FileNotFoundError(
-        "pdf-context source not found. This is a packaging error - please reinstall the CLI."
+        "retrieval-full-context source not found. This is a packaging error - please reinstall the CLI."
     )
 
 
-def get_albert_client_source() -> Path:
-    """Get the albert-client source directory for inline copying."""
+def get_core_albert_source() -> Path:
+    """Get the core-albert source directory for inline copying."""
     # In development mode, use the packages directory
     repo_root = Path(__file__).resolve().parents[5]
-    local_source = (
-        repo_root / "packages" / "core" / "albert-client" / "src" / "albert_client"
-    )
+    local_source = repo_root / "packages" / "core-albert" / "src" / "albert"
     if local_source.exists():
         return local_source
 
-    # For installed CLI, albert_client is bundled at cli/albert_client_src
-    package_source = Path(__file__).resolve().parent.parent / "albert_client_src"
+    # For installed CLI, albert is bundled at cli/albert_src
+    package_source = Path(__file__).resolve().parent.parent / "albert_src"
     if package_source.exists():
         return package_source
 
     raise FileNotFoundError(
-        "albert-client source not found. This is a packaging error - please reinstall the CLI."
+        "core-albert source not found. This is a packaging error - please reinstall the CLI."
     )
 
 
-def get_rag_config_source() -> Path:
-    """Get the rag-config source directory for inline copying."""
+def get_core_config_source() -> Path:
+    """Get the core-config source directory for inline copying."""
     # In development mode, use the packages directory
     repo_root = Path(__file__).resolve().parents[5]
-    local_source = repo_root / "packages" / "core" / "rag-config" / "src" / "rag_config"
+    local_source = repo_root / "packages" / "core-config" / "src" / "config"
     if local_source.exists():
         return local_source
 
-    # For installed CLI, rag_config is bundled at cli/rag_config_src
-    package_source = Path(__file__).resolve().parent.parent / "rag_config_src"
+    # For installed CLI, config is bundled at cli/config_src
+    package_source = Path(__file__).resolve().parent.parent / "config_src"
     if package_source.exists():
         return package_source
 
     raise FileNotFoundError(
-        "rag-config source not found. This is a packaging error - please reinstall the CLI."
+        "core-config source not found. This is a packaging error - please reinstall the CLI."
     )
 
 
@@ -320,12 +318,12 @@ def generate_standalone(
 
     # Create pyproject.toml for standalone mode
     pdf_dep = '\n    "pypdf>=5.0.0",' if "PDF" in selected_modules else ""
-    setuptools_packages_list = ["albert_client", "rag_config"]
+    setuptools_packages_list = ["albert", "config"]
     if "PDF" in selected_modules:
-        setuptools_packages_list.append("pdf_context")
+        setuptools_packages_list.append("full_context")
     setuptools_packages = f"packages = {setuptools_packages_list}"
 
-    # For standalone, albert-client, rag-config, and pdf-context are local modules (not dependencies)
+    # For standalone, albert, config, and full-context are local modules (not dependencies)
     pyproject_content = f'''[project]
 name = "{project_name}"
 version = "0.1.0"
@@ -379,7 +377,7 @@ package = true
     console.print("[dim]  ✓ pyproject.toml[/dim]")
 
     # Copy and render app files from template
-    files_to_copy = ["context_loader.py", ".env.template", "README.md"]
+    files_to_copy = ["context_loader.py", ".env.template", "README.md", "justfile"]
 
     if frontend_choice == "Chainlit":
         files_to_copy.extend(["app.py", "chainlit.md"])
@@ -422,7 +420,7 @@ package = true
     modules_yml_content += "# Auto-generated based on selected modules\n\n"
     modules_yml_content += "context_providers:\n"
     if "PDF" in selected_modules:
-        modules_yml_content += "  pdf: pdf_context\n"
+        modules_yml_content += "  pdf: full_context\n"
     if "Chroma" in selected_modules:
         modules_yml_content += "  chroma: chroma_context\n"
 
@@ -431,13 +429,13 @@ package = true
 
     console.print("[green]✓[/green] Project files generated")
 
-    # Step 3: Copy albert-client as local module (always required)
+    # Step 3: Copy albert as local module (always required)
     console.print()
     console.print("[bold green]Step 3:[/bold green] Adding Albert client module...")
 
     try:
-        albert_source = get_albert_client_source()
-        target_albert = target_path / "albert_client"
+        albert_source = get_core_albert_source()
+        target_albert = target_path / "albert"
         if target_albert.exists():
             shutil.rmtree(target_albert)
         shutil.copytree(albert_source, target_albert)
@@ -448,15 +446,15 @@ package = true
         console.print("[green]✓[/green] Albert client module added")
     except FileNotFoundError as e:
         console.print(f"[yellow]Warning: {e}[/yellow]")
-        console.print("[yellow]You'll need to install albert-client manually.[/yellow]")
+        console.print("[yellow]You'll need to install albert manually.[/yellow]")
 
-    # Step 4: Copy rag-config as local module (always required for config commands)
+    # Step 4: Copy config as local module (always required for config commands)
     console.print()
     console.print("[bold green]Step 4:[/bold green] Adding RAG config module...")
 
     try:
-        rag_config_source = get_rag_config_source()
-        target_rag_config = target_path / "rag_config"
+        rag_config_source = get_core_config_source()
+        target_rag_config = target_path / "config"
         if target_rag_config.exists():
             shutil.rmtree(target_rag_config)
         shutil.copytree(rag_config_source, target_rag_config)
@@ -467,7 +465,7 @@ package = true
         console.print("[green]✓[/green] RAG config module added")
     except FileNotFoundError as e:
         console.print(f"[yellow]Warning: {e}[/yellow]")
-        console.print("[yellow]You'll need to install rag-config manually.[/yellow]")
+        console.print("[yellow]You'll need to install config manually.[/yellow]")
 
     # Step 5: Copy pdf_context as local module if selected
     if "PDF" in selected_modules:
@@ -475,8 +473,8 @@ package = true
         console.print("[bold green]Step 5:[/bold green] Adding PDF context module...")
 
         try:
-            pdf_source = get_pdf_context_source()
-            target_pdf = target_path / "pdf_context"
+            pdf_source = get_retrieval_full_context_source()
+            target_pdf = target_path / "full_context"
             if target_pdf.exists():
                 shutil.rmtree(target_pdf)
             shutil.copytree(pdf_source, target_pdf)
@@ -488,7 +486,7 @@ package = true
         except FileNotFoundError as e:
             console.print(f"[yellow]Warning: {e}[/yellow]")
             console.print(
-                "[yellow]You'll need to install pdf-context manually.[/yellow]"
+                "[yellow]You'll need to install full-context manually.[/yellow]"
             )
 
     # Step 6: Create ragfacile.toml config file
@@ -770,9 +768,9 @@ def run(
         "sys-config",
         "chainlit-chat",
         "reflex-chat",
-        "albert-client",
-        "pdf-context",
-        "rag-config",
+        "albert",
+        "full-context",
+        "config",
         "chroma-context",
     ]:
         src = templates_dir / template_name
@@ -846,27 +844,25 @@ OPENAI_MODEL={env_config["openai_model"]}
     env_file.write_text(env_content)
     console.print("[green]✓[/green] Created .env file")
 
-    # 4. Generate albert-client package (always required)
+    # 4. Generate albert package (always required)
     console.print()
-    console.print(
-        "[bold green]Step 4:[/bold green] Generating albert-client package..."
-    )
-    albert_cmd = ["moon", "generate", "albert-client", "--defaults"]
+    console.print("[bold green]Step 4:[/bold green] Generating albert package...")
+    albert_cmd = ["moon", "generate", "albert", "--defaults"]
     if force:
         albert_cmd.append("--force")
-    if not run_command(albert_cmd, "generate albert-client", cwd=target_path):
+    if not run_command(albert_cmd, "generate albert", cwd=target_path):
         raise typer.Exit(1)
-    console.print("[green]✓[/green] albert-client package generated")
+    console.print("[green]✓[/green] albert package generated")
 
-    # 5. Generate rag-config package (always required for config management)
+    # 5. Generate config package (always required for config management)
     console.print()
-    console.print("[bold green]Step 5:[/bold green] Generating rag-config package...")
-    rag_config_cmd = ["moon", "generate", "rag-config", "--defaults"]
+    console.print("[bold green]Step 5:[/bold green] Generating config package...")
+    config_cmd = ["moon", "generate", "config", "--defaults"]
     if force:
-        rag_config_cmd.append("--force")
-    if not run_command(rag_config_cmd, "generate rag-config", cwd=target_path):
+        config_cmd.append("--force")
+    if not run_command(config_cmd, "generate config", cwd=target_path):
         raise typer.Exit(1)
-    console.print("[green]✓[/green] rag-config package generated")
+    console.print("[green]✓[/green] config package generated")
 
     # Copy ragfacile.toml config file to workspace root
     try:
