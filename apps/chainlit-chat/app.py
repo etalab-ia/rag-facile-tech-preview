@@ -129,6 +129,13 @@ async def main(message: cl.Message):
     # Send an empty message to start the stream UI
     await msg.send()
 
+    # Common generation parameters from config
+    gen_params = {
+        "stream": rag_config.generation.streaming,
+        "temperature": rag_config.generation.temperature,
+        "max_tokens": rag_config.generation.max_tokens,
+    }
+
     # TODO: OpenAI SDK can't infer correct return type when stream parameter is a variable
     # This causes ty to report no-matching-overload error. Need to either:
     # 1. Split into separate streaming/non-streaming code paths with literal True/False
@@ -138,9 +145,7 @@ async def main(message: cl.Message):
         messages=message_history,
         tools=tools,
         tool_choice="auto",
-        stream=rag_config.generation.streaming,
-        temperature=rag_config.generation.temperature,
-        max_tokens=rag_config.generation.max_tokens,
+        **gen_params,
     )
 
     cur_tool_calls = []
@@ -203,9 +208,7 @@ async def main(message: cl.Message):
         stream_post_tool = await client.chat.completions.create(
             model=model,
             messages=message_history,
-            stream=rag_config.generation.streaming,
-            temperature=rag_config.generation.temperature,
-            max_tokens=rag_config.generation.max_tokens,
+            **gen_params,
         )
 
         # Type ignore: SDK can't infer stream type when stream parameter is variable

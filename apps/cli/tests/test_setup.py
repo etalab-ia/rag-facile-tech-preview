@@ -29,6 +29,8 @@ def preset_config():
         "model_alias": "openweight-medium",
         "retrieval_module": "PDF",
         "temperature": 0.7,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant utile.",
     }
 
 

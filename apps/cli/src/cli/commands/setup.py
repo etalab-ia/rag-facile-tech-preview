@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Annotated, TypedDict
+from typing import Annotated, Literal, TypedDict
 
 import questionary
 import typer
@@ -21,6 +21,8 @@ class PresetConfig(TypedDict):
     model_alias: str
     retrieval_module: str
     temperature: float
+    language: Literal["fr", "en"]
+    system_prompt: str
 
 
 # Path constants for locating source files in development vs bundled mode
@@ -164,30 +166,40 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "model_alias": "openweight-small",
         "retrieval_module": "PDF",
         "temperature": 0.7,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant utile et concis.",
     },
     "balanced": {
         "description": "Balanced speed and accuracy (recommended)",
         "model_alias": "openweight-medium",
         "retrieval_module": "PDF",
         "temperature": 0.7,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant utile.",
     },
     "accurate": {
         "description": "Best accuracy, slower responses",
         "model_alias": "openweight-large",
         "retrieval_module": "PDF",
         "temperature": 0.7,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant expert et précis.",
     },
     "legal": {
         "description": "Optimized for legal documents",
         "model_alias": "openweight-large",
         "retrieval_module": "PDF",
         "temperature": 0.3,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant spécialisé dans l'analyse de documents juridiques.",
     },
     "hr": {
         "description": "Optimized for HR documents",
         "model_alias": "openweight-medium",
         "retrieval_module": "PDF",
         "temperature": 0.7,
+        "language": "fr",
+        "system_prompt": "Vous êtes un assistant spécialisé dans les ressources humaines.",
     },
 }
 
@@ -348,7 +360,7 @@ def generate_config_file(
             temperature=preset_config["temperature"],
             max_tokens=1024,
             streaming=True,
-            system_prompt="You are a helpful assistant.",
+            system_prompt=preset_config["system_prompt"],
         ),
         retrieval=RetrievalConfig(method="hybrid"),
         eval=EvalConfig(provider="albert", target_samples=50),
@@ -360,7 +372,7 @@ def generate_config_file(
             output_format="markdown",
             include_sources=True,
             include_confidence=False,
-            language="fr",
+            language=preset_config["language"],
         ),
     )
 
@@ -391,7 +403,7 @@ def generate_standalone(
         "description": f"{project_name} - RAG application",
         "openai_api_key": env_config["openai_api_key"],
         "openai_base_url": env_config["openai_base_url"],
-        "system_prompt": "You are a helpful assistant.",
+        "system_prompt": preset_config["system_prompt"],
         "use_pdf": "PDF" in selected_modules,
         "use_chroma": "Chroma" in selected_modules,
         "welcome_message": f"Welcome to {project_name}!",
@@ -784,8 +796,13 @@ def run(
         console.print("[red]Aborted.[/red]")
         raise typer.Exit(1)
 
-    # Use standard base URL for all presets
-    env_config["openai_base_url"] = "https://albert.api.etalab.gouv.fr/v1"
+    env_config["openai_base_url"] = questionary.text(
+        "OpenAI Base URL:",
+        default=os.getenv("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1"),
+    ).ask()
+    if env_config["openai_base_url"] is None:
+        console.print("[red]Aborted.[/red]")
+        raise typer.Exit(1)
 
     console.print()
     console.print("[bold blue]Configuration Summary[/bold blue]")

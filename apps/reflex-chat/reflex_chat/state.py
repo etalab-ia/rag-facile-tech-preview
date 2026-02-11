@@ -207,14 +207,17 @@ class State(rx.State):
         # Start a new session to answer the question (uses config values)
         # Model comes from config with env var override
         model = os.getenv("OPENAI_MODEL") or rag_config.generation.model
+        gen_params = {
+            "stream": rag_config.generation.streaming,
+            "temperature": rag_config.generation.temperature,
+            "max_tokens": rag_config.generation.max_tokens,
+        }
         session = AlbertClient(
             base_url=os.getenv("OPENAI_BASE_URL"),
         ).chat.completions.create(
             model=model,
             messages=messages,
-            stream=rag_config.generation.streaming,
-            temperature=rag_config.generation.temperature,
-            max_tokens=rag_config.generation.max_tokens,
+            **gen_params,
         )
 
         # Stream the results, yielding after every word.
