@@ -23,6 +23,7 @@ class PresetConfig(TypedDict):
     temperature: float
     language: Literal["fr", "en"]
     system_prompt: str
+    openai_base_url: str
 
 
 # Path constants for locating source files in development vs bundled mode
@@ -168,6 +169,7 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "temperature": 0.7,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant utile et concis.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     },
     "balanced": {
         "description": "Balanced speed and accuracy (recommended)",
@@ -176,6 +178,7 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "temperature": 0.7,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant utile.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     },
     "accurate": {
         "description": "Best accuracy, slower responses",
@@ -184,6 +187,7 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "temperature": 0.7,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant expert et précis.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     },
     "legal": {
         "description": "Optimized for legal documents",
@@ -192,6 +196,7 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "temperature": 0.3,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant spécialisé dans l'analyse de documents juridiques.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     },
     "hr": {
         "description": "Optimized for HR documents",
@@ -200,6 +205,7 @@ PRESET_CONFIGS: dict[str, PresetConfig] = {
         "temperature": 0.7,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant spécialisé dans les ressources humaines.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     },
 }
 
@@ -796,13 +802,8 @@ def run(
         console.print("[red]Aborted.[/red]")
         raise typer.Exit(1)
 
-    env_config["openai_base_url"] = questionary.text(
-        "OpenAI Base URL:",
-        default=os.getenv("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1"),
-    ).ask()
-    if env_config["openai_base_url"] is None:
-        console.print("[red]Aborted.[/red]")
-        raise typer.Exit(1)
+    # Use base URL from preset
+    env_config["openai_base_url"] = preset_config["openai_base_url"]
 
     console.print()
     console.print("[bold blue]Configuration Summary[/bold blue]")

@@ -31,6 +31,7 @@ def preset_config():
         "temperature": 0.7,
         "language": "fr",
         "system_prompt": "Vous êtes un assistant utile.",
+        "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
     }
 
 
