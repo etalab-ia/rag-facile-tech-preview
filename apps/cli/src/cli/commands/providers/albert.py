@@ -52,7 +52,7 @@ class AlbertApiProvider:
         self.preprocessor = DocumentPreprocessor()
 
         # Track resources for cleanup
-        self.collection_id: str | None = None
+        self.collection_id: int | None = None
 
     def upload_documents(self, document_paths: list[str]) -> None:
         """Upload documents to Albert and create a collection.
@@ -76,7 +76,7 @@ class AlbertApiProvider:
             f"data_foundry_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
         )
 
-        collection = self.albert_client.collections.create(
+        collection = self.albert_client.create_collection(
             name=collection_name,
             description="RAG Facile Data Foundry",
         )
@@ -92,7 +92,7 @@ class AlbertApiProvider:
             logger.debug(f"  Size: {Path(doc_path).stat().st_size} bytes")
 
             try:
-                self.albert_client.documents.upload(
+                self.albert_client.upload_document(
                     file_path=doc_path, collection_id=self.collection_id
                 )
                 logger.debug("  Upload successful")
@@ -173,7 +173,7 @@ class AlbertApiProvider:
         """Delete collection from Albert API and clean up temporary files."""
         if self.collection_id:
             try:
-                self.albert_client.collections.delete(self.collection_id)
+                self.albert_client.delete_collection(self.collection_id)
             except Exception:
                 pass  # Non-critical
 

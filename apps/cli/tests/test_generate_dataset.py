@@ -25,9 +25,9 @@ class TestAlbertApiProvider:
 
         # Setup default mocks for SDK methods
         mock_instance = mock_client.return_value
-        mock_instance.collections.create.return_value = MagicMock(id="col-123")
-        mock_instance.documents.upload.return_value = MagicMock()
-        mock_instance.collections.delete.return_value = None
+        mock_instance.create_collection.return_value = MagicMock(id="col-123")
+        mock_instance.upload_document.return_value = MagicMock()
+        mock_instance.delete_collection.return_value = None
 
         return mock_client
 
@@ -68,8 +68,8 @@ class TestAlbertApiProvider:
             assert provider.collection_id == "col-123"
 
             # Should call SDK methods for collection creation and document upload
-            provider.albert_client.collections.create.assert_called_once()
-            provider.albert_client.documents.upload.assert_called_once()
+            provider.albert_client.create_collection.assert_called_once()
+            provider.albert_client.upload_document.assert_called_once()
 
     def test_generate_requires_collection(self, mock_albert_client):
         """Should raise error if generate called without uploaded documents."""
@@ -95,7 +95,7 @@ class TestAlbertApiProvider:
         provider.cleanup()
 
         # Should call SDK delete method with collection ID
-        provider.albert_client.collections.delete.assert_called_once_with("col-123")
+        provider.albert_client.delete_collection.assert_called_once_with("col-123")
 
     def test_generate_streams_samples(self, mock_albert_client):
         """Should stream samples from LLM response."""

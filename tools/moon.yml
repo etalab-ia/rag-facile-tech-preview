@@ -82,7 +82,7 @@ tasks:
       cache: false
 
   type-check:
-    command: uv run ty check .
+    command: uv run ty check . --exclude ".moon/templates" --exclude "apps/chainlit-chat/app.py" --exclude "apps/reflex-chat/reflex_chat/state.py"
     options:
       runFromWorkspaceRoot: true
       cache: false

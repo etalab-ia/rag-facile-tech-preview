@@ -15,7 +15,7 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from config import get_config
+from rag_core import get_config
 
 
 console = Console()
@@ -121,7 +121,7 @@ def run(
     elif provider == "albert":
         api_key = os.getenv("OPENAI_API_KEY")
         base_url = os.getenv("OPENAI_BASE_URL")
-        model = os.getenv("OPENAI_MODEL")
+        model = os.getenv("OPENAI_MODEL") or rag_config.generation.model
 
         env_vars_to_check = {
             "OPENAI_API_KEY": api_key,
@@ -134,6 +134,11 @@ def run(
                 f"Error: Missing environment variables for 'albert' provider: "
                 f"{', '.join(missing)}"
             )
+            if "OPENAI_MODEL" in missing:
+                console.print(
+                    "\nTip: OPENAI_MODEL can be set via environment variable or "
+                    "in ragfacile.toml under [generation] section"
+                )
             raise typer.Exit(1)
 
     # Find documents
