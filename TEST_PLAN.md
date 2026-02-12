@@ -151,11 +151,12 @@ rag-facile config preset apply balanced
 ### 2. Dataset Generation (Data Foundry)
 Verify the preprocessor and provider imports work with new package names. Since the balanced preset includes PDF retrieval, this tests the `retrieval_basic` module:
 ```bash
-# Create a dummy test document
-echo "Ceci est un document test pour Albert." > test.txt
+# Create a directory with a test document (generate-dataset expects a directory)
+mkdir test-docs
+echo "Ceci est un document test pour Albert." > test-docs/test.txt
 
 # Run generation (uses retrieval_basic from balanced preset)
-rag-facile generate-dataset ./test.txt -o dataset.jsonl
+rag-facile generate-dataset ./test-docs -o dataset.jsonl
 
 # Verify output was created
 ls -lh dataset.jsonl
