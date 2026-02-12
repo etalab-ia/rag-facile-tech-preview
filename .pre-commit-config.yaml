@@ -9,6 +9,13 @@ repos:
       - id: ruff-format
   - repo: local
     hooks:
+      - id: regenerate-templates
+        name: Regenerate Moon templates
+        entry: bash -c 'uv run python tools/generate_templates.py --all --force && git add .moon/templates/'
+        language: system
+        files: ^(apps/(chainlit-chat|reflex-chat)|packages/(albert-client|rag-core|retrieval-basic))/
+        pass_filenames: false
+        stages: [commit]
       - id: ty
         name: ty
         entry: uv run ty check --exclude ".moon/templates"
