@@ -177,7 +177,12 @@ ls -lh dataset.jsonl
 # Should show a file with content
 ```
 
-**Note**: The command requires `OPENAI_API_KEY` and `OPENAI_BASE_URL` environment variables to be set. If using direnv (installed by the setup script), these are automatically loaded from the `.env` file when you `cd` into the workspace.
+**Configuration Precedence**:
+- `OPENAI_MODEL`: Environment variable → `ragfacile.toml [generation].model` → Default
+- `OPENAI_API_KEY`: Environment variable only (security)
+- `OPENAI_BASE_URL`: Environment variable only (security)
+
+**Note**: If using direnv (installed by the setup script), `OPENAI_API_KEY` and `OPENAI_BASE_URL` are automatically loaded from `.env` when you `cd` into the workspace. The `OPENAI_MODEL` can come from either the environment or `ragfacile.toml`.
 
 ---
 
