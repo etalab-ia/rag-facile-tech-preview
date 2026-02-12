@@ -1,0 +1,266 @@
+# 🧪 RAG Facile Test Plan (Component-First Architecture)
+
+## 📋 Prerequisites
+*   **Operating System**: macOS, Linux (Ubuntu/Debian recommended), or Windows (PowerShell).
+*   **Tools**: `curl`, `git`, `python` (3.11+).
+*   **Environment**: A clean directory for testing (e.g., `~/tmp/rf-testing`).
+
+---
+
+## 🏗️ Scenario A: Standalone Installation
+*Focus: Testing the "Lambda Developer" path where everything is self-contained in one folder.*
+
+### Step 1: Run the Installer
+
+**macOS/Linux:**
+```bash
+export RAG_FACILE_BRANCH="feat/refactor-monorepo-structure"
+curl -sSL "https://raw.githubusercontent.com/etalab-ia/rag-facile/refs/heads/${RAG_FACILE_BRANCH}/install.sh" | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+$env:RAG_FACILE_BRANCH = "feat/refactor-monorepo-structure"
+irm "https://raw.githubusercontent.com/etalab-ia/rag-facile/refs/heads/$env:RAG_FACILE_BRANCH/install.ps1" | iex
+```
+
+> **Important**: Use double quotes `"` in the curl URL so the shell expands `${RAG_FACILE_BRANCH}`. Single quotes will prevent variable expansion and cause a 404 error.
+
+### Step 2: Verify CLI Installation
+```bash
+rag-facile --version
+# Should output: rag-facile v0.9.0
+```
+
+### Step 3: Run Setup (Standalone)
+```bash
+mkdir -p ~/tmp/rf-testing && cd ~/tmp/rf-testing
+rag-facile setup my-standalone-app
+```
+
+**Interactive Prompts** — Select:
+- **Structure**: "Simple (recommended for getting started)"
+- **Preset**: "balanced"
+- **Frontend**: "Chainlit"
+- **API Key**: Provide your Albert API key (or dummy value for testing)
+- **Confirm**: "Yes"
+
+### Step 4: Verify Generated Files
+Navigate to `my-standalone-app/` and check:
+- [ ] `albert/` directory exists (previously `core-albert`)
+- [ ] `rag_core/` directory exists (previously `config`)
+- [ ] `retrieval_basic/` directory exists (previously `full_context`)
+- [ ] `pyproject.toml` contains: `packages = ["albert", "rag_core", "retrieval_basic"]`
+- [ ] `.env` file contains `OPENAI_API_KEY` and `OPENAI_BASE_URL`
+- [ ] `modules.yml` contains `pdf: retrieval_basic` (if PDF was selected)
+
+### Step 5: Run the App
+```bash
+cd my-standalone-app
+uv sync
+uv run chainlit run app.py -w
+```
+
+**Expected**: Chainlit opens in browser at `http://localhost:8000`
+
+---
+
+## 🏢 Scenario B: Monorepo Installation
+*Focus: Testing the "Advanced Developer" path with a Moonrepo workspace.*
+
+### Step 1: Run Setup (Monorepo)
+```bash
+cd ~/tmp/rf-testing
+rag-facile setup rf-monorepo
+```
+
+**Interactive Prompts** — Select:
+- **Structure**: "Monorepo (for multi-app projects)"
+- **Preset**: "accurate"
+- **Frontend**: "Reflex"
+- **API Key**: Provide your Albert API key (or dummy value)
+- **Confirm**: "Yes"
+
+### Step 2: Verify Workspace Structure
+```bash
+cd rf-monorepo
+```
+
+Check that these directories exist:
+- [ ] `.moon/templates/rag-core/`
+- [ ] `.moon/templates/albert-client/`
+- [ ] `.moon/templates/retrieval-basic/`
+- [ ] `packages/rag-core/src/rag_core/`
+- [ ] `packages/albert-client/src/albert/`
+- [ ] `packages/retrieval-basic/src/retrieval_basic/`
+
+### Step 3: Verify Imports
+Open `apps/reflex-chat/reflex_chat/state.py` and verify:
+```python
+from rag_core import get_config
+from albert import AlbertClient
+from retrieval_basic import extract_text_from_pdf
+```
+
+### Step 4: Run Workspace Sync
+```bash
+just sync
+# Or manually:
+# uv sync
+# uv run pre-commit install
+```
+
+### Step 5: Run Type Checking
+```bash
+just type-check
+# Expected: All checks pass
+```
+
+### Step 6: Run the App
+```bash
+just run reflex-chat
+# Or: moon run reflex-chat:dev
+```
+
+**Expected**: Reflex dev server starts at `http://localhost:3000`
+
+---
+
+## 🛠️ Feature Verification
+
+### 1. Config Management
+Verify the CLI correctly reads/writes configuration with new `rag-core` package:
+```bash
+# Show current config
+rag-facile config show
+
+# Apply a different preset
+rag-facile config preset apply fast
+
+# Verify the model changed
+rag-facile config show | grep "model"
+# Should show: model = "openweight-medium" (for fast preset)
+
+# Switch back to balanced
+rag-facile config preset apply balanced
+```
+
+### 2. Dataset Generation (Data Foundry)
+Verify the preprocessor and provider imports work with new package names:
+```bash
+# Create a dummy test document
+echo "Ceci est un document test pour Albert." > test.txt
+
+# Run generation
+rag-facile generate-dataset ./test.txt -o dataset.jsonl
+
+# Verify output was created
+ls -lh dataset.jsonl
+# Should show a file with content
+```
+
+---
+
+## ✅ Final Quality Checklist
+
+### Code Quality
+- [ ] No `import config` statements (except in old archive comments)
+- [ ] No `import full_context` statements
+- [ ] No `from config.` statements
+- [ ] No `from full_context.` statements
+
+**Verify with:**
+```bash
+# From repo root
+grep -r "from config import" --include="*.py" apps/ packages/ 2>/dev/null || echo "✓ No legacy config imports"
+grep -r "from full_context import" --include="*.py" apps/ packages/ 2>/dev/null || echo "✓ No legacy full_context imports"
+grep -r "import config\." --include="*.py" apps/ packages/ 2>/dev/null || echo "✓ No legacy config module imports"
+```
+
+### Conventional Commits
+```bash
+git log --oneline | head -5
+# Should show: feat: component-first architecture refactoring
+```
+
+### Release-Please
+Check that the GitHub Actions workflow correctly:
+- [ ] Detects the `feat:` commit
+- [ ] Updates version for `rag-core`, `albert-client`, `retrieval-basic`
+- [ ] Creates a release PR with changelog entries
+
+---
+
+## 🐛 Troubleshooting
+
+### Installation Error: "404:: command not found"
+**Cause**: Shell variable `$RAG_FACILE_BRANCH` was not expanded  
+**Solution**: Use double quotes in curl URL:
+```bash
+# ❌ WRONG (single quotes prevent expansion)
+curl -sSL 'https://raw.githubusercontent.com/etalab-ia/rag-facile/refs/heads/$RAG_FACILE_BRANCH/install.sh' | bash
+
+# ✅ CORRECT (double quotes allow expansion)
+curl -sSL "https://raw.githubusercontent.com/etalab-ia/rag-facile/refs/heads/${RAG_FACILE_BRANCH}/install.sh" | bash
+```
+
+### Import Error: "ModuleNotFoundError: No module named 'config'"
+**Cause**: Code still references old `config` package name  
+**Solution**: Update imports to `rag_core`:
+```python
+# ❌ Old
+from config import get_config
+
+# ✅ New
+from rag_core import get_config
+```
+
+### Setup Command Fails
+**Cause**: Branch not pushed to origin  
+**Solution**: Ensure branch is available on GitHub:
+```bash
+git push -u origin feat/refactor-monorepo-structure
+```
+
+### rag-facile Command Not Found
+**Cause**: `~/.local/bin` not in PATH  
+**Solution**: Add to shell profile:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+# Then source your shell profile or open a new terminal
+```
+
+---
+
+## 📝 Test Results Template
+Keep track of your testing:
+
+```markdown
+### Standalone Test (Chainlit)
+- [ ] Installation successful
+- [ ] rag-facile --version works
+- [ ] Setup creates correct directory structure
+- [ ] New package names present (albert, rag_core, retrieval_basic)
+- [ ] App runs: uv run chainlit run app.py
+- [ ] Config commands work
+- [ ] No import errors
+
+### Monorepo Test (Reflex)
+- [ ] Installation successful
+- [ ] Setup creates monorepo structure
+- [ ] Templates exist for all packages
+- [ ] just sync completes without errors
+- [ ] just type-check passes
+- [ ] just run reflex-chat starts dev server
+- [ ] No import errors in state.py
+- [ ] Dataset generation works
+
+### Quality Checks
+- [ ] No legacy imports found
+- [ ] Conventional commit format correct
+- [ ] All tests pass
+```
+
+---
+
+👾 Generated with [Letta Code](https://letta.com)
