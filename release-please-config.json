@@ -3,6 +3,11 @@
 	"release-type": "python",
 	"changelog-path": "CHANGELOG.md",
 	"packages": {
+		"packages/albert-client": {
+			"release-type": "python",
+			"changelog-path": "CHANGELOG.md",
+			"version-file": "pyproject.toml"
+		},
 		".": {
 			"release-type": "python",
 			"changelog-path": "CHANGELOG.md",

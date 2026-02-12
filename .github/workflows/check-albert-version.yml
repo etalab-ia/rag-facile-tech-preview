@@ -1,0 +1,42 @@
+name: Check Albert Client Version
+
+on:
+  pull_request:
+    paths:
+      - 'packages/albert-client/pyproject.toml'
+  workflow_dispatch:
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Get local version
+        id: local_version
+        run: |
+          VERSION=$(grep -m 1 'version = "' packages/albert-client/pyproject.toml | cut -d '"' -f 2)
+          echo "Local version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get remote OpenAPI version
+        id: remote_version
+        run: |
+          REMOTE_VERSION=$(curl -s https://albert.api.etalab.gouv.fr/openapi.json | jq -r '.info.version')
+          echo "Remote version: $REMOTE_VERSION"
+          echo "version=$REMOTE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare versions
+        run: |
+          LOCAL="${{ steps.local_version.outputs.version }}"
+          REMOTE="${{ steps.remote_version.outputs.version }}"
+
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            echo "::error::Version mismatch! Local: $LOCAL, Remote (OpenAPI): $REMOTE"
+            exit 1
+          else
+            echo "::notice::Versions match: $LOCAL"
+          fi
