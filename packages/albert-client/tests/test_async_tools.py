@@ -58,7 +58,7 @@ class TestAsyncUsageTracking:
         assert result.data[0].usage.total_tokens == 1500
 
     @respx.mock
-    async def test_get_usage_with_dates(self, client, base_url):
+    async def test_get_usage_with_time_range(self, client, base_url):
         """Test async get usage with date range."""
         mock_usage = {"object": "list", "data": []}
 

@@ -6,6 +6,9 @@ on:
       - 'packages/albert-client/pyproject.toml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   check-version:
     runs-on: ubuntu-latest

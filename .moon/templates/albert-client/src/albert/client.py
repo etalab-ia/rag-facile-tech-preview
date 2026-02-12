@@ -172,6 +172,18 @@ class AlbertClient:
 
         Raises:
             httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            results = client.search(
+                prompt="Code civil",
+                collections=["legal_docs"],
+                limit=5,
+                method="hybrid"
+            )
+            for chunk in results.data:
+                print(chunk.score, chunk.chunk.content)
+            ```
         """
         from albert.types import SearchResponse
 
@@ -407,6 +419,17 @@ class AlbertClient:
 
         Raises:
             httpx.HTTPStatusError: If the upload fails.
+
+        Example:
+            ```python
+            doc = client.upload_document(
+                file_path="report.pdf",
+                collection_id=123,
+                chunk_size=1000,
+                metadata='{"category": "finance"}'
+            )
+            print(f"Uploaded document ID: {doc.id}")
+            ```
         """
         from pathlib import Path
 
@@ -590,6 +613,19 @@ class AlbertClient:
 
         Raises:
             httpx.HTTPStatusError: If the request fails.
+
+        Example:
+            ```python
+            # Get usage for the last 24 hours
+            import time
+            now = int(time.time())
+            usage = client.get_usage(
+                start_time=now - 86400,
+                end_time=now
+            )
+            for record in usage.data:
+                print(f"{record.model}: {record.usage.total_tokens} tokens")
+            ```
         """
         from albert.types import UsageList
 

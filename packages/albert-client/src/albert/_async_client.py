@@ -142,7 +142,38 @@ class AsyncAlbertClient:
         score_threshold: float | None = None,
         rff_k: int = 20,
     ) -> SearchResponse:
-        """Hybrid RAG search across collections."""
+        """Hybrid RAG search across collections.
+
+        Searches for relevant chunks in the specified collections using the given prompt.
+        Supports semantic, lexical, or hybrid search methods.
+
+        Args:
+            prompt: Search query to find relevant chunks.
+            collections: List of collection IDs to search in. Defaults to all collections.
+            limit: Maximum number of results to return (1-200). Defaults to 10.
+            offset: Pagination offset. Defaults to 0.
+            method: Search method - "semantic", "lexical", or "hybrid". Defaults to "semantic".
+            score_threshold: Minimum cosine similarity score (0.0-1.0). Only for semantic search.
+            rff_k: RFF algorithm constant. Defaults to 20.
+
+        Returns:
+            SearchResponse with results, usage info, and metadata.
+
+        Raises:
+            httpx.HTTPStatusError: If the API request fails.
+
+        Example:
+            ```python
+            results = await client.search(
+                prompt="Code civil",
+                collections=["legal_docs"],
+                limit=5,
+                method="hybrid"
+            )
+            for chunk in results.data:
+                print(chunk.score, chunk.chunk.content)
+            ```
+        """
         from albert.types import SearchResponse
 
         body = {
@@ -275,7 +306,40 @@ class AsyncAlbertClient:
         is_separator_regex: bool = False,
         metadata: str | None = None,
     ) -> DocumentResponse:
-        """Upload a document to a collection."""
+        """Upload a document to a collection.
+
+        The document will be parsed, chunked, and embedded according to the collection's
+        settings.
+
+        Args:
+            file_path: Path to the file to upload.
+            collection_id: The collection ID to add the document to.
+            chunk_size: Size of text chunks for embedding (default: 2048).
+            chunk_overlap: Overlap between chunks (default: 0).
+            chunker: Chunker strategy (default: "RecursiveCharacterTextSplitter").
+            chunk_min_size: Minimum chunk size (default: 0).
+            separators: List of custom separators.
+            preset_separators: Preset generic separators (e.g. "markdown").
+            is_separator_regex: Treat separators as regex? (default: False).
+            metadata: Stringified JSON object matching the Metadata schema.
+
+        Returns:
+            DocumentResponse with document ID.
+
+        Raises:
+            httpx.HTTPStatusError: If the upload fails.
+
+        Example:
+            ```python
+            doc = await client.upload_document(
+                file_path="report.pdf",
+                collection_id=123,
+                chunk_size=1000,
+                metadata='{"category": "finance"}'
+            )
+            print(f"Uploaded document ID: {doc.id}")
+            ```
+        """
         from pathlib import Path
 
         from albert.types import DocumentResponse
@@ -383,7 +447,36 @@ class AsyncAlbertClient:
         offset: int = 0,
         endpoint: str | None = None,
     ) -> UsageList:
-        """Get API usage statistics."""
+        """Get API usage statistics.
+
+        Returns usage data aggregated by request.
+
+        Args:
+            start_time: Filter from this timestamp (Unix seconds). Optional.
+            end_time: Filter until this timestamp (Unix seconds). Optional.
+            limit: Max results. Default 10.
+            offset: Pagination offset. Default 0.
+            endpoint: Filter by endpoint API path.
+
+        Returns:
+            UsageList with usage records.
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails.
+
+        Example:
+            ```python
+            # Get usage for the last 24 hours
+            import time
+            now = int(time.time())
+            usage = await client.get_usage(
+                start_time=now - 86400,
+                end_time=now
+            )
+            for record in usage.data:
+                print(f"{record.model}: {record.usage.total_tokens} tokens")
+            ```
+        """
         from albert.types import UsageList
 
         params = {"limit": limit, "offset": offset}
