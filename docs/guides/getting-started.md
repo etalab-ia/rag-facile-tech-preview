@@ -80,7 +80,8 @@ The CLI will interactively guide you through:
 1. **Project structure** — Simple or Monorepo (see below)
 2. **Configuration preset** — Balanced, Fast, Accurate, Legal, or HR
 3. **Frontend** — Chainlit or Reflex
-4. **Environment** — Your Albert API key (presets handle the rest)
+4. **Retrieval module** — PDF (local extraction) or Albert RAG (server-side parsing + search)
+5. **Environment** — Your Albert API key (presets handle the rest)
 
 After configuration, the CLI automatically:
 
@@ -100,13 +101,14 @@ Best for: **Quick prototypes, single-app deployments, learning RAG Facile**
 
 ```
 my-rag-app/
-├── pyproject.toml      # All dependencies in one place
-├── .env                # Your API credentials
-├── app.py              # Your application code
-├── context_loader.py   # Module loading logic
-├── modules.yml         # Enabled modules configuration
-├── chainlit.md         # Chat welcome message (Chainlit only)
-└── pdf_context/        # PDF module (if selected)
+├── pyproject.toml          # All dependencies in one place
+├── .env                    # Your API credentials
+├── app.py                  # Your application code
+├── context_loader.py       # Module loading logic
+├── modules.yml             # Retrieval module configuration
+├── ragfacile.toml          # RAG pipeline configuration
+├── chainlit.md             # Chat welcome message (Chainlit only)
+└── retrieval_basic/ OR retrieval_albert/   # Selected retrieval module
 ```
 
 **Advantages:**
@@ -131,7 +133,10 @@ my-rag-app/
 │       ├── .env        # Your API credentials
 │       └── ...
 ├── packages/
-│   └── pdf-context/    # Shared modules
+│   ├── rag-core/       # Configuration system
+│   ├── albert-client/  # Albert API SDK
+│   └── retrieval-basic/ OR retrieval-albert/  # Selected retrieval module
+├── ragfacile.toml      # RAG pipeline configuration
 ├── justfile            # Common commands
 └── pyproject.toml      # Workspace root
 ```

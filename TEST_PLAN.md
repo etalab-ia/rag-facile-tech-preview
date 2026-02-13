@@ -114,12 +114,14 @@ just run
 **Expected**: Chainlit opens in browser at `http://localhost:8000`
 
 ### Step 4: Test Multi-Format File Upload
-With Albert RAG, many file types are supported via Albert's parse API:
+Albert RAG supports the following formats via Albert's parse API:
 - [ ] Upload a `.pdf` file — should parse via Albert API and include in chat
-- [ ] Upload a `.docx` file — should parse via Albert API and include in chat
-- [ ] Upload a `.pptx` file — should parse via Albert API and include in chat
-- [ ] Upload a `.txt` or `.md` file — should parse and include in chat
-- [ ] Upload an unsupported format (e.g., `.zip`) — should show "Unsupported file type"
+- [ ] Upload a `.json` file — should parse and include in chat
+- [ ] Upload a `.md` (Markdown) file — should parse and include in chat
+- [ ] Upload an `.html` file — should parse and include in chat
+- [ ] Upload an unsupported format (e.g., `.docx`, `.xlsx`, `.txt`) — should show "Unsupported file type" or fall back to local extraction
+
+**Note**: If Albert's parse API returns a 500 error (server issue), the app automatically falls back to local pypdf extraction for PDF files.
 
 ### Step 5: Verify the Retrieval Module API
 ```python
@@ -128,7 +130,7 @@ from retrieval_albert import SUPPORTED_EXTENSIONS, process_file, extract_text
 
 # Check supported extensions
 print(SUPPORTED_EXTENSIONS)
-# Should include: .pdf, .docx, .pptx, .xlsx, .html, .md, .txt, .csv, etc.
+# Should be: ['.pdf', '.json', '.md', '.html']
 ```
 
 ---

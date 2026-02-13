@@ -70,16 +70,25 @@ moon run tools:type-check   # Run type checker
 rag-facile/
 ├── apps/                    # Applications
 │   ├── cli/                 # rag-facile CLI tool
-│   ├── chainlit-chat/       # Chainlit frontend
-│   └── reflex-chat/         # Reflex frontend
+│   ├── chainlit-chat/       # Chainlit frontend (golden master)
+│   └── reflex-chat/         # Reflex frontend (golden master)
 ├── packages/                # Shared packages
-│   ├── core-config/         # RAG Configuration System
-│   └── pdf-context/         # PDF processing
+│   ├── rag-core/            # RAG Configuration System (replaces core-config)
+│   ├── albert-client/       # Albert API SDK
+│   ├── retrieval-basic/     # PDF extraction (local, offline)
+│   └── retrieval-albert/    # Albert RAG (server-side parsing & search)
+├── docs/                    # User and contributor documentation
+│   ├── guides/              # Getting started, setup, pipelines
+│   ├── reference/           # Components, config, ragfacile.toml
+│   └── troubleshooting/     # Common issues and fixes
 ├── tools/                   # Development tools
+│   ├── generate_templates.py # Template generator
 │   └── moon.yml             # Code quality tasks
 ├── .moon/                   # Moon workspace config
-│   └── templates/           # Moon templates (source of truth)
+│   ├── templates/           # Moon templates (source of truth)
+│   └── toolchain.yml        # Python/uv/proto config
 ├── justfile                 # Developer task runner
+├── CONTRIBUTING.md          # Contributing guide (you are here)
 └── pyproject.toml           # Workspace config
 ```
 
@@ -92,6 +101,29 @@ Templates live in `.moon/templates/` and are automatically bundled into the CLI 
 ```bash
 moon run cli:test
 ```
+
+### Understanding Retrieval Modules
+
+RAG Facile uses pluggable retrieval modules. Users select one during `rag-facile setup`:
+
+- **retrieval-basic** — Local PDF extraction via pypdf (lightweight, offline)
+- **retrieval-albert** — Server-side parsing via Albert API + fallback to local pypdf
+
+Both modules implement the same interface:
+- `process_file(path)` — Extract text from file
+- `extract_text_from_bytes(data, filename)` — Extract text from bytes
+
+The `context_loader.py` in each app dynamically imports the selected module from `modules.yml`. Both modules are interchangeable from the app's perspective.
+
+**Key files:**
+- `packages/retrieval-basic/src/retrieval_basic/` — PDF extraction logic
+- `packages/retrieval-albert/src/retrieval_albert/parser.py` — Albert API + fallback logic
+- `packages/rag-core/src/rag_core/pdf.py` — Shared local PDF extraction (used by both)
+
+When modifying retrieval logic, remember:
+- Test both modules (see test files in each package)
+- `rag-core/pdf.py` is the fallback for Albert RAG, so changes there affect both modules
+- The `modules.yml` file determines which module is active (auto-generated from templates)
 
 ### Testing the Generate Dataset Command
 
