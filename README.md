@@ -12,370 +12,61 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝╚══════╝╚══════╝
 ```
 
-> [!IMPORTANT]
-> This project is a starter kit for RAG applications in the French government.
+Build a RAG application for the French government in under 5 minutes, powered by the [Albert API](https://albert.sites.beta.gouv.fr/).
 
-## Overview
+## Prerequisites
 
-RAG Facile provides a foundation for building RAG (Retrieval-Augmented Generation) applications in the French government, specifically using the [Albert API](https://albert.sites.beta.gouv.fr/). It is designed for exploratory greenfield projects.
+- An **Albert API key** — [request one here](https://albert.sites.beta.gouv.fr/)
+- **git** and **curl** installed
 
-## Quick Start
+## Install
 
-### 1. Install the CLI
-
-One command installs the entire toolchain (proto, moon, uv) and the CLI:
-
-#### Linux / macOS / WSL
+One command installs the entire toolchain and the `rag-facile` CLI:
 
 ```bash
+# Linux / macOS / WSL
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
 source ~/.bashrc  # or restart your terminal
 ```
 
-> **Note**: On Ubuntu/Debian, the installer will automatically install prerequisites (git, curl, xz-utils, unzip) if needed.
-
-#### Windows (PowerShell) — Recommended
-
 ```powershell
+# Windows (PowerShell)
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
 
-Open a new PowerShell window and you're ready to go!
-
-#### Windows (Git Bash / MSYS2)
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
-source ~/.bashrc
-```
-
-> **Behind a corporate proxy or VPN?** The installer automatically detects and configures proxy support. See [Installation Documentation](docs/) for troubleshooting guides.
-
-Verify the installation:
+Verify it worked:
 
 ```bash
 rag-facile --help
 ```
 
-### 2. Setup Your Workspace
-
-One command gets you to a running RAG app:
+## Create Your App
 
 ```bash
 rag-facile setup my-rag-app
 ```
 
-The CLI will guide you through:
-1. **Project structure** - Choose Simple or Monorepo (see below)
-2. **Configuration preset** - Choose from Balanced, Fast, Accurate, Legal, or HR
-3. **Frontend selection** - Choose Chainlit or Reflex
-4. **Environment configuration** - Set your Albert API key (presets handle the rest)
+The CLI will guide you through choosing a project structure, a configuration preset, and a frontend. After setup, it installs dependencies and starts the dev server — your app opens in the browser, ready to use.
 
-After configuration, the CLI automatically:
-- Sets up your workspace with the selected components
-- Creates your `ragfacile.toml` based on your chosen preset
-- Creates your `.env` file with your credentials
-- Installs all dependencies with `uv sync`
-- Starts the development server
+## Upgrade
 
-Your app will open in the browser, ready to use!
-
-## Documentation
-
-For detailed guides and troubleshooting, see the [Documentation Hub](docs/):
-
-### Installation & Setup
-
-- **[Windows Setup Guide](docs/guides/windows-setup.md)** - Complete guide for Windows (PowerShell and Git Bash)
-- **[Proxy & Network Setup](docs/guides/proxy-setup.md)** - Install RAG Facile on corporate networks or behind VPNs
-- **[Proxy Troubleshooting](docs/troubleshooting/proxy.md)** - Solve network-related issues
-
-### Reference
-
-- **[Full Documentation Index](docs/)** - All guides and resources
-
-## Project Structure Options
-
-When generating a workspace, you'll choose between two project structures:
-
-### Simple (Recommended for Getting Started)
-
-Best for: **Quick prototypes, single-app deployments, learning RAG Facile**
-
-```
-my-rag-app/
-├── pyproject.toml      # All dependencies in one place
-├── .env                # Your API credentials
-├── app.py              # Your application code
-├── context_loader.py   # Module loading logic
-├── modules.yml         # Enabled modules configuration
-├── chainlit.md         # Chat welcome message (Chainlit only)
-└── pdf_context/        # PDF module (if selected)
-```
-
-**Advantages:**
-- ✅ Familiar single-project structure
-- ✅ No build tools to learn
-- ✅ Easy to understand and modify
-- ✅ Simple deployment
-
-**Run your app:**
-```bash
-cd my-rag-app
-just run
-```
-
-### Monorepo (For Multi-App Projects)
-
-Best for: **Team projects, multiple apps sharing code, production deployments**
-
-```
-my-rag-app/
-├── .moon/              # Moon workspace configuration
-│   ├── templates/      # Templates for adding new apps
-│   ├── toolchain.yml   # Python/uv configuration
-│   └── workspace.yml   # Workspace settings
-├── apps/
-│   └── chainlit-chat/  # Your selected frontend app
-│       ├── app.py
-│       ├── .env        # Your API credentials
-│       └── ...
-├── packages/
-│   └── pdf-context/    # Shared modules
-├── justfile            # Common commands
-└── pyproject.toml      # Workspace root
-```
-
-**Advantages:**
-- ✅ Multiple apps can share packages
-- ✅ Consistent tooling across apps
-- ✅ Easy to add new apps with `just add <template>`
-- ✅ Built-in task runner with Moon
-
-**Run your app:**
-```bash
-cd my-rag-app
-just run chainlit-chat    # Run specific app
-just run                  # Run all apps
-```
-
-### Which Should I Choose?
-
-| Scenario | Recommendation |
-|----------|----------------|
-| First time using RAG Facile | **Simple** |
-| Building a quick prototype | **Simple** |
-| Single application deployment | **Simple** |
-| Multiple related apps | **Monorepo** |
-| Team with shared components | **Monorepo** |
-| Need to add apps later | **Monorepo** |
-
-## Available Components
-
-### Configuration Management
-
-RAG Facile includes a comprehensive configuration system for customizing your RAG pipeline without touching code.
-
-**Quick Start:**
-```bash
-# Apply a preset configuration
-rag-facile config preset apply balanced
-
-# View current configuration
-rag-facile config show
-
-# Update specific values
-rag-facile config set generation.model openweight-large
-rag-facile config set generation.temperature 0.5
-```
-
-**Available Presets:**
-- `balanced` - Recommended default (quality/speed tradeoff)
-- `fast` - Speed-optimized (smaller models, skip reranking)
-- `accurate` - Quality-optimized (larger models, hallucination detection)
-- `legal` - For legal documents (strict citations, accuracy validation)
-- `hr` - For HR policies (privacy-aware, clear attribution, semantic search)
-
-**Precedence:** Environment Variables > `ragfacile.toml` > Presets.
-
-**Environment Variable Overrides:**
-```bash
-# Format: RAG_<SECTION>_<KEY>
-export RAG_GENERATION_MODEL=openweight-large
-export RAG_RERANKING_ENABLED=true
-```
-
-See [Configuration Guide](docs/guides/config-guide.md) for complete documentation.
-
-### Albert Client SDK
-
-Official Python SDK for the Albert API. OpenAI-compatible with features specific to French government administration.
-
-**Installation:**
-```bash
-pip install albert-client
-```
-
-**Usage Example:**
-```python
-from albert_client import AlbertClient
-
-client = AlbertClient(
-    api_key="your-api-key",
-    base_url="https://albert.api.etalab.gouv.fr/v1"
-)
-
-# OpenAI-compatible
-response = client.chat.completions.create(
-    model="openweight-small",
-    messages=[{"role": "user", "content": "Hello!"}]
-)
-
-# Hybrid search with reranking
-results = client.search(
-    query="energy transition",
-    collections=[1, 2],
-    method="hybrid"
-)
-```
-
-**Full Documentation:** [Albert Client SDK](packages/albert-client/README.md)
-
-### Frontend Apps
-
-| App | Description | Port |
-|-----|-------------|------|
-| **Chainlit Chat** | Chat interface with file upload support | 8000 |
-| **Reflex Chat** | Interactive chat with modern UI | 3000 |
-
-### Modules
-
-| Module | Description | Status |
-|--------|-------------|--------|
-| **PDF Context** | Extract and process PDF documents | ✅ Available |
-| **Chroma Context** | Vector store for semantic search | 🚧 Coming Soon |
-
-## Upgrading the CLI
-
-To upgrade to the latest version, re-run the installer:
+Re-run the installer to get the latest version:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
 ```
 
-## Running Your App
+## Documentation
 
-### Simple Structure
-
-```bash
-cd my-rag-app
-just run
-```
-
-### Monorepo Structure
-
-Use the `just` commands:
-
-```bash
-cd my-rag-app
-just run chainlit-chat      # Run a specific app
-just run                    # Run all apps
-```
-
-#### Available `just` Commands
-
-| Command | Description |
-|---------|-------------|
-| `just run` | Run all apps |
-| `just run <name>` | Run a specific app (e.g., `just run chainlit-chat`) |
-| `just format` | Format code with ruff |
-| `just lint` | Run linter |
-| `just check` | Run all checks (format, lint, type-check) |
-| `just sync` | Sync dependencies with uv |
-| `just add <template>` | Add a new app from template |
-
-## Evaluating Your RAG Application
-
-Before deploying, you need to know if your RAG application works well. Evaluation helps answer: Is my chatbot giving correct answers? Does it find the right documents? Is it hallucinating?
-
-### Generate Synthetic Evaluation Datasets
-
-Don't have evaluation data? Generate it automatically from your documents using the **Data Foundry** feature. Choose between Letta Cloud or self-hosted Albert API:
-
-#### Option 1: Letta Cloud (Easiest)
-
-```bash
-# Set up Letta Cloud credentials
-export LETTA_API_KEY="your-letta-api-key"           # Get at https://app.letta.com/api-keys
-export DATA_FOUNDRY_AGENT_ID="agent-xxx"            # Pre-configured agent ID
-
-# Generate Q/A pairs from your documents
-rag-facile generate-dataset ./my-docs -o golden_dataset.jsonl -n 50 --provider letta
-```
-
-#### Option 2: Albert API (Self-Hosted)
-
-```bash
-# Set up Albert API credentials
-export OPENAI_API_KEY="your-api-key"                # Albert API key
-export OPENAI_BASE_URL="http://localhost:8000"      # Albert API endpoint
-export OPENAI_MODEL="mistral-7b"                    # Model to use
-
-# Generate Q/A pairs using your Albert instance
-rag-facile generate-dataset ./my-docs -o golden_dataset.jsonl -n 50 --provider albert
-```
-
-#### Output Format
-
-Both providers create Ragas-compatible JSONL files with French Q/A pairs:
-
-```json
-{
-  "user_input": "Quel est le délai de recours administratif?",
-  "retrieved_contexts": ["Le délai de recours est de deux mois..."],
-  "reference": "Le délai de recours administratif est de deux mois.",
-  "_metadata": {"source_file": "code.pdf", "quality_score": 0.95}
-}
-```
-
-### Basic Evaluation Workflow
-
-```python
-from datasets import load_dataset
-
-# Load a dataset from HuggingFace
-dataset = load_dataset("AgentPublic/service-public")
-
-# Run your RAG pipeline on each question
-results = []
-for example in dataset["train"]:
-    answer = your_rag_pipeline(example["question"])
-    results.append({
-        "question": example["question"],
-        "expected": example["ground_truth"],
-        "actual": answer,
-    })
-
-# Measure accuracy
-accuracy = sum(1 for r in results if r["expected"] == r["actual"]) / len(results) if results else 0.0
-```
-
-### What to Measure
-
-| Metric | What it Measures |
-|--------|------------------|
-| **Accuracy** | Correct answers / Total questions |
-| **Retrieval Recall** | Did we find the right documents? |
-| **Faithfulness** | Does the answer match the sources? |
-| **Latency** | Response time |
-
-For sovereign AI, also consider: sovereignty (only *.gouv.fr sources), energy score, and French language quality.
-
-### Learn More
-
-- [Letta Evals](https://github.com/letta-ai/letta-evals) - Framework for testing AI agents
-- [MTEB Leaderboard](https://huggingface.co/spaces/mteb/leaderboard) - Embedding model benchmarks
-- [BEIR Benchmark](https://github.com/beir-cellar/beir) - Information retrieval benchmarks
+| Guide | Description |
+|-------|-------------|
+| [Getting Started](docs/guides/getting-started.md) | Detailed installation options, project structures, and running your app |
+| [Understanding the RAG Pipeline](docs/guides/rag-pipeline.md) | What each stage of the pipeline does and why it matters |
+| [`ragfacile.toml` Reference](docs/reference/ragfacile-toml.md) | Every configuration option, presets comparison, environment overrides |
+| [Evaluation Guide](docs/guides/evaluation.md) | Generate synthetic datasets and measure RAG quality |
+| [Components Reference](docs/reference/components.md) | Albert Client SDK, frontend apps, and modules |
+| [Windows Setup](docs/guides/windows-setup.md) | Complete guide for Windows (PowerShell and Git Bash) |
+| [Proxy & Network Setup](docs/guides/proxy-setup.md) | Install behind corporate proxies and VPNs |
 
 ## Contributing
 
