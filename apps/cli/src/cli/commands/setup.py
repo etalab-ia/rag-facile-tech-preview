@@ -679,24 +679,6 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
     (target_path / ".python-version").write_text("3.13\n")
     console.print("[dim]  ✓ .python-version[/dim]")
 
-    # Generate Chainlit config with correct file upload accept types
-    if frontend_choice == "Chainlit":
-        chainlit_dir = target_path / ".chainlit"
-        chainlit_dir.mkdir(parents=True, exist_ok=True)
-        if "Albert RAG" in selected_modules:
-            accept_toml = '{ "application/pdf" = [".pdf"], "application/json" = [".json"], "text/markdown" = [".md"], "text/html" = [".html", ".htm"] }'
-        else:
-            accept_toml = '["application/pdf"]'
-        chainlit_config = f"""\
-[features.spontaneous_file_upload]
-    enabled = true
-    accept = {accept_toml}
-    max_files = 20
-    max_size_mb = 500
-"""
-        (chainlit_dir / "config.toml").write_text(chainlit_config)
-        console.print("[dim]  ✓ .chainlit/config.toml[/dim]")
-
     # Done with generation!
     console.print()
     console.print("[bold green]✨ Project generation complete![/bold green]")
@@ -841,12 +823,12 @@ def run(
         "Select your retrieval module:",
         choices=[
             questionary.Choice(
-                "PDF - Local text extraction (offline, simple)",
-                value="PDF",
+                "Albert RAG - Server-side parsing, search & reranking (recommended)",
+                value="Albert RAG",
             ),
             questionary.Choice(
-                "Albert RAG - Server-side parsing, search & reranking",
-                value="Albert RAG",
+                "PDF - Local text extraction (offline, simple)",
+                value="PDF",
             ),
         ],
     ).ask()
