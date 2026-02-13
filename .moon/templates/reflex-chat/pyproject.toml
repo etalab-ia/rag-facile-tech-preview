@@ -7,7 +7,11 @@ requires-python = ">=3.13"
 dependencies = [
     "albert-client",
     "rag-core",
+{%- if use_pdf %}
     "retrieval-basic",
+{%- else %}
+    "retrieval-albert",
+{%- endif %}
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0.0",
     "reflex>=0.7.11",
@@ -25,7 +29,11 @@ py-modules = ["context_loader"]
 [tool.uv.sources]
 albert-client = { workspace = true }
 rag-core = { workspace = true }
+{%- if use_pdf %}
 retrieval-basic = { workspace = true }
+{%- else %}
+retrieval-albert = { workspace = true }
+{%- endif %}
 
 [tool.uv]
 package = true

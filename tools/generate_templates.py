@@ -311,20 +311,21 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
                 "[\"{{ project_name | replace(from='-', to='_') }}*\"]",
             )
 
-        # Make pdf-context dependency conditional
+        # Make retrieval dependency conditional (retrieval-basic vs retrieval-albert)
         content = content.replace(
-            '    "pdf-context",', '{%- if use_pdf %}\n    "pdf-context",\n{%- endif %}'
+            '    "retrieval-basic",',
+            '{%- if use_pdf %}\n    "retrieval-basic",\n{%- else %}\n    "retrieval-albert",\n{%- endif %}',
         )
 
-        # Update uv sources for conditional deps
-        old_sources = "[tool.uv.sources]\npdf-context = { workspace = true }"
-        new_sources = """{% if use_pdf %}
-[tool.uv.sources]
-{%- if use_pdf %}
-pdf-context = { workspace = true }
-{%- endif %}
-{% endif %}"""
-        content = content.replace(old_sources, new_sources)
+        # Update uv sources for conditional retrieval dep
+        content = content.replace(
+            "retrieval-basic = { workspace = true }",
+            """{%- if use_pdf %}
+retrieval-basic = { workspace = true }
+{%- else %}
+retrieval-albert = { workspace = true }
+{%- endif %}""",
+        )
 
         # Add [tool.uv] package = true if not present
         if "[tool.uv]\npackage = true" not in content:
@@ -340,6 +341,8 @@ pdf-context = { workspace = true }
 context_providers:
 {%- if use_pdf %}
   pdf: retrieval_basic
+{%- else %}
+  pdf: retrieval_albert
 {%- endif %}
 """
     (target / "modules.yml").write_text(modules_yml_content)
