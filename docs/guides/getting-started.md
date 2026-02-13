@@ -60,7 +60,9 @@ To upgrade to the latest version, re-run the installer:
 ```bash
 # Linux / macOS / WSL
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+```
 
+```powershell
 # Windows (PowerShell)
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
