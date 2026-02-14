@@ -104,7 +104,7 @@ class TestConstants:
     def test_modules_has_pdf(self):
         """Should have PDF module option."""
         assert "PDF" in MODULES
-        assert MODULES["PDF"]["template"] == "retrieval-basic"
+        assert MODULES["PDF"]["template"] == "retrieval"
         assert MODULES["PDF"]["available"] is True
 
     def test_project_structures_has_standalone(self):
