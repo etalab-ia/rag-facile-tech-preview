@@ -65,8 +65,6 @@ max_tokens = 4096
 deduplicate = true
 ordering = "by-score"
 
-
-
 [generation]
 model = "openweight-medium"
 temperature = 0.7
