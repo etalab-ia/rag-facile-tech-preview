@@ -65,10 +65,14 @@ class TestGetPipeline:
         pipeline = get_pipeline(config)
         assert isinstance(pipeline, BasicPipeline)
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_albert_collections_returns_albert_pipeline(self, mock_get_provider):
+    def test_albert_collections_returns_albert_pipeline(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """albert-collections config should return AlbertPipeline."""
-        mock_get_provider.return_value = MagicMock()
+        mock_get_ingestion.return_value = MagicMock()
+        mock_get_storage.return_value = MagicMock()
         config = self._make_config("albert-collections")
         pipeline = get_pipeline(config)
         assert isinstance(pipeline, AlbertPipeline)
@@ -146,14 +150,18 @@ class TestBasicPipeline:
 
 
 class TestAlbertPipeline:
-    """Verify AlbertPipeline delegates to ingestion and retrieval."""
+    """Verify AlbertPipeline delegates to ingestion, retrieval, and storage."""
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_file_delegates_to_ingestion(self, mock_get_provider):
+    def test_process_file_delegates_to_ingestion(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """process_file should delegate to Albert ingestion provider."""
         mock_provider = MagicMock()
         mock_provider.process_file.return_value = "albert parsed content"
-        mock_get_provider.return_value = mock_provider
+        mock_get_ingestion.return_value = mock_provider
+        mock_get_storage.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         result = pipeline.process_file("/tmp/test.pdf", "test.pdf")
@@ -161,12 +169,16 @@ class TestAlbertPipeline:
         assert result == "albert parsed content"
         mock_provider.process_file.assert_called_once_with("/tmp/test.pdf", "test.pdf")
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_bytes_delegates_to_ingestion(self, mock_get_provider):
+    def test_process_bytes_delegates_to_ingestion(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """process_bytes should delegate to Albert ingestion provider."""
         mock_provider = MagicMock()
         mock_provider.process_bytes.return_value = "albert parsed bytes"
-        mock_get_provider.return_value = mock_provider
+        mock_get_ingestion.return_value = mock_provider
+        mock_get_storage.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         result = pipeline.process_bytes(b"fake data", "doc.pdf")
@@ -174,10 +186,14 @@ class TestAlbertPipeline:
         assert result == "albert parsed bytes"
         mock_provider.process_bytes.assert_called_once_with(b"fake data", "doc.pdf")
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_query_delegates_to_retrieval(self, mock_get_provider):
+    def test_process_query_delegates_to_retrieval(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """process_query should delegate to retrieval.process_query."""
-        mock_get_provider.return_value = MagicMock()
+        mock_get_ingestion.return_value = MagicMock()
+        mock_get_storage.return_value = MagicMock()
         pipeline = AlbertPipeline()
 
         with patch("retrieval.formatter.process_query") as mock_pq:
@@ -187,25 +203,33 @@ class TestAlbertPipeline:
         assert result == "retrieved context"
         mock_pq.assert_called_once_with("what is RAG?", collection_ids=[1])
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_supported_extensions_from_ingestion(self, mock_get_provider):
+    def test_supported_extensions_from_ingestion(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """supported_extensions should come from the Albert ingestion provider."""
         mock_provider = MagicMock()
         mock_provider.supported_extensions = [".pdf", ".json", ".md", ".html"]
-        mock_get_provider.return_value = mock_provider
+        mock_get_ingestion.return_value = mock_provider
+        mock_get_storage.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         assert pipeline.supported_extensions == [".pdf", ".json", ".md", ".html"]
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_accepted_mime_types_from_ingestion(self, mock_get_provider):
+    def test_accepted_mime_types_from_ingestion(
+        self, mock_get_ingestion, mock_get_storage
+    ):
         """accepted_mime_types should come from the Albert ingestion provider."""
         mock_provider = MagicMock()
         mock_provider.accepted_mime_types = {
             "application/pdf": [".pdf"],
             "text/markdown": [".md"],
         }
-        mock_get_provider.return_value = mock_provider
+        mock_get_ingestion.return_value = mock_provider
+        mock_get_storage.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         assert pipeline.accepted_mime_types == {
@@ -213,34 +237,44 @@ class TestAlbertPipeline:
             "text/markdown": [".md"],
         }
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_create_collection_delegates_to_retrieval(self, mock_get_provider):
-        """create_collection should delegate to retrieval."""
-        mock_get_provider.return_value = MagicMock()
+    def test_create_collection_delegates_to_storage(
+        self, mock_get_ingestion, mock_get_storage
+    ):
+        """create_collection should delegate to storage provider."""
+        mock_get_ingestion.return_value = MagicMock()
+        mock_storage = MagicMock()
+        mock_storage.create_collection.return_value = 42
+        mock_get_storage.return_value = mock_storage
+
         pipeline = AlbertPipeline()
         mock_client = MagicMock()
-
-        with patch("retrieval.ingestion.create_collection") as mock_cc:
-            mock_cc.return_value = 42
-            result = pipeline.create_collection(mock_client, "test", "description")
+        result = pipeline.create_collection(mock_client, "test", "description")
 
         assert result == 42
-        mock_cc.assert_called_once_with(mock_client, "test", "description")
+        mock_storage.create_collection.assert_called_once_with(
+            mock_client, "test", "description"
+        )
 
+    @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_ingest_documents_delegates_to_retrieval(self, mock_get_provider):
-        """ingest_documents should delegate to retrieval."""
-        mock_get_provider.return_value = MagicMock()
+    def test_ingest_documents_delegates_to_storage(
+        self, mock_get_ingestion, mock_get_storage
+    ):
+        """ingest_documents should delegate to storage provider."""
+        mock_get_ingestion.return_value = MagicMock()
+        mock_storage = MagicMock()
+        mock_storage.ingest_documents.return_value = [1, 2, 3]
+        mock_get_storage.return_value = mock_storage
+
         pipeline = AlbertPipeline()
         mock_client = MagicMock()
-
-        with patch("retrieval.ingestion.ingest_documents") as mock_id:
-            mock_id.return_value = [1, 2, 3]
-            result = pipeline.ingest_documents(
-                mock_client, ["/tmp/a.pdf"], 42, chunk_size=256
-            )
+        result = pipeline.ingest_documents(
+            mock_client, ["/tmp/a.pdf"], 42, chunk_size=256
+        )
 
         assert result == [1, 2, 3]
-        mock_id.assert_called_once_with(
+        mock_storage.ingest_documents.assert_called_once_with(
             mock_client, ["/tmp/a.pdf"], 42, chunk_size=256, chunk_overlap=None
         )

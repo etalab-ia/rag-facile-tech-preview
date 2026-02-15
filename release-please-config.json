@@ -21,7 +21,8 @@
 				"packages/ingestion/pyproject.toml",
 				"packages/pipelines/pyproject.toml",
 				"packages/rag-core/pyproject.toml",
-				"packages/retrieval/pyproject.toml"
+				"packages/retrieval/pyproject.toml",
+				"packages/storage/pyproject.toml"
 			]
 		}
 	}

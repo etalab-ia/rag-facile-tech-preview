@@ -14,6 +14,7 @@ from cli.commands.setup import (
     get_ingestion_source,
     get_pipelines_source,
     get_retrieval_source,
+    get_storage_source,
     get_templates_dir,
     render_template_file,
     run_command,
@@ -148,10 +149,9 @@ class TestGetRetrievalSource:
         assert init_file.exists(), f"__init__.py not found at {init_file}"
 
     def test_contains_required_modules(self):
-        """retrieval source should contain search, format, and collection modules."""
+        """retrieval source should contain search, format, and type modules."""
         result = get_retrieval_source()
         assert (result / "albert.py").exists()
-        assert (result / "ingestion.py").exists()
         assert (result / "formatter.py").exists()
         assert (result / "_types.py").exists()
 
@@ -207,6 +207,32 @@ class TestGetIngestionSource:
         assert (result / "__init__.py").exists()
         assert (result / "_base.py").exists()
         assert (result / "local.py").exists()
+        assert (result / "albert.py").exists()
+
+
+class TestGetStorageSource:
+    """Tests for get_storage_source function."""
+
+    def test_returns_path_object(self):
+        """Should return a Path object."""
+        result = get_storage_source()
+        assert isinstance(result, Path)
+
+    def test_path_ends_with_storage(self):
+        """Should return path ending with storage."""
+        result = get_storage_source()
+        assert result.name == "storage"
+
+    def test_path_exists_in_repo(self):
+        """storage source should exist when running from repo."""
+        result = get_storage_source()
+        assert result.exists(), f"storage source not found at {result}"
+
+    def test_contains_required_modules(self):
+        """storage source should contain provider modules."""
+        result = get_storage_source()
+        assert (result / "__init__.py").exists()
+        assert (result / "_base.py").exists()
         assert (result / "albert.py").exists()
 
 
@@ -545,6 +571,32 @@ class TestGenerateStandalone:
         assert ingestion.exists()
         assert (ingestion / "__init__.py").exists()
         assert (ingestion / "_base.py").exists()
+
+    def test_copies_storage_module(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
+        """Should copy storage module to standalone project."""
+        from cli.commands.setup import generate_standalone
+
+        generate_standalone(
+            target_path=standalone_target,
+            target_display=str(standalone_target),
+            frontend_choice="Chainlit",
+            selected_modules=["PDF"],
+            env_config={
+                "openai_api_key": "test-key",
+                "openai_base_url": "https://api.test.com",
+            },
+            preset="balanced",
+            preset_config=preset_config,
+            force=False,
+        )
+
+        storage = standalone_target / "storage"
+        assert storage.exists()
+        assert (storage / "__init__.py").exists()
+        assert (storage / "_base.py").exists()
+        assert (storage / "albert.py").exists()
 
     def test_creates_chainlit_md_for_chainlit(
         self, standalone_target, mock_standalone_deps, preset_config

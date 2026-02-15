@@ -459,6 +459,7 @@ def main():
             "pipelines",
             "rag-core",
             "retrieval",
+            "storage",
         ],
         help="Generate a specific template",
     )
@@ -492,6 +493,7 @@ def main():
             "pipelines",
             "rag-core",
             "retrieval",
+            "storage",
         ]
     else:
         templates_to_generate = [args.template]
@@ -544,6 +546,14 @@ def main():
             result = generate_package_template(
                 "retrieval",
                 REPO_ROOT / "packages" / "retrieval",
+                force=args.force,
+            )
+            if result is False:
+                success = False
+        elif template == "storage":
+            result = generate_package_template(
+                "storage",
+                REPO_ROOT / "packages" / "storage",
                 force=args.force,
             )
             if result is False:

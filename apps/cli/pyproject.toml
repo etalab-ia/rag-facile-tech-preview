@@ -10,6 +10,7 @@ dependencies = [
     "pipelines",
     "rag-core",
     "retrieval",
+    "storage",
     "datasets>=3.0.0",
     "huggingface-hub>=1.3.0",
     "letta-client>=0.1.0",
@@ -34,6 +35,7 @@ ingestion = { workspace = true }
 pipelines = { workspace = true }
 rag-core = { workspace = true }
 retrieval = { workspace = true }
+storage = { workspace = true }
 
 [project.scripts]
 rag-facile = "cli.main:app"
@@ -52,4 +54,5 @@ packages = ["src/cli"]
 "../../packages/pipelines/src/pipelines" = "cli/pipelines_src"
 "../../packages/rag-core/src/rag_core" = "cli/rag_core_src"
 "../../packages/retrieval/src/retrieval" = "cli/retrieval_src"
+"../../packages/storage/src/storage" = "cli/storage_src"
 "src/cli/templates/ragfacile.toml" = "cli/templates/ragfacile.toml"

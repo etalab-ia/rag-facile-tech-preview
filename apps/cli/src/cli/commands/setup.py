@@ -270,6 +270,15 @@ def get_retrieval_source() -> Path:
     )
 
 
+def get_storage_source() -> Path:
+    """Get the storage source directory for inline copying."""
+    return _get_source_path(
+        ("packages", "storage", "src", "storage"),
+        ("storage_src",),
+        "storage source not found. This is a packaging error - please reinstall the CLI.",
+    )
+
+
 def get_pipelines_source() -> Path:
     """Get the pipelines source directory for inline copying."""
     return _get_source_path(
@@ -326,7 +335,7 @@ def _copy_module_to_standalone(
 
     Handles directory cleanup, __pycache__ removal, and user-facing
     progress output.  Used by :func:`generate_standalone` to inline
-    pipeline packages (albert, rag_core, ingestion, retrieval, pipelines).
+    pipeline packages (albert, rag_core, ingestion, retrieval, storage, pipelines).
 
     Args:
         target_path: Root of the standalone project.
@@ -509,6 +518,7 @@ def generate_standalone(
         "pipelines",
         "rag_core",
         "retrieval",
+        "storage",
     ]
     setuptools_packages = f"packages = {setuptools_packages_list}"
 
@@ -614,6 +624,7 @@ package = true
         ("rag_core", get_rag_core_source, "RAG core module"),
         ("ingestion", get_ingestion_source, "ingestion module"),
         ("retrieval", get_retrieval_source, "retrieval module"),
+        ("storage", get_storage_source, "storage module"),
         ("pipelines", get_pipelines_source, "pipelines module"),
     ]
     for i, (module_name, source_func, display_name) in enumerate(
