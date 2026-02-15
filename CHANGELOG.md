@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1](https://github.com/etalab-ia/rag-facile/compare/v0.11.0...v0.11.1) (2026-02-15)
+
+
+### Bug Fixes
+
+* address review comments on process_query and rerank_chunks ([06de58b](https://github.com/etalab-ia/rag-facile/commit/06de58ba6887829936b81c651f1f5dbf7f23e2ad))
+
 ## [0.11.0](https://github.com/etalab-ia/rag-facile/compare/v0.10.1...v0.11.0) (2026-02-15)
 
 
