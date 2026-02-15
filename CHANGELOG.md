@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0](https://github.com/etalab-ia/rag-facile/compare/v0.10.1...v1.0.0) (2026-02-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* consolidate citation config and unify schema terminology
+
+### Features
+
+* Add initial `ragfacile.toml` configuration file for RAG system settings. ([482ad12](https://github.com/etalab-ia/rag-facile/commit/482ad12a58ecacf99c4bd9afa09989504fdc5d4e))
+* add retrieval-albert package and remove Chroma placeholder ([32a93af](https://github.com/etalab-ia/rag-facile/commit/32a93af64a53dd3a02ce3bb01bb55927fb47e5f8))
+* add retrieval-albert package and remove Chroma placeholder ([7834dce](https://github.com/etalab-ia/rag-facile/commit/7834dce74b6738dd08370ba4b713baa2ac4088c6))
+* display config show in RAG pipeline order with descriptions ([c810ccb](https://github.com/etalab-ia/rag-facile/commit/c810ccb3ce77b9d1527a79acd2e6310bf70f3539))
+* display config show in RAG pipeline order with descriptions ([5955e82](https://github.com/etalab-ia/rag-facile/commit/5955e8298f87c625789d339ca3d246e8ed793784))
+* local PDF fallback when Albert parse API fails ([67350f2](https://github.com/etalab-ia/rag-facile/commit/67350f2eeb9490a8f656273ab2dd847be9654e0a))
+* multi-format file support for retrieval-albert, update TEST_PLAN ([7ab2bc3](https://github.com/etalab-ia/rag-facile/commit/7ab2bc32a950273c4684f87dea2077ce17252f62))
+* uniform table widths in config show ([4466dba](https://github.com/etalab-ia/rag-facile/commit/4466dba7251b3d19e8a09299463cfa18f025538d))
+
+
+### Bug Fixes
+
+* add interactive retrieval module selection to setup command ([2bba840](https://github.com/etalab-ia/rag-facile/commit/2bba840b791779ad944b989554e784c0b43ca858))
+* address code review comments from Gemini Code Assist ([63a788f](https://github.com/etalab-ia/rag-facile/commit/63a788ff3bfcb484f28961f25a70250c3307d252))
+* address Gemini Code Assist review comments ([9ed3b9c](https://github.com/etalab-ia/rag-facile/commit/9ed3b9c59cc9bd2402c9c0324e038ee5cda8e779))
+* address Gemini review - sort __all__, simplify dotted_key logic ([783e3c2](https://github.com/etalab-ia/rag-facile/commit/783e3c20b4007b15ae57b7f0b5d2369fd8b558c3))
+* chainlit repeating all responses + handle malformed SSE ([531f056](https://github.com/etalab-ia/rag-facile/commit/531f05657ff5779e1bcf1836cea2629d2f5dac7e))
+* display storage backend in config show command ([bac5bb9](https://github.com/etalab-ia/rag-facile/commit/bac5bb9a90441136865fc9239d343702fe9cb786))
+* make Albert RAG first choice, remove broken Chainlit config gen ([a4332bc](https://github.com/etalab-ia/rag-facile/commit/a4332bcb33a6c1735a7f491a6369a4216f4c6324))
+* make retrieval-albert interchangeable with retrieval-basic ([4f993cc](https://github.com/etalab-ia/rag-facile/commit/4f993cce42c381de04b0e9b035bd9b91852842ae))
+* monorepo templates conditionally use retrieval-basic or retrieval-albert ([1ffa0cf](https://github.com/etalab-ia/rag-facile/commit/1ffa0cf7bcc33175fc7c4de5528f73485e556262))
+* reflex app crashes on malformed SSE events from Albert API ([6c41d7d](https://github.com/etalab-ia/rag-facile/commit/6c41d7dc12998c780ccb110f14285cac24aa56de))
+* rename albert_rag provider for clarity ([33ef440](https://github.com/etalab-ia/rag-facile/commit/33ef440e61c36c340d9e846231c86e6f9e6a5fa7))
+* rename Reflex app package dir after moon generate ([e501d21](https://github.com/etalab-ia/rag-facile/commit/e501d2153a0f625537f999d7aff47430f3f56812))
+* restrict file types to Albert API-supported formats ([dc25e79](https://github.com/etalab-ia/rag-facile/commit/dc25e79601cd2c1ade8716d87c5c46b5ee4730e4))
+* update golden master modules.yml from stale pdf_context ([1a551a7](https://github.com/etalab-ia/rag-facile/commit/1a551a796af2280fb725992823a6537489e32a1d))
+* update setup command to use unified retrieval template ([65d11ba](https://github.com/etalab-ia/rag-facile/commit/65d11baac91808fa17ca9daa5cf11a286f19470d))
+* use Albert API model aliases instead of raw model IDs ([ea5c5b9](https://github.com/etalab-ia/rag-facile/commit/ea5c5b9681d86cb00abe7172afea1afb93616a40))
+
+
+### Documentation
+
+* update for Albert RAG component and retrieval modules ([052792c](https://github.com/etalab-ia/rag-facile/commit/052792cc3daf658c314a9bc153ec745eeb822ebc))
+
+
+### Code Refactoring
+
+* consolidate citation config and unify schema terminology ([065e41b](https://github.com/etalab-ia/rag-facile/commit/065e41bdfbc8cbec9cc26dca1e013567718ed8e8))
+
 ## [0.10.1](https://github.com/etalab-ia/rag-facile/compare/v0.10.0...v0.10.1) (2026-02-13)
 
 
