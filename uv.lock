@@ -18,6 +18,7 @@ members = [
     "rag-facile-cli",
     "reflex-chat",
     "retrieval",
+    "storage",
 ]
 
 [[package]]
@@ -1960,6 +1961,7 @@ dependencies = [
     { name = "ingestion" },
     { name = "rag-core" },
     { name = "retrieval" },
+    { name = "storage" },
 ]
 
 [package.metadata]
@@ -1967,6 +1969,7 @@ requires-dist = [
     { name = "ingestion", editable = "packages/ingestion" },
     { name = "rag-core", editable = "packages/rag-core" },
     { name = "retrieval", editable = "packages/retrieval" },
+    { name = "storage", editable = "packages/storage" },
 ]
 
 [[package]]
@@ -2387,6 +2390,7 @@ dependencies = [
     { name = "rag-facile-cli" },
     { name = "reflex-chat" },
     { name = "retrieval" },
+    { name = "storage" },
 ]
 
 [package.dev-dependencies]
@@ -2411,6 +2415,7 @@ requires-dist = [
     { name = "rag-facile-cli", editable = "apps/cli" },
     { name = "reflex-chat", editable = "apps/reflex-chat" },
     { name = "retrieval", editable = "packages/retrieval" },
+    { name = "storage", editable = "packages/storage" },
 ]
 
 [package.metadata.requires-dev]
@@ -2444,6 +2449,7 @@ dependencies = [
     { name = "rag-core" },
     { name = "retrieval" },
     { name = "rich" },
+    { name = "storage" },
     { name = "typer" },
 ]
 
@@ -2469,6 +2475,7 @@ requires-dist = [
     { name = "rag-core", editable = "packages/rag-core" },
     { name = "retrieval", editable = "packages/retrieval" },
     { name = "rich", specifier = ">=13.0.0" },
+    { name = "storage", editable = "packages/storage" },
     { name = "typer", specifier = ">=0.12.0" },
 ]
 
@@ -2781,6 +2788,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c4/68/79977123bb7be889ad680d79a40f339082c1978b5cfcf62c2d8d196873ac/starlette-0.52.1.tar.gz", hash = "sha256:834edd1b0a23167694292e94f597773bc3f89f362be6effee198165a35d62933", size = 2653702, upload-time = "2026-01-18T13:34:11.062Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/0d/13d1d239a25cbfb19e740db83143e95c772a1fe10202dda4b76792b114dd/starlette-0.52.1-py3-none-any.whl", hash = "sha256:0029d43eb3d273bc4f83a08720b4912ea4b071087a3b48db01b7c839f7954d74", size = 74272, upload-time = "2026-01-18T13:34:09.188Z" },
+]
+
+[[package]]
+name = "storage"
+version = "0.11.0"
+source = { editable = "packages/storage" }
+dependencies = [
+    { name = "albert-client" },
+    { name = "rag-core" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "albert-client", editable = "packages/albert-client" },
+    { name = "rag-core", editable = "packages/rag-core" },
 ]
 
 [[package]]

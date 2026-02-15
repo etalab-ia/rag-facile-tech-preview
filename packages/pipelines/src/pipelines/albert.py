@@ -25,15 +25,15 @@ class AlbertPipeline(RAGPipeline):
     File processing is delegated to the ingestion package's
     :class:`~ingestion.AlbertProvider`.  Query-time retrieval delegates to
     the retrieval package for search, reranking, and context formatting.
-
-    Collection management methods are exposed via composition for
-    applications that need to ingest documents into Albert collections.
+    Collection management delegates to the storage package.
     """
 
     def __init__(self, config: Any | None = None) -> None:
         from ingestion import get_provider
+        from storage import get_provider as get_storage_provider
 
         self._ingestion = get_provider(config)
+        self._storage = get_storage_provider(config)
 
     # ── Upload-time: file processing ──
 
@@ -73,7 +73,7 @@ class AlbertPipeline(RAGPipeline):
 
         return process_query(query, **kwargs)  # type: ignore[arg-type]
 
-    # ── Collection management (delegated to retrieval) ──
+    # ── Collection management (delegated to storage) ──
 
     def create_collection(
         self,
@@ -91,9 +91,7 @@ class AlbertPipeline(RAGPipeline):
         Returns:
             The new collection ID.
         """
-        from retrieval.ingestion import create_collection
-
-        return create_collection(client, name, description)
+        return self._storage.create_collection(client, name, description)
 
     def ingest_documents(
         self,
@@ -116,9 +114,7 @@ class AlbertPipeline(RAGPipeline):
         Returns:
             List of document IDs created.
         """
-        from retrieval.ingestion import ingest_documents
-
-        return ingest_documents(
+        return self._storage.ingest_documents(
             client,
             paths,
             collection_id,
@@ -133,9 +129,7 @@ class AlbertPipeline(RAGPipeline):
             client: Configured Albert client.
             collection_id: Collection to delete.
         """
-        from retrieval.ingestion import delete_collection
-
-        delete_collection(client, collection_id)
+        self._storage.delete_collection(client, collection_id)
 
     def list_collections(
         self,
@@ -154,9 +148,7 @@ class AlbertPipeline(RAGPipeline):
         Returns:
             CollectionList from Albert API.
         """
-        from retrieval.ingestion import list_collections
-
-        return list_collections(client, limit=limit, offset=offset)
+        return self._storage.list_collections(client, limit=limit, offset=offset)
 
     # ── Capabilities ──
 

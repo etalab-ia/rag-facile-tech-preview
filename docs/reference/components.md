@@ -47,20 +47,38 @@ results = client.search(
 
 Both are available during `rag-facile setup` and are pre-configured to work with the Albert API out of the box.
 
-## Retrieval System
+## Pipeline Packages
 
-RAG Facile provides a **unified retrieval package** with two backends that can be switched at runtime. The backend is determined by your `ragfacile.toml` configuration.
+RAG Facile organizes the RAG pipeline into dedicated packages, each handling a specific phase:
 
-### Architecture
+| Package | Phase | Description |
+|---------|-------|-------------|
+| **ingestion** | Document Ingestion | Parse documents into text (PDF, Markdown, HTML) |
+| **storage** | Vector Storage | Collection management — create, populate, delete, list |
+| **retrieval** | Retrieval + Reranking | Search for relevant chunks and re-score with cross-encoder |
+| **pipelines** | Orchestration | Coordinate ingestion, storage, and retrieval into a unified interface |
 
-The retrieval system uses a factory pattern for runtime backend selection:
+### Storage
+
+Manages vector store collections via the Albert API (or local SQLite, planned).
 
 ```python
-from retrieval import get_provider
+from storage import get_provider
 
-# Backend determined by ragfacile.toml config
-provider = get_provider()
-context = provider.process_file("document.pdf")
+provider = get_provider()  # Backend from ragfacile.toml
+collection_id = provider.create_collection(client, "my-docs")
+provider.ingest_documents(client, ["report.pdf"], collection_id)
+```
+
+### Retrieval
+
+Searches the vector store and formats results as LLM context.
+
+```python
+from retrieval import retrieve, format_context
+
+chunks = retrieve(client, "energy transition", collection_ids=[1])
+context = format_context(chunks)
 ```
 
 ### Backend Selection
@@ -69,8 +87,7 @@ Backend is configured in `ragfacile.toml`:
 
 ```toml
 [storage]
-backend = "local-sqlite"        # Uses Basic backend
-# backend = "albert-collections" # Uses Albert backend
+provider = "albert-collections"  # or "local-sqlite" (planned)
 ```
 
 To switch backends:
@@ -79,34 +96,10 @@ To switch backends:
 
 No code changes or reinstallation needed!
 
-### Basic Backend (`local-sqlite`)
-
-**Best for:** Quick prototypes, offline usage, simple document processing
-
-- **Extraction:** Local pypdf library (no network calls)
-- **Supported formats:** PDF
-- **Features:** Simple, lightweight, no server dependencies
-- **Use case:** Getting started quickly, private/offline scenarios, small documents
-
-### Albert Backend (`albert-collections`)
-
-**Best for:** Production deployments, large document collections, advanced search features
-
-- **Extraction:** Albert API server-side parsing (`/parse-beta`)
-- **Supported formats:** PDF, JSON, Markdown, HTML
-- **Features:** 
-  - Multi-format document support
-  - Server-side chunking and vectorization
-  - Hybrid search (semantic + lexical)
-  - Result reranking with BGE models
-  - Collection-based document storage
-  - Built-in fallback to local pypdf if parse API fails
-- **Use case:** Advanced RAG pipelines, production applications, large document sets
-
 ### Comparison Table
 
-| Feature | Basic | Albert |
-|---------|-------|--------|
+| Feature | Basic (`local-sqlite`) | Albert (`albert-collections`) |
+|---------|----------------------|-------------------------------|
 | **Extraction** | Local pypdf | Albert API + fallback |
 | **Formats** | PDF only | PDF, JSON, MD, HTML |
 | **Search** | None (context injection) | Semantic + Hybrid + Reranking |

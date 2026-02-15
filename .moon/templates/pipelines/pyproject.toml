@@ -8,12 +8,14 @@ dependencies = [
     "ingestion",
     "retrieval",
     "rag-core",
+    "storage",
 ]
 
 [tool.uv.sources]
 ingestion = { workspace = true }
 retrieval = { workspace = true }
 rag-core = { workspace = true }
+storage = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

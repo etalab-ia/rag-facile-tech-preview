@@ -4,7 +4,6 @@ import pytest
 
 from albert import AlbertClient
 from rag_core.schema import (
-    ChunkingConfig,
     CitationsConfig,
     FormattingConfig,
     RAGConfig,
@@ -42,14 +41,12 @@ def client(api_key, base_url):
 def mock_config(monkeypatch):
     """Patch rag_core.get_config() with test values."""
     config = RAGConfig(
-        chunking=ChunkingConfig(chunk_size=512, chunk_overlap=50),
         retrieval=RetrievalConfig(strategy="hybrid", top_k=10, score_threshold=0.0),
         reranking=RerankingConfig(enabled=True, model="openweight-rerank", top_n=3),
         formatting=FormattingConfig(
             citations=CitationsConfig(enabled=True, style="inline")
         ),
     )
-    monkeypatch.setattr("retrieval.ingestion.get_config", lambda: config)
     monkeypatch.setattr("retrieval.albert.get_config", lambda: config)
     monkeypatch.setattr("retrieval.formatter.get_config", lambda: config)
     return config
