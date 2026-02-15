@@ -45,18 +45,18 @@ def get_provider(config: Any | None = None) -> IngestionProvider:
 
     backend = config.ingestion.provider
 
-    if backend == "local":
-        from ingestion.local import LocalProvider
+    match backend:
+        case "local":
+            from ingestion.local import LocalProvider
 
-        return LocalProvider()
+            return LocalProvider()
+        case "albert":
+            from ingestion.albert import AlbertProvider
 
-    if backend == "albert":
-        from ingestion.albert import AlbertProvider
-
-        return AlbertProvider()
-
-    msg = f"Unknown ingestion provider: {backend!r}. Expected 'local' or 'albert'."
-    raise ValueError(msg)
+            return AlbertProvider()
+        case _:
+            msg = f"Unknown ingestion provider: {backend!r}. Expected 'local' or 'albert'."
+            raise ValueError(msg)
 
 
 __all__ = [

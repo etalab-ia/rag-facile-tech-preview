@@ -64,12 +64,7 @@ class AlbertProvider(IngestionProvider):
         """Parse a file via Albert API and combine page contents."""
         parsed = self.client.parse(file_path=file_path, force_ocr=force_ocr)
 
-        text_parts: list[str] = []
-        for page in parsed.data:
-            if page.content:
-                text_parts.append(page.content)
-
-        return "\n".join(text_parts)
+        return "\n".join(page.content for page in parsed.data if page.content)
 
     def extract_text(self, path: str | Path) -> str:
         """Extract text from a document using Albert's parse API.
@@ -130,22 +125,21 @@ class AlbertProvider(IngestionProvider):
 
         # Albert parse API requires a file path, so write to a temp file.
         # delete=False for Windows compatibility (prevents read-while-open).
-        tmp = NamedTemporaryFile(suffix=suffix, delete=False)
-        try:
+        with NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            tmp_path = Path(tmp.name)
             tmp.write(data)
-            tmp.flush()
-            tmp.close()
-            try:
-                return self._parse_and_combine(Path(tmp.name))
-            except httpx.HTTPStatusError as e:
-                if e.response.status_code >= 500 and suffix.lower() == ".pdf":
-                    logger.warning(
-                        "Albert parse API returned %s, falling back to local pypdf",
-                        e.response.status_code,
-                    )
-                    from rag_core.pdf import extract_text_from_bytes as _local
 
-                    return _local(data)
-                raise
+        try:
+            return self._parse_and_combine(tmp_path)
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code >= 500 and suffix.lower() == ".pdf":
+                logger.warning(
+                    "Albert parse API returned %s, falling back to local pypdf",
+                    e.response.status_code,
+                )
+                from rag_core.pdf import extract_text_from_bytes as _local
+
+                return _local(data)
+            raise
         finally:
-            Path(tmp.name).unlink(missing_ok=True)
+            tmp_path.unlink(missing_ok=True)
