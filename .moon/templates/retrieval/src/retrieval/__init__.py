@@ -17,7 +17,7 @@ Example usage::
 .. note::
     For file parsing and text extraction, use the ``ingestion`` package.
     For pipeline orchestration (coordinating ingestion + retrieval),
-    use the ``orchestration`` package.
+    use the ``pipelines`` package.
 """
 
 from retrieval._types import RetrievedChunk

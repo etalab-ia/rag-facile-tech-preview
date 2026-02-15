@@ -1,11 +1,11 @@
-# Orchestration
+# Pipelines
 
 RAG pipeline orchestration for chat applications. Coordinates document ingestion and retrieval behind a unified `RAGPipeline` interface.
 
 ## Usage
 
 ```python
-from orchestration import get_pipeline
+from pipelines import get_pipeline
 
 pipeline = get_pipeline()
 

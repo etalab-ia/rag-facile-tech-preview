@@ -270,12 +270,12 @@ def get_retrieval_source() -> Path:
     )
 
 
-def get_orchestration_source() -> Path:
-    """Get the orchestration source directory for inline copying."""
+def get_pipelines_source() -> Path:
+    """Get the pipelines source directory for inline copying."""
     return _get_source_path(
-        ("packages", "orchestration", "src", "orchestration"),
-        ("orchestration_src",),
-        "orchestration source not found. This is a packaging error - please reinstall the CLI.",
+        ("packages", "pipelines", "src", "pipelines"),
+        ("pipelines_src",),
+        "pipelines source not found. This is a packaging error - please reinstall the CLI.",
     )
 
 
@@ -326,7 +326,7 @@ def _copy_module_to_standalone(
 
     Handles directory cleanup, __pycache__ removal, and user-facing
     progress output.  Used by :func:`generate_standalone` to inline
-    pipeline packages (albert, rag_core, ingestion, retrieval, orchestration).
+    pipeline packages (albert, rag_core, ingestion, retrieval, pipelines).
 
     Args:
         target_path: Root of the standalone project.
@@ -506,7 +506,7 @@ def generate_standalone(
     setuptools_packages_list = [
         "albert",
         "ingestion",
-        "orchestration",
+        "pipelines",
         "rag_core",
         "retrieval",
     ]
@@ -614,7 +614,7 @@ package = true
         ("rag_core", get_rag_core_source, "RAG core module"),
         ("ingestion", get_ingestion_source, "ingestion module"),
         ("retrieval", get_retrieval_source, "retrieval module"),
-        ("orchestration", get_orchestration_source, "orchestration module"),
+        ("pipelines", get_pipelines_source, "pipelines module"),
     ]
     for i, (module_name, source_func, display_name) in enumerate(
         modules_to_copy, start=3
@@ -928,7 +928,7 @@ def run(
         "reflex-chat",
         "albert-client",
         "ingestion",
-        "orchestration",
+        "pipelines",
         "rag-core",
         "retrieval",
     ]:
@@ -1072,17 +1072,15 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
         raise typer.Exit(1)
     console.print("[green]✓[/green] ingestion package generated")
 
-    # 7. Generate orchestration package (always required for pipeline coordination)
+    # 7. Generate pipelines package (always required for pipeline coordination)
     console.print()
-    console.print(
-        "[bold green]Step 7:[/bold green] Generating orchestration package..."
-    )
-    orchestration_cmd = ["moon", "generate", "orchestration", "--defaults"]
+    console.print("[bold green]Step 7:[/bold green] Generating pipelines package...")
+    pipelines_cmd = ["moon", "generate", "pipelines", "--defaults"]
     if force:
-        orchestration_cmd.append("--force")
-    if not run_command(orchestration_cmd, "generate orchestration", cwd=target_path):
+        pipelines_cmd.append("--force")
+    if not run_command(pipelines_cmd, "generate pipelines", cwd=target_path):
         raise typer.Exit(1)
-    console.print("[green]✓[/green] orchestration package generated")
+    console.print("[green]✓[/green] pipelines package generated")
 
     # 8. Generate selected packages
     if selected_modules:

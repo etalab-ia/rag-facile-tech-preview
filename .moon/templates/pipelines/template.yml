@@ -1,0 +1,4 @@
+title: Pipelines
+description: Pipelines package
+destination: packages/pipelines
+variables: {}

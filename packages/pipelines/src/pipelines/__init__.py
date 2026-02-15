@@ -1,4 +1,4 @@
-"""Orchestration - RAG pipeline coordination for chat applications.
+"""Pipelines - RAG pipeline coordination for chat applications.
 
 Provides a unified :class:`RAGPipeline` interface that coordinates
 document ingestion and retrieval.  Chat apps depend on this package
@@ -12,14 +12,14 @@ Pipeline selection is driven by ``ragfacile.toml``::
 
 Example usage::
 
-    from orchestration import get_pipeline
+    from pipelines import get_pipeline
 
     pipeline = get_pipeline()
     context = pipeline.process_file("document.pdf")
 
 Convenience functions are also available for simpler call sites::
 
-    from orchestration import process_file, process_bytes, get_accepted_mime_types
+    from pipelines import process_file, process_bytes, get_accepted_mime_types
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
-from orchestration._base import RAGPipeline
+from pipelines._base import RAGPipeline
 
 
 # ── Singleton pipeline cache ──
@@ -75,11 +75,11 @@ def get_pipeline(config: Any | None = None) -> RAGPipeline:
 
     match backend:
         case "local-sqlite":
-            from orchestration.basic import BasicPipeline
+            from pipelines.basic import BasicPipeline
 
             return BasicPipeline(config)
         case "albert-collections":
-            from orchestration.albert import AlbertPipeline
+            from pipelines.albert import AlbertPipeline
 
             return AlbertPipeline(config)
         case _:
@@ -93,7 +93,7 @@ def get_pipeline(config: Any | None = None) -> RAGPipeline:
 # ── Convenience functions ──
 #
 # These allow simple call-sites like:
-#   from orchestration import process_file
+#   from pipelines import process_file
 #   context = process_file("doc.pdf")
 
 

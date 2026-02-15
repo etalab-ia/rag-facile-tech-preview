@@ -456,7 +456,7 @@ def main():
             "reflex-chat",
             "albert-client",
             "ingestion",
-            "orchestration",
+            "pipelines",
             "rag-core",
             "retrieval",
         ],
@@ -489,7 +489,7 @@ def main():
             "reflex-chat",
             "albert-client",
             "ingestion",
-            "orchestration",
+            "pipelines",
             "rag-core",
             "retrieval",
         ]
@@ -532,10 +532,10 @@ def main():
             )
             if result is False:
                 success = False
-        elif template == "orchestration":
+        elif template == "pipelines":
             result = generate_package_template(
-                "orchestration",
-                REPO_ROOT / "packages" / "orchestration",
+                "pipelines",
+                REPO_ROOT / "packages" / "pipelines",
                 force=args.force,
             )
             if result is False:

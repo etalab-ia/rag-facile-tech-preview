@@ -12,7 +12,7 @@ from cli.commands.setup import (
     MODULES,
     PROJECT_STRUCTURES,
     get_ingestion_source,
-    get_orchestration_source,
+    get_pipelines_source,
     get_retrieval_source,
     get_templates_dir,
     render_template_file,
@@ -156,27 +156,27 @@ class TestGetRetrievalSource:
         assert (result / "_types.py").exists()
 
 
-class TestGetOrchestrationSource:
-    """Tests for get_orchestration_source function."""
+class TestGetPipelinesSource:
+    """Tests for get_pipelines_source function."""
 
     def test_returns_path_object(self):
         """Should return a Path object."""
-        result = get_orchestration_source()
+        result = get_pipelines_source()
         assert isinstance(result, Path)
 
-    def test_path_ends_with_orchestration(self):
-        """Should return path ending with orchestration."""
-        result = get_orchestration_source()
-        assert result.name == "orchestration"
+    def test_path_ends_with_pipelines(self):
+        """Should return path ending with pipelines."""
+        result = get_pipelines_source()
+        assert result.name == "pipelines"
 
     def test_path_exists_in_repo(self):
-        """orchestration source should exist when running from repo."""
-        result = get_orchestration_source()
-        assert result.exists(), f"orchestration source not found at {result}"
+        """pipelines source should exist when running from repo."""
+        result = get_pipelines_source()
+        assert result.exists(), f"pipelines source not found at {result}"
 
     def test_contains_required_modules(self):
-        """orchestration source should contain pipeline modules."""
-        result = get_orchestration_source()
+        """pipelines source should contain pipeline modules."""
+        result = get_pipelines_source()
         assert (result / "__init__.py").exists()
         assert (result / "_base.py").exists()
         assert (result / "basic.py").exists()
@@ -370,7 +370,7 @@ class TestGenerateStandalone:
     def test_creates_app_files(
         self, standalone_target, mock_standalone_deps, preset_config
     ):
-        """Should create app.py (context_loader.py replaced by orchestration)."""
+        """Should create app.py (context_loader.py replaced by pipelines)."""
         from cli.commands.setup import generate_standalone
 
         generate_standalone(
@@ -388,7 +388,7 @@ class TestGenerateStandalone:
         )
 
         assert (standalone_target / "app.py").exists()
-        # context_loader.py no longer exists — replaced by orchestration package
+        # context_loader.py no longer exists — replaced by pipelines package
         assert not (standalone_target / "context_loader.py").exists()
 
     def test_creates_env_file(
@@ -419,10 +419,10 @@ class TestGenerateStandalone:
         # OPENAI_MODEL is now in ragfacile.toml, not .env
         assert "OPENAI_MODEL" not in content
 
-    def test_copies_orchestration_module(
+    def test_copies_pipelines_module(
         self, standalone_target, mock_standalone_deps, preset_config
     ):
-        """Should copy orchestration module to standalone project."""
+        """Should copy pipelines module to standalone project."""
         from cli.commands.setup import generate_standalone
 
         generate_standalone(
@@ -439,10 +439,10 @@ class TestGenerateStandalone:
             force=False,
         )
 
-        orchestration = standalone_target / "orchestration"
-        assert orchestration.exists()
-        assert (orchestration / "__init__.py").exists()
-        assert (orchestration / "_base.py").exists()
+        pipelines = standalone_target / "pipelines"
+        assert pipelines.exists()
+        assert (pipelines / "__init__.py").exists()
+        assert (pipelines / "_base.py").exists()
 
     def test_creates_python_version_file(
         self, standalone_target, mock_standalone_deps, preset_config

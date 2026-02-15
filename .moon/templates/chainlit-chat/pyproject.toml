@@ -7,7 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "albert-client",
     "chainlit>=1.3.0",
-    "orchestration",
+    "pipelines",
     "rag-core",
     "python-dotenv>=1.0.0",
 ]
@@ -20,7 +20,7 @@ py-modules = ["app"]
 
 [tool.uv.sources]
 albert-client = { workspace = true }
-orchestration = { workspace = true }
+pipelines = { workspace = true }
 rag-core = { workspace = true }
 
 [tool.uv]

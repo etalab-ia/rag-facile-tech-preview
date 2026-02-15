@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "albert-client",
-    "orchestration",
+    "pipelines",
     "rag-core",
     "python-dotenv>=1.0.0",
     "reflex>=0.7.11",
@@ -20,7 +20,7 @@ include = ["{{ project_name | replace(from='-', to='_') }}*"]
 
 [tool.uv.sources]
 albert-client = { workspace = true }
-orchestration = { workspace = true }
+pipelines = { workspace = true }
 rag-core = { workspace = true }
 
 [tool.uv]

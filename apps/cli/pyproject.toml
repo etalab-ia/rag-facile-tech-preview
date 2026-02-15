@@ -7,7 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "albert-client",
     "ingestion",
-    "orchestration",
+    "pipelines",
     "rag-core",
     "retrieval",
     "datasets>=3.0.0",
@@ -31,7 +31,7 @@ dev = [
 [tool.uv.sources]
 albert-client = { workspace = true }
 ingestion = { workspace = true }
-orchestration = { workspace = true }
+pipelines = { workspace = true }
 rag-core = { workspace = true }
 retrieval = { workspace = true }
 
@@ -49,7 +49,7 @@ packages = ["src/cli"]
 "../../.moon/templates" = "cli/templates"
 "../../packages/albert-client/src/albert" = "cli/albert_src"
 "../../packages/ingestion/src/ingestion" = "cli/ingestion_src"
-"../../packages/orchestration/src/orchestration" = "cli/orchestration_src"
+"../../packages/pipelines/src/pipelines" = "cli/pipelines_src"
 "../../packages/rag-core/src/rag_core" = "cli/rag_core_src"
 "../../packages/retrieval/src/retrieval" = "cli/retrieval_src"
 "src/cli/templates/ragfacile.toml" = "cli/templates/ragfacile.toml"

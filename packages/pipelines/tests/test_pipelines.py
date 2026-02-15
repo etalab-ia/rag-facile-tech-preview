@@ -1,4 +1,4 @@
-"""Tests for the orchestration package."""
+"""Tests for the pipelines package."""
 
 from __future__ import annotations
 
@@ -6,10 +6,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from orchestration import get_pipeline
-from orchestration._base import RAGPipeline as RAGPipelineABC
-from orchestration.albert import AlbertPipeline
-from orchestration.basic import BasicPipeline
+from pipelines import get_pipeline
+from pipelines._base import RAGPipeline as RAGPipelineABC
+from pipelines.albert import AlbertPipeline
+from pipelines.basic import BasicPipeline
 
 
 # ── ABC tests ──
