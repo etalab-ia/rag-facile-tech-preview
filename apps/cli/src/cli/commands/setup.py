@@ -963,8 +963,10 @@ def run(
         "chainlit-chat",
         "reflex-chat",
         "albert-client",
-        "retrieval",
+        "ingestion",
+        "orchestration",
         "rag-core",
+        "retrieval",
     ]:
         src = templates_dir / template_name
         dst = target_templates / template_name
@@ -1096,10 +1098,32 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
             "[yellow]You can create config later with: rag-facile config preset apply balanced[/yellow]"
         )
 
-    # 6. Generate selected packages
+    # 6. Generate ingestion package (always required for document parsing)
+    console.print()
+    console.print("[bold green]Step 6:[/bold green] Generating ingestion package...")
+    ingestion_cmd = ["moon", "generate", "ingestion", "--defaults"]
+    if force:
+        ingestion_cmd.append("--force")
+    if not run_command(ingestion_cmd, "generate ingestion", cwd=target_path):
+        raise typer.Exit(1)
+    console.print("[green]✓[/green] ingestion package generated")
+
+    # 7. Generate orchestration package (always required for pipeline coordination)
+    console.print()
+    console.print(
+        "[bold green]Step 7:[/bold green] Generating orchestration package..."
+    )
+    orchestration_cmd = ["moon", "generate", "orchestration", "--defaults"]
+    if force:
+        orchestration_cmd.append("--force")
+    if not run_command(orchestration_cmd, "generate orchestration", cwd=target_path):
+        raise typer.Exit(1)
+    console.print("[green]✓[/green] orchestration package generated")
+
+    # 8. Generate selected packages
     if selected_modules:
         console.print()
-        console.print("[bold green]Step 6:[/bold green] Generating packages...")
+        console.print("[bold green]Step 8:[/bold green] Generating packages...")
 
         # Collect unique templates (both PDF and Albert RAG use same retrieval template)
         templates_to_generate = set()
@@ -1124,14 +1148,14 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
 
     # Run uv sync to install dependencies
     console.print()
-    console.print("[bold green]Step 7:[/bold green] Installing dependencies...")
+    console.print("[bold green]Step 9:[/bold green] Installing dependencies...")
     if not run_command(["uv", "sync"], "install dependencies", cwd=target_path):
         console.print("[yellow]Warning: uv sync failed. Run it manually.[/yellow]")
 
     # Start the dev server
     console.print()
     console.print(
-        f"[bold green]Step 7:[/bold green] Starting {frontend_choice} dev server..."
+        f"[bold green]Step 10:[/bold green] Starting {frontend_choice} dev server..."
     )
     console.print()
     console.print(f"[dim]Your app is at: {target_display}[/dim]")
