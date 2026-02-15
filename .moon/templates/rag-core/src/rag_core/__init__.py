@@ -70,8 +70,8 @@ __all__ = [
     "HallucinationConfig",
     "FormattingConfig",
     # Pipeline metadata
-    "PipelineStage",
     "PIPELINE_STAGES",
+    "PipelineStage",
     "flatten_model_fields",
     # Loader functions
     "load_config",

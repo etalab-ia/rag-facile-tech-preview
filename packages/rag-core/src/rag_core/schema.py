@@ -656,7 +656,7 @@ def flatten_model_fields(
 
     for field_name, field_info in model_instance.model_fields.items():
         value = getattr(model_instance, field_name)
-        dotted_key = f"{prefix}{field_name}" if not prefix else f"{prefix}.{field_name}"
+        dotted_key = f"{prefix}.{field_name}" if prefix else field_name
         description = field_info.description or ""
 
         if isinstance(value, BaseModel):
