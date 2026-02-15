@@ -188,20 +188,105 @@ class TestAlbertPipeline:
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_query_delegates_to_retrieval(
+    def test_process_query_orchestrates_search_rerank_format(
         self, mock_get_ingestion, mock_get_storage
     ):
-        """process_query should delegate to retrieval.process_query."""
+        """process_query should orchestrate search → rerank → format."""
         mock_get_ingestion.return_value = MagicMock()
         mock_get_storage.return_value = MagicMock()
         pipeline = AlbertPipeline()
 
-        with patch("retrieval.formatter.process_query") as mock_pq:
-            mock_pq.return_value = "retrieved context"
-            result = pipeline.process_query("what is RAG?", collection_ids=[1])
+        mock_chunks = [{"content": "chunk1", "score": 0.9}]
+        mock_reranked = [{"content": "chunk1", "score": 0.99}]
 
-        assert result == "retrieved context"
-        mock_pq.assert_called_once_with("what is RAG?", collection_ids=[1])
+        with (
+            patch("retrieval.search_chunks", return_value=mock_chunks) as mock_search,
+            patch("reranking.rerank_chunks", return_value=mock_reranked) as mock_rerank,
+            patch(
+                "context.format_context", return_value="formatted context"
+            ) as mock_format,
+            patch("rag_core.get_config") as mock_get_config,
+        ):
+            mock_config = MagicMock()
+            mock_config.retrieval.top_k = 10
+            mock_config.retrieval.strategy = "hybrid"
+            mock_config.retrieval.score_threshold = 0.0
+            mock_config.reranking.enabled = True
+            mock_config.reranking.model = "openweight-rerank"
+            mock_config.reranking.top_n = 3
+            mock_get_config.return_value = mock_config
+
+            mock_client = MagicMock()
+            result = pipeline.process_query(
+                "what is RAG?", collection_ids=[1], client=mock_client
+            )
+
+        assert result == "formatted context"
+        mock_search.assert_called_once()
+        mock_rerank.assert_called_once()
+        mock_format.assert_called_once_with(mock_reranked)
+
+    @patch("storage.get_provider")
+    @patch("ingestion.get_provider")
+    def test_process_query_skips_rerank_when_disabled(
+        self, mock_get_ingestion, mock_get_storage
+    ):
+        """process_query should skip reranking when config disables it."""
+        mock_get_ingestion.return_value = MagicMock()
+        mock_get_storage.return_value = MagicMock()
+        pipeline = AlbertPipeline()
+
+        mock_chunks = [{"content": "chunk1", "score": 0.9}]
+
+        with (
+            patch("retrieval.search_chunks", return_value=mock_chunks),
+            patch("reranking.rerank_chunks") as mock_rerank,
+            patch(
+                "context.format_context", return_value="formatted context"
+            ) as mock_format,
+            patch("rag_core.get_config") as mock_get_config,
+        ):
+            mock_config = MagicMock()
+            mock_config.retrieval.top_k = 10
+            mock_config.retrieval.strategy = "hybrid"
+            mock_config.retrieval.score_threshold = 0.0
+            mock_config.reranking.enabled = False
+            mock_get_config.return_value = mock_config
+
+            mock_client = MagicMock()
+            pipeline.process_query(
+                "what is RAG?", collection_ids=[1], client=mock_client
+            )
+
+        mock_rerank.assert_not_called()
+        mock_format.assert_called_once_with(mock_chunks)
+
+    @patch("storage.get_provider")
+    @patch("ingestion.get_provider")
+    def test_process_query_returns_empty_when_no_results(
+        self, mock_get_ingestion, mock_get_storage
+    ):
+        """process_query should return empty string when search finds nothing."""
+        mock_get_ingestion.return_value = MagicMock()
+        mock_get_storage.return_value = MagicMock()
+        pipeline = AlbertPipeline()
+
+        with (
+            patch("retrieval.search_chunks", return_value=[]),
+            patch("rag_core.get_config") as mock_get_config,
+        ):
+            mock_config = MagicMock()
+            mock_config.retrieval.top_k = 10
+            mock_config.retrieval.strategy = "hybrid"
+            mock_config.retrieval.score_threshold = 0.0
+            mock_get_config.return_value = mock_config
+
+            mock_client = MagicMock()
+            result = pipeline.process_query(
+                "nonexistent", collection_ids=[1], client=mock_client
+            )
+
+        assert result == ""
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")

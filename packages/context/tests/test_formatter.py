@@ -1,7 +1,8 @@
-"""Tests for formatter functions."""
+"""Tests for context formatter functions."""
 
-from retrieval.formatter import format_context
-from retrieval._types import RetrievedChunk
+from rag_core import RetrievedChunk
+
+from context import format_context
 
 
 def _make_chunk(

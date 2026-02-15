@@ -9,11 +9,12 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
     from albert import AlbertClient
+    from albert.types.collections import CollectionList
 
 
 class StorageProvider(ABC):
@@ -84,7 +85,7 @@ class StorageProvider(ABC):
         *,
         limit: int = 10,
         offset: int = 0,
-    ) -> Any:
+    ) -> CollectionList:
         """List accessible collections.
 
         Args:

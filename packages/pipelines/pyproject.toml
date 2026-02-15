@@ -5,16 +5,20 @@ description = "RAG pipeline orchestration - coordinate ingestion, retrieval, and
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "context",
     "ingestion",
-    "retrieval",
     "rag-core",
+    "reranking",
+    "retrieval",
     "storage",
 ]
 
 [tool.uv.sources]
+context = { workspace = true }
 ingestion = { workspace = true }
-retrieval = { workspace = true }
 rag-core = { workspace = true }
+reranking = { workspace = true }
+retrieval = { workspace = true }
 storage = { workspace = true }
 
 [build-system]

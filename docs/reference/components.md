@@ -55,8 +55,10 @@ RAG Facile organizes the RAG pipeline into dedicated packages, each handling a s
 |---------|-------|-------------|
 | **ingestion** | Document Ingestion | Parse documents into text (PDF, Markdown, HTML) |
 | **storage** | Vector Storage | Collection management — create, populate, delete, list |
-| **retrieval** | Retrieval + Reranking | Search for relevant chunks and re-score with cross-encoder |
-| **pipelines** | Orchestration | Coordinate ingestion, storage, and retrieval into a unified interface |
+| **retrieval** | Search | Vector search across document collections (semantic, lexical, hybrid) |
+| **reranking** | Reranking | Re-score search results with a cross-encoder for higher precision |
+| **context** | Context Assembly | Format retrieved chunks into LLM-ready context strings with citations |
+| **pipelines** | Orchestration | Coordinate all pipeline phases into a unified interface |
 
 ### Storage
 
@@ -70,15 +72,19 @@ collection_id = provider.create_collection(client, "my-docs")
 provider.ingest_documents(client, ["report.pdf"], collection_id)
 ```
 
-### Retrieval
+### Retrieval → Reranking → Context
 
-Searches the vector store and formats results as LLM context.
+Each phase is a self-contained package. The `pipelines` package orchestrates them:
 
 ```python
-from retrieval import retrieve, format_context
+# Individual phase packages (used by pipelines internally)
+from retrieval import search_chunks
+from reranking import rerank_chunks
+from context import format_context
 
-chunks = retrieve(client, "energy transition", collection_ids=[1])
-context = format_context(chunks)
+chunks = search_chunks(client, "energy transition", collection_ids=[1])
+reranked = rerank_chunks(client, "energy transition", chunks)
+context_str = format_context(reranked)
 ```
 
 ### Backend Selection

@@ -1,36 +1,23 @@
-"""Retrieval - Search, reranking, and context formatting.
+"""Retrieval - vector search for the RAG pipeline.
 
-This package provides retrieval capabilities for the RAG pipeline:
-
-- **Search**: Find relevant document chunks via Albert API
-- **Reranking**: Re-score results with a cross-encoder for higher precision
-- **Formatting**: Convert retrieved chunks into LLM-ready context strings
+This package provides search capabilities via the Albert API:
+semantic, lexical, and hybrid search across document collections.
 
 Example usage::
 
-    from retrieval import retrieve, format_context
+    from retrieval import search_chunks
 
-    chunks = retrieve(client, "What is RAG?", collection_ids=[1])
-    context = format_context(chunks)
+    chunks = search_chunks(client, "What is RAG?", collection_ids=[1])
 
 .. note::
-    For file parsing and text extraction, use the ``ingestion`` package.
+    For reranking results, use the ``reranking`` package.
+    For formatting chunks as LLM context, use the ``context`` package.
     For collection management (create, delete, list), use the ``storage`` package.
     For pipeline orchestration, use the ``pipelines`` package.
 """
 
-from retrieval._types import RetrievedChunk
-from retrieval.albert import rerank_chunks, retrieve, search_chunks
-from retrieval.formatter import format_context, process_query
-
+from retrieval.albert import search_chunks
 
 __all__ = [
-    "RetrievedChunk",
-    # Search & reranking
-    "retrieve",
     "search_chunks",
-    "rerank_chunks",
-    # Context formatting
-    "format_context",
-    "process_query",
 ]

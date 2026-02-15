@@ -11,8 +11,10 @@ from cli.commands.setup import (
     FRONTENDS,
     MODULES,
     PROJECT_STRUCTURES,
+    get_context_source,
     get_ingestion_source,
     get_pipelines_source,
+    get_reranking_source,
     get_retrieval_source,
     get_storage_source,
     get_templates_dir,
@@ -149,11 +151,9 @@ class TestGetRetrievalSource:
         assert init_file.exists(), f"__init__.py not found at {init_file}"
 
     def test_contains_required_modules(self):
-        """retrieval source should contain search, format, and type modules."""
+        """retrieval source should contain search module."""
         result = get_retrieval_source()
         assert (result / "albert.py").exists()
-        assert (result / "formatter.py").exists()
-        assert (result / "_types.py").exists()
 
 
 class TestGetPipelinesSource:
@@ -207,6 +207,56 @@ class TestGetIngestionSource:
         assert (result / "__init__.py").exists()
         assert (result / "_base.py").exists()
         assert (result / "local.py").exists()
+        assert (result / "albert.py").exists()
+
+
+class TestGetContextSource:
+    """Tests for get_context_source function."""
+
+    def test_returns_path_object(self):
+        """Should return a Path object."""
+        result = get_context_source()
+        assert isinstance(result, Path)
+
+    def test_path_ends_with_context(self):
+        """Should return path ending with context."""
+        result = get_context_source()
+        assert result.name == "context"
+
+    def test_path_exists_in_repo(self):
+        """context source should exist when running from repo."""
+        result = get_context_source()
+        assert result.exists(), f"context source not found at {result}"
+
+    def test_contains_required_modules(self):
+        """context source should contain formatter module."""
+        result = get_context_source()
+        assert (result / "__init__.py").exists()
+        assert (result / "formatter.py").exists()
+
+
+class TestGetRerankingSource:
+    """Tests for get_reranking_source function."""
+
+    def test_returns_path_object(self):
+        """Should return a Path object."""
+        result = get_reranking_source()
+        assert isinstance(result, Path)
+
+    def test_path_ends_with_reranking(self):
+        """Should return path ending with reranking."""
+        result = get_reranking_source()
+        assert result.name == "reranking"
+
+    def test_path_exists_in_repo(self):
+        """reranking source should exist when running from repo."""
+        result = get_reranking_source()
+        assert result.exists(), f"reranking source not found at {result}"
+
+    def test_contains_required_modules(self):
+        """reranking source should contain Albert module."""
+        result = get_reranking_source()
+        assert (result / "__init__.py").exists()
         assert (result / "albert.py").exists()
 
 
@@ -518,7 +568,6 @@ class TestGenerateStandalone:
         assert retrieval.exists()
         assert (retrieval / "__init__.py").exists()
         assert (retrieval / "albert.py").exists()
-        assert (retrieval / "formatter.py").exists()
 
     def test_pyproject_includes_pypdf_when_pdf_selected(
         self, standalone_target, mock_standalone_deps, preset_config
@@ -597,6 +646,56 @@ class TestGenerateStandalone:
         assert (storage / "__init__.py").exists()
         assert (storage / "_base.py").exists()
         assert (storage / "albert.py").exists()
+
+    def test_copies_context_module(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
+        """Should copy context module to standalone project."""
+        from cli.commands.setup import generate_standalone
+
+        generate_standalone(
+            target_path=standalone_target,
+            target_display=str(standalone_target),
+            frontend_choice="Chainlit",
+            selected_modules=["PDF"],
+            env_config={
+                "openai_api_key": "test-key",
+                "openai_base_url": "https://api.test.com",
+            },
+            preset="balanced",
+            preset_config=preset_config,
+            force=False,
+        )
+
+        context = standalone_target / "context"
+        assert context.exists()
+        assert (context / "__init__.py").exists()
+        assert (context / "formatter.py").exists()
+
+    def test_copies_reranking_module(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
+        """Should copy reranking module to standalone project."""
+        from cli.commands.setup import generate_standalone
+
+        generate_standalone(
+            target_path=standalone_target,
+            target_display=str(standalone_target),
+            frontend_choice="Chainlit",
+            selected_modules=["PDF"],
+            env_config={
+                "openai_api_key": "test-key",
+                "openai_base_url": "https://api.test.com",
+            },
+            preset="balanced",
+            preset_config=preset_config,
+            force=False,
+        )
+
+        reranking = standalone_target / "reranking"
+        assert reranking.exists()
+        assert (reranking / "__init__.py").exists()
+        assert (reranking / "albert.py").exists()
 
     def test_creates_chainlit_md_for_chainlit(
         self, standalone_target, mock_standalone_deps, preset_config

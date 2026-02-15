@@ -34,6 +34,7 @@ from .schema import (
     ChunkingConfig,
     CitationsConfig,
     ContextConfig,
+    RetrievedChunk,
     EmbeddingConfig,
     EvalConfig,
     FormattingConfig,
@@ -71,6 +72,8 @@ __all__ = [
     "HallucinationConfig",
     "FormattingConfig",
     "CitationsConfig",
+    # Shared types
+    "RetrievedChunk",
     # Pipeline metadata
     "PIPELINE_STAGES",
     "PipelineStage",

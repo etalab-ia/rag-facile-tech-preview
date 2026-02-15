@@ -7,9 +7,11 @@ requires-python = ">=3.13, <3.14"
 dependencies = [
     "albert-client",
     "chainlit-chat",
+    "context",
     "ingestion",
     "pipelines",
     "rag-core",
+    "reranking",
     "retrieval",
     "rag-facile-cli",
     "reflex-chat",
@@ -19,9 +21,11 @@ dependencies = [
 [tool.uv.sources]
 albert-client = { workspace = true }
 chainlit-chat = { workspace = true }
+context = { workspace = true }
 ingestion = { workspace = true }
 pipelines = { workspace = true }
 rag-core = { workspace = true }
+reranking = { workspace = true }
 retrieval = { workspace = true }
 rag-facile-cli = { workspace = true }
 reflex-chat = { workspace = true }
@@ -63,7 +67,7 @@ exclude = [".moon/templates"]
 
 [tool.ruff.lint.isort]
 # Define our first-party packages (local imports)
-known-first-party = ["albert", "chainlit_chat", "cli", "ingestion", "pipelines", "rag_core", "retrieval", "reflex_chat", "storage"]
+known-first-party = ["albert", "chainlit_chat", "cli", "context", "ingestion", "pipelines", "rag_core", "reranking", "retrieval", "reflex_chat", "storage"]
 # Ensure proper PEP 8 section ordering with blank lines between groups
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 lines-after-imports = 2  # PEP 8: 2 blank lines before top-level definitions

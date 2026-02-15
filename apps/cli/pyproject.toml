@@ -6,9 +6,11 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "albert-client",
+    "context",
     "ingestion",
     "pipelines",
     "rag-core",
+    "reranking",
     "retrieval",
     "storage",
     "datasets>=3.0.0",
@@ -31,9 +33,11 @@ dev = [
 
 [tool.uv.sources]
 albert-client = { workspace = true }
+context = { workspace = true }
 ingestion = { workspace = true }
 pipelines = { workspace = true }
 rag-core = { workspace = true }
+reranking = { workspace = true }
 retrieval = { workspace = true }
 storage = { workspace = true }
 
@@ -50,9 +54,11 @@ packages = ["src/cli"]
 [tool.hatch.build.targets.wheel.force-include]
 "../../.moon/templates" = "cli/templates"
 "../../packages/albert-client/src/albert" = "cli/albert_src"
+"../../packages/context/src/context" = "cli/templates/context"
 "../../packages/ingestion/src/ingestion" = "cli/ingestion_src"
 "../../packages/pipelines/src/pipelines" = "cli/pipelines_src"
 "../../packages/rag-core/src/rag_core" = "cli/rag_core_src"
+"../../packages/reranking/src/reranking" = "cli/templates/reranking"
 "../../packages/retrieval/src/retrieval" = "cli/retrieval_src"
 "../../packages/storage/src/storage" = "cli/storage_src"
 "src/cli/templates/ragfacile.toml" = "cli/templates/ragfacile.toml"

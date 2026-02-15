@@ -1,15 +1,8 @@
-"""Pytest configuration and shared fixtures for retrieval-albert tests."""
+"""Pytest configuration and shared fixtures for retrieval tests."""
 
 import pytest
 
 from albert import AlbertClient
-from rag_core.schema import (
-    CitationsConfig,
-    FormattingConfig,
-    RAGConfig,
-    RerankingConfig,
-    RetrievalConfig,
-)
 
 
 @pytest.fixture(autouse=True)
@@ -35,21 +28,6 @@ def base_url():
 def client(api_key, base_url):
     """Create test Albert client."""
     return AlbertClient(api_key=api_key, base_url=base_url)
-
-
-@pytest.fixture
-def mock_config(monkeypatch):
-    """Patch rag_core.get_config() with test values."""
-    config = RAGConfig(
-        retrieval=RetrievalConfig(strategy="hybrid", top_k=10, score_threshold=0.0),
-        reranking=RerankingConfig(enabled=True, model="openweight-rerank", top_n=3),
-        formatting=FormattingConfig(
-            citations=CitationsConfig(enabled=True, style="inline")
-        ),
-    )
-    monkeypatch.setattr("retrieval.albert.get_config", lambda: config)
-    monkeypatch.setattr("retrieval.formatter.get_config", lambda: config)
-    return config
 
 
 @pytest.fixture
@@ -103,29 +81,6 @@ def mock_search_response():
             "completion_tokens": 0,
             "total_tokens": 10,
             "cost": 0.001,
-            "requests": 1,
-        },
-    }
-
-
-@pytest.fixture
-def mock_rerank_response():
-    """Mock rerank response."""
-    return {
-        "object": "list",
-        "id": "rerank-test-123",
-        "data": [],
-        "results": [
-            {"relevance_score": 0.98, "index": 0},
-            {"relevance_score": 0.85, "index": 2},
-            {"relevance_score": 0.70, "index": 1},
-        ],
-        "model": "openweight-rerank",
-        "usage": {
-            "prompt_tokens": 50,
-            "completion_tokens": 0,
-            "total_tokens": 50,
-            "cost": 0.002,
             "requests": 1,
         },
     }

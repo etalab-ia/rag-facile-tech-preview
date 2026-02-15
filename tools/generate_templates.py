@@ -455,9 +455,11 @@ def main():
             "chainlit-chat",
             "reflex-chat",
             "albert-client",
+            "context",
             "ingestion",
             "pipelines",
             "rag-core",
+            "reranking",
             "retrieval",
             "storage",
         ],
@@ -489,9 +491,11 @@ def main():
             "chainlit-chat",
             "reflex-chat",
             "albert-client",
+            "context",
             "ingestion",
             "pipelines",
             "rag-core",
+            "reranking",
             "retrieval",
             "storage",
         ]
@@ -526,6 +530,14 @@ def main():
             )
             if result is False:
                 success = False
+        elif template == "context":
+            result = generate_package_template(
+                "context",
+                REPO_ROOT / "packages" / "context",
+                force=args.force,
+            )
+            if result is False:
+                success = False
         elif template == "ingestion":
             result = generate_package_template(
                 "ingestion",
@@ -538,6 +550,14 @@ def main():
             result = generate_package_template(
                 "pipelines",
                 REPO_ROOT / "packages" / "pipelines",
+                force=args.force,
+            )
+            if result is False:
+                success = False
+        elif template == "reranking":
+            result = generate_package_template(
+                "reranking",
+                REPO_ROOT / "packages" / "reranking",
                 force=args.force,
             )
             if result is False:

@@ -1,8 +1,8 @@
 """Albert RAG pipeline — full retrieval with Albert API.
 
 Parses documents via the Albert API (ingestion package) and supports
-query-time retrieval with search, reranking, and context formatting
-(retrieval package).
+query-time retrieval with search, reranking, and context formatting.
+Orchestrates the individual phase packages.
 
 Selected when ``storage.provider = "albert-collections"`` in ragfacile.toml.
 """
@@ -22,10 +22,10 @@ if TYPE_CHECKING:
 class AlbertPipeline(RAGPipeline):
     """Full RAG pipeline using the Albert API.
 
-    File processing is delegated to the ingestion package's
-    :class:`~ingestion.AlbertProvider`.  Query-time retrieval delegates to
-    the retrieval package for search, reranking, and context formatting.
-    Collection management delegates to the storage package.
+    File processing is delegated to the ingestion package.
+    Collection management is delegated to the storage package.
+    Query-time retrieval orchestrates: search → rerank → format
+    using the retrieval, reranking, and context packages.
     """
 
     def __init__(self, config: Any | None = None) -> None:
@@ -49,7 +49,7 @@ class AlbertPipeline(RAGPipeline):
         """Parse file bytes via Albert API and return formatted context."""
         return self._ingestion.process_bytes(data, filename)
 
-    # ── Query-time: retrieval ──
+    # ── Query-time: search → rerank → format ──
 
     def process_query(
         self,
@@ -58,20 +58,63 @@ class AlbertPipeline(RAGPipeline):
     ) -> str:
         """Retrieve relevant context from Albert collections.
 
-        Performs search → optional rerank → format.  Delegates to
-        :func:`retrieval.process_query`.
+        Orchestrates the full retrieval pipeline:
+        1. Search for relevant chunks (retrieval package)
+        2. Optionally rerank results (reranking package)
+        3. Format chunks as LLM context (context package)
+
+        All parameters default to ragfacile.toml config values.
 
         Args:
             query: User query to retrieve context for.
-            **kwargs: Passed to :func:`retrieval.process_query`.
-                Common keys: ``collection_ids``, ``client``.
+            **kwargs: Pipeline options.
+                ``collection_ids`` (required): Albert collection IDs to search.
+                ``client``: Optional pre-configured Albert client.
 
         Returns:
             Formatted context string ready for LLM injection.
         """
-        from retrieval.formatter import process_query
+        from context import format_context
+        from rag_core import get_config
+        from reranking import rerank_chunks
+        from retrieval import search_chunks
 
-        return process_query(query, **kwargs)  # type: ignore[arg-type]
+        config = get_config()
+
+        # Resolve client
+        client: AlbertClient = kwargs.get("client")  # type: ignore[assignment]
+        if client is None:
+            from albert import AlbertClient as _AlbertClient
+
+            client = _AlbertClient()
+
+        collection_ids: list[int | str] = kwargs["collection_ids"]  # type: ignore[assignment]
+
+        # Step 1: Search
+        chunks = search_chunks(
+            client,
+            query,
+            collection_ids,
+            limit=config.retrieval.top_k,
+            method=config.retrieval.strategy,
+            score_threshold=config.retrieval.score_threshold,
+        )
+
+        if not chunks:
+            return ""
+
+        # Step 2: Rerank (optional)
+        if config.reranking.enabled:
+            chunks = rerank_chunks(
+                client,
+                query,
+                chunks,
+                model=config.reranking.model,
+                top_n=config.reranking.top_n,
+            )
+
+        # Step 3: Format as LLM context
+        return format_context(chunks)
 
     # ── Collection management (delegated to storage) ──
 

@@ -7,16 +7,8 @@ suitable for injection into LLM prompts, with optional citations.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 
-from rag_core import get_config
-
-from ._types import RetrievedChunk
-from .albert import retrieve
-
-
-if TYPE_CHECKING:
-    from albert import AlbertClient
+from rag_core import RetrievedChunk, get_config
 
 
 logger = logging.getLogger(__name__)
@@ -89,31 +81,3 @@ def format_context(
     lines.append("")
 
     return "\n".join(lines)
-
-
-def process_query(
-    query: str,
-    collection_ids: list[int | str],
-    *,
-    client: AlbertClient | None = None,
-) -> str:
-    """Retrieve relevant chunks and format as context.
-
-    This is the main convenience entry point for apps. Creates an
-    AlbertClient from environment variables if not provided.
-
-    Args:
-        query: User query to retrieve context for.
-        collection_ids: Albert collection IDs to search.
-        client: Optional pre-configured Albert client.
-
-    Returns:
-        Formatted context string ready for LLM injection.
-    """
-    if client is None:
-        from albert import AlbertClient
-
-        client = AlbertClient()
-
-    chunks = retrieve(client, query, collection_ids)
-    return format_context(chunks)

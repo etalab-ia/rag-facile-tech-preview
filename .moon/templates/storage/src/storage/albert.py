@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from rag_core import get_config
 
@@ -17,7 +17,7 @@ from ._base import StorageProvider
 
 if TYPE_CHECKING:
     from albert import AlbertClient
-    from albert.types.collections import Collection
+    from albert.types.collections import Collection, CollectionList
 
 
 logger = logging.getLogger(__name__)
@@ -123,7 +123,7 @@ class AlbertProvider(StorageProvider):
         *,
         limit: int = 10,
         offset: int = 0,
-    ) -> Any:
+    ) -> CollectionList:
         """List accessible collections.
 
         Args:

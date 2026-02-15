@@ -1,61 +1,53 @@
 # Retrieval
 
-Search, reranking, and context formatting for the RAG pipeline.
+Vector search for the RAG pipeline.
 
 ## Overview
 
-This package provides retrieval capabilities:
+This package provides search capabilities via the Albert API:
 
-- **Search**: Find relevant document chunks via Albert API (semantic, lexical, or hybrid)
-- **Reranking**: Re-score results with a cross-encoder for higher precision
-- **Context formatting**: Convert retrieved chunks into LLM-ready context strings with citations
+- **Semantic search**: Find chunks by meaning
+- **Lexical search**: Find chunks by keywords
+- **Hybrid search**: Combine semantic and lexical for best results
 
 ## Usage
 
 ```python
-from retrieval import retrieve, format_context
+from retrieval import search_chunks
 
-# Search + optional rerank (config-driven)
-chunks = retrieve(client, "What is RAG?", collection_ids=[1])
-
-# Format for LLM injection
-context = format_context(chunks)
+chunks = search_chunks(client, "energy transition", collection_ids=[1])
 ```
 
-### Convenience function
+### Parameters
+
+All parameters have sensible defaults from `ragfacile.toml`:
 
 ```python
-from retrieval import process_query
-
-# Search + rerank + format in one call
-context = process_query("What is RAG?", collection_ids=[1])
+chunks = search_chunks(
+    client,
+    "energy transition",
+    collection_ids=[1],
+    limit=10,             # Max results (default: config.retrieval.top_k)
+    method="hybrid",      # "hybrid", "semantic", or "lexical"
+    score_threshold=0.0,  # Minimum relevance score
+)
 ```
 
 ## Configuration
 
-Parameters default to `ragfacile.toml` values:
-
 ```toml
 [retrieval]
-strategy = "hybrid"     # "hybrid", "semantic", or "lexical"
+strategy = "hybrid"
 top_k = 10
 score_threshold = 0.0
-
-[reranking]
-enabled = true
-model = "openweight-rerank"
-top_n = 3
-
-[formatting.citations]
-enabled = true
-style = "inline"        # "inline" or "footnote"
 ```
 
 ## Related packages
 
-- **[storage](../storage/)** — Collection management (create, delete, list, ingest documents)
-- **[ingestion](../ingestion/)** — Document text extraction (PDF, Markdown, HTML)
-- **[pipelines](../pipelines/)** — Pipeline orchestration (coordinates ingestion, storage, and retrieval)
+- **[reranking](../reranking/)** — Re-score results with a cross-encoder
+- **[context](../context/)** — Format chunks into LLM-ready context strings
+- **[storage](../storage/)** — Collection management (create, delete, list, ingest)
+- **[pipelines](../pipelines/)** — Orchestrates search → rerank → format
 
 ## Development
 

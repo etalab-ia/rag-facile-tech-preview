@@ -9,9 +9,30 @@ configuration in a way that teaches users about the RAG pipeline.
 """
 
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any, Literal, TypedDict
 
 from pydantic import BaseModel, Field
+
+
+# ==============================================================================
+# SHARED TYPES
+# ==============================================================================
+
+
+class RetrievedChunk(TypedDict):
+    """A retrieved chunk with score and source metadata.
+
+    This type is shared across pipeline phase packages (retrieval,
+    reranking, context) and lives here to avoid inter-phase dependencies.
+    """
+
+    content: str
+    score: float
+    source_file: str | None
+    page: int | None
+    collection_id: int
+    document_id: int
+    chunk_id: int
 
 
 # ==============================================================================

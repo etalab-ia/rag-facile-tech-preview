@@ -261,6 +261,24 @@ def _get_source_path(
     raise FileNotFoundError(error_message)
 
 
+def get_context_source() -> Path:
+    """Get the context source directory for inline copying."""
+    return _get_source_path(
+        ("packages", "context", "src", "context"),
+        ("context_src",),
+        "context source not found. This is a packaging error - please reinstall the CLI.",
+    )
+
+
+def get_reranking_source() -> Path:
+    """Get the reranking source directory for inline copying."""
+    return _get_source_path(
+        ("packages", "reranking", "src", "reranking"),
+        ("reranking_src",),
+        "reranking source not found. This is a packaging error - please reinstall the CLI.",
+    )
+
+
 def get_retrieval_source() -> Path:
     """Get the retrieval source directory for inline copying."""
     return _get_source_path(
@@ -335,7 +353,7 @@ def _copy_module_to_standalone(
 
     Handles directory cleanup, __pycache__ removal, and user-facing
     progress output.  Used by :func:`generate_standalone` to inline
-    pipeline packages (albert, rag_core, ingestion, retrieval, storage, pipelines).
+    pipeline packages (albert, rag_core, context, ingestion, reranking, retrieval, storage, pipelines).
 
     Args:
         target_path: Root of the standalone project.
@@ -622,7 +640,9 @@ package = true
     modules_to_copy = [
         ("albert", get_albert_client_source, "Albert client module"),
         ("rag_core", get_rag_core_source, "RAG core module"),
+        ("context", get_context_source, "context module"),
         ("ingestion", get_ingestion_source, "ingestion module"),
+        ("reranking", get_reranking_source, "reranking module"),
         ("retrieval", get_retrieval_source, "retrieval module"),
         ("storage", get_storage_source, "storage module"),
         ("pipelines", get_pipelines_source, "pipelines module"),
