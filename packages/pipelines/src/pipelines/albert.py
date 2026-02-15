@@ -82,13 +82,18 @@ class AlbertPipeline(RAGPipeline):
         config = get_config()
 
         # Resolve client
-        client: AlbertClient = kwargs.get("client")  # type: ignore[assignment]
+        client: AlbertClient | None = kwargs.get("client")  # type: ignore[assignment]
         if client is None:
             from albert import AlbertClient as _AlbertClient
 
             client = _AlbertClient()
 
-        collection_ids: list[int | str] = kwargs["collection_ids"]  # type: ignore[assignment]
+        try:
+            collection_ids: list[int | str] = kwargs["collection_ids"]  # type: ignore[assignment]
+        except KeyError:
+            raise ValueError(
+                "`collection_ids` is a required argument for `process_query`."
+            ) from None
 
         # Step 1: Search
         chunks = search_chunks(
