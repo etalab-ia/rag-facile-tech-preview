@@ -530,16 +530,19 @@ def generate_standalone(
         if ("PDF" in selected_modules or "Albert RAG" in selected_modules)
         else ""
     )
-    setuptools_packages_list = [
-        "albert",
-        "context",
-        "ingestion",
-        "pipelines",
-        "rag_core",
-        "reranking",
-        "retrieval",
-        "storage",
+    # Single source of truth for pipeline modules copied into standalone projects.
+    # Used both for setuptools packages list and for the copy loop below.
+    modules_to_copy = [
+        ("albert", get_albert_client_source, "Albert client module"),
+        ("rag_core", get_rag_core_source, "RAG core module"),
+        ("context", get_context_source, "context module"),
+        ("ingestion", get_ingestion_source, "ingestion module"),
+        ("reranking", get_reranking_source, "reranking module"),
+        ("retrieval", get_retrieval_source, "retrieval module"),
+        ("storage", get_storage_source, "storage module"),
+        ("pipelines", get_pipelines_source, "pipelines module"),
     ]
+    setuptools_packages_list = sorted([module[0] for module in modules_to_copy])
     setuptools_packages = f"packages = {setuptools_packages_list}"
 
     # For standalone, all pipeline packages are local modules (not dependencies)
@@ -638,17 +641,7 @@ package = true
 
     console.print("[green]✓[/green] Project files generated")
 
-    # Steps 3-7: Copy pipeline modules as local packages
-    modules_to_copy = [
-        ("albert", get_albert_client_source, "Albert client module"),
-        ("rag_core", get_rag_core_source, "RAG core module"),
-        ("context", get_context_source, "context module"),
-        ("ingestion", get_ingestion_source, "ingestion module"),
-        ("reranking", get_reranking_source, "reranking module"),
-        ("retrieval", get_retrieval_source, "retrieval module"),
-        ("storage", get_storage_source, "storage module"),
-        ("pipelines", get_pipelines_source, "pipelines module"),
-    ]
+    # Steps 3-10: Copy pipeline modules as local packages
     for i, (module_name, source_func, display_name) in enumerate(
         modules_to_copy, start=3
     ):
