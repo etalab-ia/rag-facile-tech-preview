@@ -265,7 +265,7 @@ class RetrievalConfig(BaseModel):
         description="Retrieval strategy",
     )
     top_k: int = Field(
-        default=6,
+        default=10,
         ge=1,
         le=100,
         description="Number of results to retrieve",
@@ -299,7 +299,7 @@ class RerankingConfig(BaseModel):
         description="Reranking model alias",
     )
     top_n: int = Field(
-        default=3,
+        default=5,
         ge=1,
         le=50,
         description="Final number of results after reranking",

@@ -70,7 +70,7 @@ spell_check = false
 # ==============================================================================
 [retrieval]
 strategy = "hybrid"
-top_k = 6
+top_k = 10
 score_threshold = 0.0
 
 [retrieval.hybrid]
@@ -82,7 +82,7 @@ alpha = 0.5  # Balanced semantic/lexical
 [reranking]
 enabled = true
 model = "openweight-rerank"
-top_n = 3
+top_n = 5
 
 # ==============================================================================
 # CONTEXT SELECTION

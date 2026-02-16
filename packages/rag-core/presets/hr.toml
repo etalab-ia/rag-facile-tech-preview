@@ -49,7 +49,7 @@ spell_check = true  # Friendly to typos
 
 [retrieval]
 strategy = "hybrid"  # Balance semantic understanding with keyword matching
-top_k = 8
+top_k = 10
 score_threshold = 0.3  # Lower threshold for broader policy coverage
 
 [retrieval.hybrid]
@@ -58,7 +58,7 @@ alpha = 0.7  # Weight semantic more (natural language queries)
 [reranking]
 enabled = true
 model = "openweight-rerank"
-top_n = 4
+top_n = 5
 
 [context]
 strategy = "token-budget"
