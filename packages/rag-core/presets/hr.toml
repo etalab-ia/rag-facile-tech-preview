@@ -12,7 +12,7 @@ target_samples = 50
 output_format = "jsonl"
 
 [ingestion]
-provider = "local"
+provider = "albert"
 file_types = [".pdf", ".md", ".txt"]
 
 [ingestion.ocr]
@@ -28,8 +28,8 @@ include_page_numbers = true
 
 [chunking]
 strategy = "semantic"  # HR policies are naturally semantic
-chunk_size = 512
-chunk_overlap = 75
+chunk_size = 1024
+chunk_overlap = 100
 preserve_metadata = true  # Track policy names and sections
 
 [embedding]
@@ -49,7 +49,7 @@ spell_check = true  # Friendly to typos
 
 [retrieval]
 strategy = "hybrid"  # Balance semantic understanding with keyword matching
-top_k = 12
+top_k = 8
 score_threshold = 0.3  # Lower threshold for broader policy coverage
 
 [retrieval.hybrid]
@@ -70,7 +70,7 @@ ordering = "by-score"
 
 [generation]
 model = "openweight-medium"  # Good for conversational HR responses
-temperature = 0.5  # Balanced - accurate but approachable
+temperature = 0.3  # Balanced - accurate but approachable
 max_tokens = 1024
 streaming = true
 system_prompt = """You are an HR assistant for the French government.

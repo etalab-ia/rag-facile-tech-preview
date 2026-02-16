@@ -126,7 +126,7 @@ class IngestionConfig(BaseModel):
     """Configuration for document ingestion and pre-processing."""
 
     provider: Literal["local", "albert"] = Field(
-        default="local",
+        default="albert",
         description="Document parsing provider (local pypdf or Albert API)",
     )
     file_types: list[str] = Field(
@@ -156,13 +156,13 @@ class ChunkingConfig(BaseModel):
         description="Chunking strategy",
     )
     chunk_size: int = Field(
-        default=512,
+        default=1024,
         ge=64,
         le=4096,
         description="Chunk size in tokens (semantic) or characters (fixed-size)",
     )
     chunk_overlap: int = Field(
-        default=50,
+        default=100,
         ge=0,
         le=512,
         description="Overlap between chunks in tokens/characters",
@@ -265,7 +265,7 @@ class RetrievalConfig(BaseModel):
         description="Retrieval strategy",
     )
     top_k: int = Field(
-        default=10,
+        default=6,
         ge=1,
         le=100,
         description="Number of results to retrieve",
@@ -347,7 +347,7 @@ class GenerationConfig(BaseModel):
         description="LLM model (openweight-small, openweight-medium, openweight-large)",
     )
     temperature: float = Field(
-        default=0.7,
+        default=0.2,
         ge=0.0,
         le=2.0,
         description="Temperature (0.0=deterministic, 1.0=balanced, 2.0=creative)",

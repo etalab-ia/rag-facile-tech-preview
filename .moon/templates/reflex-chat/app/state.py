@@ -3,7 +3,7 @@ import json
 from typing import Any, TypedDict
 
 import reflex as rx
-from pipelines import process_bytes
+from pipelines import process_bytes, process_query
 from dotenv import load_dotenv
 
 from albert import AlbertClient, ChatCompletionMessageParam
@@ -48,8 +48,8 @@ class State(rx.State):
     # Whether the new chat modal is open.
     is_modal_open: bool = False
 
-    # The current context from the uploaded PDF.
-    context: str = ""
+    # Whether documents have been indexed for RAG retrieval.
+    has_indexed_docs: bool = False
 
     # list of attached file names
     attached_files: list[str] = []
@@ -58,29 +58,24 @@ class State(rx.State):
     is_uploading: bool = False
 
     async def handle_upload(self, files: list[rx.UploadFile]):
-        """Handle the file upload using context_loader factory."""
+        """Upload files to Albert collection for RAG retrieval."""
         self.is_uploading = True
         for file in files:
             upload_data = await file.read()
             filename = file.filename or "unknown"
-            self.context += process_bytes(upload_data, filename)
+            process_bytes(upload_data, filename)
             self.attached_files.append(filename)
+            self.has_indexed_docs = True
         self.is_uploading = False
 
     @rx.event
     def clear_attachment(self, filename: str):
-        """Clear an attached file."""
-        # For simple demonstration, clearing one clears the context if it matches,
-        # but since context is a string, we might just clear everything for now
-        # or implement more complex logic.
-        # To keep it consistent with the screenshot pattern (remove file),
-        # we'll reset context if we remove all files.
+        """Clear an attached file from the UI list."""
         if filename in self.attached_files:
             self.attached_files.remove(filename)
 
-        # If no files left, clear context
         if not self.attached_files:
-            self.context = ""
+            self.has_indexed_docs = False
 
     @rx.event
     def create_chat(self, form_data: dict[str, Any]):
@@ -187,13 +182,15 @@ class State(rx.State):
             }
         ]
 
-        if self.context:
+        # Retrieve relevant context via RAG pipeline (search -> rerank -> format)
+        retrieved_context = process_query(question)
+        if retrieved_context:
             messages.append(
                 {
                     "role": "system",
                     "content": (
-                        "Use the following context to answer the user's questions:\n\n"
-                        f"{self.context}"
+                        "Use the following context to answer the user's question:\n\n"
+                        f"{retrieved_context}"
                     ),
                 }
             )
@@ -243,6 +240,3 @@ class State(rx.State):
 
         # Toggle the processing flag.
         self.processing = False
-
-        # Note: We currently keep context persistent for "Chat with PDF" behavior.
-        # If per-message attachment is desired, we should clear it here.

@@ -127,6 +127,22 @@ def process_bytes(data: bytes, filename: str) -> str:
     return _get_or_create_pipeline().process_bytes(data, filename)
 
 
+def process_query(query: str, **kwargs: object) -> str:
+    """Retrieve relevant context for a user query.
+
+    Uses the singleton pipeline (created on first call from config).
+    For the Albert pipeline, this performs search -> rerank -> format.
+
+    Args:
+        query: User query to retrieve context for.
+        **kwargs: Pipeline-specific options (e.g., ``collection_ids``).
+
+    Returns:
+        Formatted context string. Empty string when not applicable.
+    """
+    return _get_or_create_pipeline().process_query(query, **kwargs)
+
+
 def get_accepted_mime_types() -> dict[str, list[str]]:
     """Get accepted MIME types for file upload dialogs.
 
@@ -142,4 +158,5 @@ __all__ = [
     "get_pipeline",
     "process_bytes",
     "process_file",
+    "process_query",
 ]

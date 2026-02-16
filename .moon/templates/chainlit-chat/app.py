@@ -5,7 +5,7 @@ import os
 import chainlit as cl
 import engineio
 import engineio.payload
-from pipelines import process_file
+from pipelines import process_file, process_query
 from dotenv import load_dotenv
 
 from albert import AsyncAlbertClient
@@ -108,21 +108,32 @@ async def call_tool(tool_call, message_history):
 async def main(message: cl.Message):
     message_history = cl.user_session.get("message_history")
 
-    # Handle attachments using context_loader factory
-    file_content = ""
+    # Handle attachments — ingest into Albert collection for RAG retrieval
     if message.elements:
         for element in message.elements:
             if element.path:
                 try:
-                    file_content += process_file(element.path, element.name)
+                    status = process_file(element.path, element.name)
+                    await cl.Message(content=status).send()
                 except Exception as e:
-                    file_content += f"\n\nError reading '{element.name}': {e!s}\n"
+                    await cl.Message(
+                        content=f"Error indexing '{element.name}': {e!s}"
+                    ).send()
 
-    user_message = message.content
-    if file_content:
-        user_message += file_content
+    # Retrieve relevant context for the user's query
+    retrieved_context = process_query(message.content)
+    if retrieved_context:
+        message_history.append(
+            {
+                "role": "system",
+                "content": (
+                    "Use the following context to answer the user's question:\n\n"
+                    f"{retrieved_context}"
+                ),
+            }
+        )
 
-    message_history.append({"role": "user", "content": user_message})
+    message_history.append({"role": "user", "content": message.content})
 
     msg = cl.Message(content="")
 

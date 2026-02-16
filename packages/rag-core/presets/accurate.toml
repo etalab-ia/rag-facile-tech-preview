@@ -28,8 +28,8 @@ include_page_numbers = true
 
 [chunking]
 strategy = "semantic"  # Best context preservation
-chunk_size = 768  # Larger chunks for more context
-chunk_overlap = 100  # More overlap for continuity
+chunk_size = 1024  # Larger chunks for more context
+chunk_overlap = 200  # More overlap for continuity
 preserve_metadata = true
 
 [embedding]
@@ -49,7 +49,7 @@ spell_check = true  # Fix typos
 
 [retrieval]
 strategy = "hybrid"  # Best of both worlds
-top_k = 20  # More candidates for reranking
+top_k = 10  # More candidates for reranking
 score_threshold = 0.5  # Only high-quality results
 
 [retrieval.hybrid]
@@ -70,7 +70,7 @@ ordering = "by-score"
 
 [generation]
 model = "openweight-large"  # Best generation model
-temperature = 0.5  # Lower for more factual responses
+temperature = 0.2  # Lower for more factual responses
 max_tokens = 2048  # Longer, more detailed responses
 streaming = true
 system_prompt = """You are an expert assistant for the French government.

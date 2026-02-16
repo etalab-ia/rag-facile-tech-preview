@@ -12,7 +12,7 @@ target_samples = 25  # Fewer samples for faster generation
 output_format = "jsonl"
 
 [ingestion]
-provider = "local"
+provider = "albert"
 file_types = [".pdf", ".md", ".txt"]
 
 [ingestion.ocr]
@@ -70,7 +70,7 @@ ordering = "by-score"
 
 [generation]
 model = "openweight-small"  # Fastest model
-temperature = 0.3  # Lower for more deterministic (faster)
+temperature = 0.2  # Lower for more deterministic (faster)
 max_tokens = 512  # Shorter responses
 streaming = true
 system_prompt = """You are a helpful assistant. Answer concisely based on the context provided."""

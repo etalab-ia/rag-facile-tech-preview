@@ -18,7 +18,7 @@ output_format = "jsonl"
 # DOCUMENT INGESTION
 # ==============================================================================
 [ingestion]
-provider = "local"
+provider = "albert"
 file_types = [".pdf", ".md", ".txt"]
 
 [ingestion.ocr]
@@ -37,8 +37,8 @@ include_page_numbers = true
 # ==============================================================================
 [chunking]
 strategy = "semantic"
-chunk_size = 512
-chunk_overlap = 50
+chunk_size = 1024
+chunk_overlap = 100
 preserve_metadata = true
 
 # ==============================================================================
@@ -70,7 +70,7 @@ spell_check = false
 # ==============================================================================
 [retrieval]
 strategy = "hybrid"
-top_k = 10
+top_k = 6
 score_threshold = 0.0
 
 [retrieval.hybrid]
@@ -100,7 +100,7 @@ ordering = "by-score"
 # ==============================================================================
 [generation]
 model = "openweight-medium"
-temperature = 0.7
+temperature = 0.2
 max_tokens = 1024
 streaming = true
 system_prompt = """You are a helpful assistant for the French government.

@@ -53,17 +53,9 @@ def rerank_chunks(
     reranked: list[RetrievedChunk] = []
     for result in response.results:
         original = chunks[result.index]
-        reranked.append(
-            RetrievedChunk(
-                content=original["content"],
-                score=result.relevance_score,
-                source_file=original["source_file"],
-                page=original["page"],
-                collection_id=original["collection_id"],
-                document_id=original["document_id"],
-                chunk_id=original["chunk_id"],
-            )
-        )
+        reranked_chunk = original.copy()
+        reranked_chunk["score"] = result.relevance_score
+        reranked.append(reranked_chunk)
 
     logger.info("Reranked %d chunks → %d results", len(chunks), len(reranked))
     return reranked

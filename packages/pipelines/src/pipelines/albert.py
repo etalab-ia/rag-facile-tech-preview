@@ -1,15 +1,18 @@
-"""Albert RAG pipeline — full retrieval with Albert API.
+"""Albert RAG pipeline — true retrieval-augmented generation with Albert API.
 
-Parses documents via the Albert API (ingestion package) and supports
-query-time retrieval with search, reranking, and context formatting.
-Orchestrates the individual phase packages.
+Ingests documents into Albert collections (chunking + embedding handled
+server-side), then retrieves relevant chunks at query time via
+search -> rerank -> format.  Orchestrates the individual phase packages.
 
 Selected when ``storage.provider = "albert-collections"`` in ragfacile.toml.
 """
 
 from __future__ import annotations
 
+import logging
+import time
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING, Any
 
 from ._base import RAGPipeline
@@ -19,12 +22,18 @@ if TYPE_CHECKING:
     from albert import AlbertClient
 
 
+logger = logging.getLogger(__name__)
+
+
 class AlbertPipeline(RAGPipeline):
     """Full RAG pipeline using the Albert API.
 
-    File processing is delegated to the ingestion package.
+    Documents are uploaded to an auto-managed Albert collection on first
+    file upload.  At query time, relevant chunks are retrieved via
+    search -> optional rerank -> context formatting.
+
     Collection management is delegated to the storage package.
-    Query-time retrieval orchestrates: search → rerank → format
+    Query-time retrieval orchestrates: search -> rerank -> format
     using the retrieval, reranking, and context packages.
     """
 
@@ -34,22 +43,101 @@ class AlbertPipeline(RAGPipeline):
 
         self._ingestion = get_provider(config)
         self._storage = get_storage_provider(config)
+        self._client: AlbertClient | None = None
+        self._collection_id: int | None = None
 
-    # ── Upload-time: file processing ──
+    # ── Internal helpers ──
+
+    @property
+    def client(self) -> AlbertClient:
+        """Lazily create the Albert client on first use."""
+        if self._client is None:
+            from albert import AlbertClient as _AlbertClient
+
+            self._client = _AlbertClient()
+        return self._client
+
+    def _ensure_collection(self) -> int:
+        """Create a session collection if one doesn't exist yet.
+
+        Returns:
+            The collection ID for this session.
+        """
+        if self._collection_id is None:
+            name = f"rag-facile-session-{int(time.time())}"
+            self._collection_id = self._storage.create_collection(
+                self.client, name, description="Auto-managed session collection"
+            )
+            logger.info(
+                "Created session collection %s (id=%s)", name, self._collection_id
+            )
+        return self._collection_id
+
+    # ── Upload-time: ingest into collection ──
 
     def process_file(
         self,
         path: str | Path,
         filename: str | None = None,
     ) -> str:
-        """Parse a file via Albert API and return formatted context."""
-        return self._ingestion.process_file(path, filename)
+        """Ingest a file into the session collection for RAG retrieval.
+
+        The document is uploaded to Albert, which handles chunking and
+        embedding server-side.
+
+        Args:
+            path: Path to the document.
+            filename: Optional display name.
+
+        Returns:
+            Confirmation message with the uploaded filename.
+        """
+        path = Path(path)
+        display_name = filename or path.name
+        collection_id = self._ensure_collection()
+
+        self._storage.ingest_documents(
+            self.client,
+            [path],
+            collection_id,
+        )
+        logger.info("Ingested '%s' into collection %s", display_name, collection_id)
+        return f"[Document indexed: {display_name}]"
 
     def process_bytes(self, data: bytes, filename: str) -> str:
-        """Parse file bytes via Albert API and return formatted context."""
-        return self._ingestion.process_bytes(data, filename)
+        """Ingest file bytes into the session collection for RAG retrieval.
 
-    # ── Query-time: search → rerank → format ──
+        Writes bytes to a temporary file, then uploads to Albert for
+        chunking and embedding.
+
+        Args:
+            data: Raw file content.
+            filename: Display name (also used to infer file type).
+
+        Returns:
+            Confirmation message with the uploaded filename.
+        """
+        suffix = Path(filename).suffix or ".pdf"
+        collection_id = self._ensure_collection()
+
+        # Albert upload API requires a file path — write to temp file.
+        with NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            tmp_path = Path(tmp.name)
+            tmp.write(data)
+
+        try:
+            self._storage.ingest_documents(
+                self.client,
+                [tmp_path],
+                collection_id,
+            )
+        finally:
+            tmp_path.unlink(missing_ok=True)
+
+        logger.info("Ingested '%s' into collection %s", filename, collection_id)
+        return f"[Document indexed: {filename}]"
+
+    # ── Query-time: search -> rerank -> format ──
 
     def process_query(
         self,
@@ -68,11 +156,13 @@ class AlbertPipeline(RAGPipeline):
         Args:
             query: User query to retrieve context for.
             **kwargs: Pipeline options.
-                ``collection_ids`` (required): Albert collection IDs to search.
+                ``collection_ids``: Albert collection IDs to search.
+                    Falls back to the auto-managed session collection.
                 ``client``: Optional pre-configured Albert client.
 
         Returns:
             Formatted context string ready for LLM injection.
+            Empty string if no collection exists or no results found.
         """
         from context import format_context
         from rag_core import get_config
@@ -84,16 +174,14 @@ class AlbertPipeline(RAGPipeline):
         # Resolve client
         client: AlbertClient | None = kwargs.get("client")  # type: ignore[assignment]
         if client is None:
-            from albert import AlbertClient as _AlbertClient
+            client = self.client
 
-            client = _AlbertClient()
-
-        try:
-            collection_ids: list[int | str] = kwargs["collection_ids"]  # type: ignore[assignment]
-        except KeyError:
-            raise ValueError(
-                "`collection_ids` is a required argument for `process_query`."
-            ) from None
+        # Resolve collection IDs — explicit kwarg or auto-managed session
+        collection_ids: list[int | str] | None = kwargs.get("collection_ids")  # type: ignore[assignment]
+        if collection_ids is None:
+            if self._collection_id is None:
+                return ""
+            collection_ids = [self._collection_id]
 
         # Step 1: Search
         chunks = search_chunks(
