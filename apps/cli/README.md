@@ -10,8 +10,9 @@ One command installs the entire toolchain (proto, moon, uv) and the CLI:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
-source ~/.bashrc  # or restart your terminal
 ```
+
+Then **restart your terminal** (or run the `source` command shown by the installer).
 
 ### Option 2: Manual Installation
 

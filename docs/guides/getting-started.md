@@ -18,8 +18,9 @@ The installer sets up the full toolchain automatically: [proto](https://moonrepo
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
-source ~/.bashrc  # or restart your terminal
 ```
+
+Then **restart your terminal** (or run the `source` command shown by the installer).
 
 > **Note**: On Ubuntu/Debian, the installer will automatically install prerequisites (git, curl, xz-utils, unzip) if needed.
 

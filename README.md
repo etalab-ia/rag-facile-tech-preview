@@ -23,18 +23,19 @@ Build a RAG application for the French government in under 5 minutes, powered by
 
 One command installs the entire toolchain and the `rag-facile` CLI:
 
+Linux / macOS / WSL:
+
 ```bash
-# Linux / macOS / WSL
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
-source ~/.bashrc  # or restart your terminal
 ```
 
+Windows (PowerShell):
+
 ```powershell
-# Windows (PowerShell)
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
 
-Verify it worked:
+Then **restart your terminal** (or run the `source` command shown by the installer) and verify it worked:
 
 ```bash
 rag-facile --help
@@ -52,13 +53,15 @@ The CLI will guide you through choosing a project structure, a configuration pre
 
 Re-run the installer to get the latest version:
 
+Linux / macOS / WSL:
+
 ```bash
-# Linux / macOS / WSL
 curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
 ```
 
+Windows (PowerShell):
+
 ```powershell
-# Windows (PowerShell)
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
 
