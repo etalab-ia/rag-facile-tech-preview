@@ -1,17 +1,20 @@
-#!/usr/bin/env python3
-"""Wait for localhost:3000 to be available, then open browser."""
+"""Wait for the Reflex frontend to be ready, then open the browser."""
 
 import socket
 import time
 import webbrowser
 
+PORT = 3000
+URL = f"http://localhost:{PORT}"
+TIMEOUT = 60  # seconds
 
-def wait_for_port(port: int, host: str = "localhost", timeout: float = 30.0) -> bool:
-    """Wait for a port to become available."""
-    start = time.time()
-    while time.time() - start < timeout:
+
+def wait_for_port(port: int, timeout: int) -> bool:
+    """Wait until a port is accepting connections."""
+    start = time.monotonic()
+    while time.monotonic() - start < timeout:
         try:
-            with socket.create_connection((host, port), timeout=1):
+            with socket.create_connection(("localhost", port), timeout=1):
                 return True
         except OSError:
             time.sleep(0.5)
@@ -19,5 +22,5 @@ def wait_for_port(port: int, host: str = "localhost", timeout: float = 30.0) -> 
 
 
 if __name__ == "__main__":
-    if wait_for_port(3000):
-        webbrowser.open("http://localhost:3000")
+    if wait_for_port(PORT, TIMEOUT):
+        webbrowser.open(URL)

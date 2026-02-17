@@ -5,6 +5,6 @@ default:
 sync:
     uv sync --python 3.13.11
 
-# Run the Reflex application
+# Run the Reflex application (opens browser when ready)
 run:
-    uv run reflex run
+    sh -c 'uv run python scripts/open_browser.py & uv run reflex run'
