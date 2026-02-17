@@ -176,17 +176,23 @@ class AlbertPipeline(RAGPipeline):
         if client is None:
             client = self.client
 
-        # Resolve collection IDs — explicit kwarg, config, or auto-managed session
+        # Resolve collection IDs — explicit kwarg, config, or auto-managed session.
+        # When collection_ids is explicitly passed (even empty), honour the
+        # caller's intent (e.g. user disabled all public collections in the UI).
+        # When not passed (None), fall back to config defaults.
         collection_ids: list[int | str] | None = kwargs.get("collection_ids")  # type: ignore[assignment]
         if collection_ids is None:
-            # Combine configured public collections and session collection,
-            # using a set to prevent duplicate IDs.
             ids: set[int | str] = set(config.storage.collections)
-            if self._collection_id is not None:
-                ids.add(self._collection_id)
-            if not ids:
-                return ""
-            collection_ids = list(ids)
+        else:
+            ids = set(collection_ids)
+
+        # Always include the auto-managed session collection if one exists
+        if self._collection_id is not None:
+            ids.add(self._collection_id)
+
+        if not ids:
+            return ""
+        collection_ids = list(ids)
 
         # Step 1: Search
         chunks = search_chunks(

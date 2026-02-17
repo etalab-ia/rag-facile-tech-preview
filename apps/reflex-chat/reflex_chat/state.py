@@ -219,10 +219,9 @@ class State(rx.State):
         # Retrieve relevant context via RAG pipeline (search -> rerank -> format)
         # Combine context with the current question to avoid accumulating
         # system messages in the conversation history.
-        query_kwargs: dict[str, object] = {}
-        if self.enabled_collection_ids:
-            query_kwargs["collection_ids"] = self.enabled_collection_ids
-        retrieved_context = process_query(question, **query_kwargs)
+        retrieved_context = process_query(
+            question, collection_ids=self.enabled_collection_ids
+        )
         if retrieved_context:
             messages[-1]["content"] = (
                 "Use the following context to answer the user's question:\n\n"

@@ -157,10 +157,9 @@ async def main(message: cl.Message):
 
     # Retrieve relevant context using active collections
     active_collections: list[int] = cl.user_session.get("active_collections") or []
-    query_kwargs: dict[str, object] = {}
-    if active_collections:
-        query_kwargs["collection_ids"] = active_collections
-    retrieved_context = process_query(message.content, **query_kwargs)
+    retrieved_context = process_query(
+        message.content, collection_ids=active_collections
+    )
 
     user_content = message.content
     if retrieved_context:
