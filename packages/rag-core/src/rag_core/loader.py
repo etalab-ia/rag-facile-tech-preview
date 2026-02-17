@@ -98,10 +98,40 @@ def _apply_env_overrides(config_dict: dict[str, Any]) -> dict[str, Any]:
     return config_dict
 
 
+def _find_config_file(filename: str = "ragfacile.toml") -> Path | None:
+    """Search for config file in current directory and parent directories.
+
+    Walks up the directory tree from CWD, similar to how tools like
+    ``load_dotenv`` discover ``.env`` files. This allows apps that run from
+    subdirectories (e.g. ``apps/chainlit-chat/``) to find the project-root
+    ``ragfacile.toml`` automatically.
+
+    Args:
+        filename: Name of the configuration file to search for
+
+    Returns:
+        Resolved Path to the file, or None if not found
+    """
+    current = Path.cwd().resolve()
+    while True:
+        candidate = current / filename
+        if candidate.exists():
+            return candidate
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+    return None
+
+
 def load_config(path: Path | str = "ragfacile.toml") -> RAGConfig:
     """Load and validate RAG configuration from TOML file.
 
     Supports environment variable overrides using RAG_<SECTION>_<KEY> format.
+
+    If *path* is relative and does not exist in the current directory, the
+    loader searches parent directories automatically (same behaviour as
+    ``load_dotenv`` for ``.env`` files).
 
     Args:
         path: Path to TOML configuration file (default: ragfacile.toml)
@@ -126,6 +156,11 @@ def load_config(path: Path | str = "ragfacile.toml") -> RAGConfig:
     """
     path = Path(path)
 
+    if not path.exists() and not path.is_absolute():
+        found = _find_config_file(path.name)
+        if found is not None:
+            path = found
+
     if not path.exists():
         raise FileNotFoundError(f"Configuration file not found: {path}")
 
@@ -146,6 +181,9 @@ def load_config_or_default(path: Path | str = "ragfacile.toml") -> RAGConfig:
     This is useful for applications that want to work with default config
     when no ragfacile.toml is present.
 
+    If *path* is relative, the loader searches parent directories before
+    falling back to defaults.
+
     Args:
         path: Path to TOML configuration file
 
@@ -153,6 +191,11 @@ def load_config_or_default(path: Path | str = "ragfacile.toml") -> RAGConfig:
         RAGConfig instance (loaded or default)
     """
     path = Path(path)
+
+    if not path.exists() and not path.is_absolute():
+        found = _find_config_file(path.name)
+        if found is not None:
+            path = found
 
     if not path.exists():
         # Return default config with env var overrides

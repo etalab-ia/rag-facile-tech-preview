@@ -89,7 +89,7 @@ async def send_collection_badges() -> None:
                 name="toggle_collection",
                 payload={"id": col_id},
                 label=label,
-                description=f"Click to {'disable' if is_active else 'enable'} {name}",
+                tooltip=f"Click to {'disable' if is_active else 'enable'} {name}",
             )
         )
 

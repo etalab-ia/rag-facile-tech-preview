@@ -56,12 +56,16 @@ def search_chunks(
     Returns:
         List of retrieved chunks sorted by score (descending).
     """
+    # score_threshold is only supported for semantic search; the Albert API
+    # rejects it for hybrid/lexical methods with a 400 Bad Request.
+    effective_threshold = score_threshold if method == "semantic" else None
+
     response = client.search(
         prompt=query,
         collections=collection_ids,
         limit=limit,
         method=method,
-        score_threshold=score_threshold,
+        score_threshold=effective_threshold,
     )
 
     chunks = [_search_result_to_chunk(r) for r in response.data]
