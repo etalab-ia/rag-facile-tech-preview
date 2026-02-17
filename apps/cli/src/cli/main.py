@@ -1,6 +1,7 @@
 from importlib.metadata import version as get_version
 from typing import Optional
 
+import click
 import typer
 from rich.console import Console
 
@@ -25,7 +26,16 @@ BANNER = """[magenta]
  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝╚══════╝╚══════╝
 [/magenta]"""
 
+
+class AlphabeticalGroup(typer.core.TyperGroup):
+    """Display commands in alphabetical order in help output."""
+
+    def list_commands(self, ctx: click.Context) -> list[str]:
+        return sorted(super().list_commands(ctx))
+
+
 app = typer.Typer(
+    cls=AlphabeticalGroup,
     add_completion=False,
     invoke_without_command=True,
     no_args_is_help=True,
