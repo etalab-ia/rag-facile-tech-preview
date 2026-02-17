@@ -179,16 +179,14 @@ class AlbertPipeline(RAGPipeline):
         # Resolve collection IDs — explicit kwarg, config, or auto-managed session
         collection_ids: list[int | str] | None = kwargs.get("collection_ids")  # type: ignore[assignment]
         if collection_ids is None:
-            ids: list[int | str] = []
-            # Add configured collections (e.g., public MediaTech collections)
-            if config.storage.collections:
-                ids.extend(config.storage.collections)
-            # Add session collection (from file uploads)
+            # Combine configured public collections and session collection,
+            # using a set to prevent duplicate IDs.
+            ids: set[int | str] = set(config.storage.collections)
             if self._collection_id is not None:
-                ids.append(self._collection_id)
+                ids.add(self._collection_id)
             if not ids:
                 return ""
-            collection_ids = ids
+            collection_ids = list(ids)
 
         # Step 1: Search
         chunks = search_chunks(

@@ -388,7 +388,7 @@ class TestAlbertPipeline:
 
         # Should include both config collections AND session collection
         call_args = mock_search.call_args
-        assert call_args[0][2] == [42, 87, 999]
+        assert set(call_args[0][2]) == {42, 87, 999}
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")

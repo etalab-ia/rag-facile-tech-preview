@@ -5,6 +5,7 @@ import os
 import chainlit as cl
 import engineio
 import engineio.payload
+from chainlit.input_widget import Switch
 from pipelines import process_file, process_query
 from dotenv import load_dotenv
 
@@ -71,53 +72,6 @@ tools = [
 ]
 
 
-async def send_collection_badges() -> None:
-    """Send collection toggle badges as action buttons."""
-    configured = rag_config.storage.collections
-    if not configured:
-        return
-
-    active: list[int] = cl.user_session.get("active_collections") or []
-
-    actions = []
-    for col_id in configured:
-        name = get_collection_name(col_id) or f"Collection {col_id}"
-        is_active = col_id in active
-        label = f"{'✓' if is_active else '✗'} {name}"
-        actions.append(
-            cl.Action(
-                name="toggle_collection",
-                payload={"id": col_id},
-                label=label,
-                tooltip=f"Click to {'disable' if is_active else 'enable'} {name}",
-            )
-        )
-
-    await cl.Message(
-        content="📚 **Active collections** — click to toggle:",
-        actions=actions,
-    ).send()
-
-
-@cl.action_callback("toggle_collection")
-async def on_toggle_collection(action: cl.Action) -> None:
-    """Toggle a collection on or off for RAG retrieval."""
-    col_id = action.payload["id"]
-    active: list[int] = cl.user_session.get("active_collections") or []
-
-    if col_id in active:
-        active.remove(col_id)
-    else:
-        active.append(col_id)
-
-    cl.user_session.set("active_collections", active)
-
-    name = get_collection_name(col_id) or f"Collection {col_id}"
-    state = "enabled" if col_id in active else "disabled"
-    await cl.Message(content=f"📚 **{name}** {state}").send()
-    await send_collection_badges()
-
-
 @cl.on_chat_start
 async def start_chat():
     # Use system prompt from config
@@ -130,8 +84,24 @@ async def start_chat():
     active_collections = list(rag_config.storage.collections)
     cl.user_session.set("active_collections", active_collections)
 
-    # Show collection badges if any configured
-    await send_collection_badges()
+    # Show collection toggles in the settings panel (gear icon in header)
+    widgets = []
+    for col_id in rag_config.storage.collections:
+        name = get_collection_name(col_id) or f"Collection {col_id}"
+        widgets.append(Switch(id=f"col_{col_id}", label=f"📚 {name}", initial=True))
+    if widgets:
+        await cl.ChatSettings(widgets).send()
+
+
+@cl.on_settings_update
+async def on_settings_update(settings: dict) -> None:
+    """Update active collections when the user toggles settings."""
+    active = [
+        col_id
+        for col_id in rag_config.storage.collections
+        if settings.get(f"col_{col_id}", True)
+    ]
+    cl.user_session.set("active_collections", active)
 
 
 @cl.step(type="tool")
