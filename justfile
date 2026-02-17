@@ -41,7 +41,7 @@ check: format-check lint type-check
 
 # Run a specific app (e.g., just run chainlit-chat)
 run name:
-    cd apps/{{name}} && just run
+    cd "apps/{{name}}" && just run
 
 # Add a new app from a template (e.g., just add chainlit-chat)
 add template:
