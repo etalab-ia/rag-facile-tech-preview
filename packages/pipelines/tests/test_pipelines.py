@@ -154,37 +154,39 @@ class TestAlbertPipeline:
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_file_delegates_to_ingestion(
+    def test_process_file_ingests_into_collection(
         self, mock_get_ingestion, mock_get_storage
     ):
-        """process_file should delegate to Albert ingestion provider."""
-        mock_provider = MagicMock()
-        mock_provider.process_file.return_value = "albert parsed content"
-        mock_get_ingestion.return_value = mock_provider
-        mock_get_storage.return_value = MagicMock()
+        """process_file should upload to a session collection."""
+        mock_storage = MagicMock()
+        mock_storage.create_collection.return_value = 42
+        mock_get_storage.return_value = mock_storage
+        mock_get_ingestion.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         result = pipeline.process_file("/tmp/test.pdf", "test.pdf")
 
-        assert result == "albert parsed content"
-        mock_provider.process_file.assert_called_once_with("/tmp/test.pdf", "test.pdf")
+        assert result == "[Document indexed: test.pdf]"
+        mock_storage.create_collection.assert_called_once()
+        mock_storage.ingest_documents.assert_called_once()
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")
-    def test_process_bytes_delegates_to_ingestion(
+    def test_process_bytes_ingests_into_collection(
         self, mock_get_ingestion, mock_get_storage
     ):
-        """process_bytes should delegate to Albert ingestion provider."""
-        mock_provider = MagicMock()
-        mock_provider.process_bytes.return_value = "albert parsed bytes"
-        mock_get_ingestion.return_value = mock_provider
-        mock_get_storage.return_value = MagicMock()
+        """process_bytes should upload to a session collection."""
+        mock_storage = MagicMock()
+        mock_storage.create_collection.return_value = 42
+        mock_get_storage.return_value = mock_storage
+        mock_get_ingestion.return_value = MagicMock()
 
         pipeline = AlbertPipeline()
         result = pipeline.process_bytes(b"fake data", "doc.pdf")
 
-        assert result == "albert parsed bytes"
-        mock_provider.process_bytes.assert_called_once_with(b"fake data", "doc.pdf")
+        assert result == "[Document indexed: doc.pdf]"
+        mock_storage.create_collection.assert_called_once()
+        mock_storage.ingest_documents.assert_called_once()
 
     @patch("storage.get_provider")
     @patch("ingestion.get_provider")
