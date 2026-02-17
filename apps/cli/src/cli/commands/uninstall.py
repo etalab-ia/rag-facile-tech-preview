@@ -177,7 +177,7 @@ def _clean_windows_path() -> bool:
             timeout=15,
         )
         return "cleaned" in result.stdout
-    except Exception:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
 

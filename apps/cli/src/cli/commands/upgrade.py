@@ -1,9 +1,10 @@
 """Upgrade RAG Facile CLI to the latest version."""
 
+import re
 import subprocess
 
 import typer
-from importlib.metadata import version as get_version
+from importlib.metadata import PackageNotFoundError, version as get_version
 from rich.console import Console
 
 
@@ -24,7 +25,7 @@ def run(
     # Get current version
     try:
         old_version = get_version("rag-facile-cli")
-    except Exception:
+    except PackageNotFoundError:
         old_version = "unknown"
 
     console.print("\n[bold]Upgrading RAG Facile CLI...[/bold]")
@@ -65,9 +66,11 @@ def run(
             text=True,
             timeout=10,
         )
-        # Output format: "rag-facile v0.13.0" (with ANSI codes from Rich)
-        new_version = check.stdout.strip()
-    except Exception:
+        # Strip ANSI escape codes (Rich adds bold/color) then extract "v0.13.0"
+        raw = re.sub(r"\x1b\[[0-9;]*m", "", check.stdout.strip())
+        match = re.search(r"v[\d.]+", raw)
+        new_version = match.group(0) if match else raw
+    except (FileNotFoundError, subprocess.TimeoutExpired):
         new_version = "unknown"
 
     console.print("[bold green]Upgraded successfully![/bold green]")
