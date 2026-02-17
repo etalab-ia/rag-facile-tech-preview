@@ -9,6 +9,7 @@ Welcome to the RAG Facile documentation. Whether you're setting up your first ap
 | **[Getting Started](guides/getting-started.md)** | Installation, project structures, and running your app |
 | **[Understanding the RAG Pipeline](guides/rag-pipeline.md)** | What each pipeline stage does and why it matters |
 | **[Evaluation Guide](guides/evaluation.md)** | Generate synthetic datasets and measure RAG quality |
+| **[Uninstalling](guides/uninstalling.md)** | Remove RAG Facile and its toolchain |
 
 ### Platform-Specific Setup
 

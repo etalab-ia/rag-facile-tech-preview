@@ -65,6 +65,16 @@ Windows (PowerShell):
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
 
+## Uninstall
+
+To remove RAG Facile and its entire toolchain:
+
+```bash
+rag-facile uninstall
+```
+
+See the [Uninstalling Guide](docs/guides/uninstalling.md) for manual steps and details.
+
 ## Documentation
 
 | Guide | Description |
@@ -76,6 +86,7 @@ irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | ie
 | [Components Reference](docs/reference/components.md) | Albert Client SDK, frontend apps, and modules |
 | [Windows Setup](docs/guides/windows-setup.md) | Complete guide for Windows (PowerShell and Git Bash) |
 | [Proxy & Network Setup](docs/guides/proxy-setup.md) | Install behind corporate proxies and VPNs |
+| [Uninstalling](docs/guides/uninstalling.md) | Remove RAG Facile and its toolchain |
 
 ## Contributing
 

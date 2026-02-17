@@ -68,6 +68,16 @@ curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.s
 irm https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.ps1 | iex
 ```
 
+### Uninstalling
+
+To remove RAG Facile and its entire toolchain:
+
+```bash
+rag-facile uninstall
+```
+
+See the [Uninstalling Guide](uninstalling.md) for manual steps and details.
+
 ## Setting Up Your Workspace
 
 One command gets you to a running RAG app:

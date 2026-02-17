@@ -4,7 +4,14 @@ from typing import Optional
 import typer
 from rich.console import Console
 
-from cli.commands import collections, config, generate_dataset, setup
+from cli.commands import (
+    collections,
+    config,
+    generate_dataset,
+    setup,
+    uninstall,
+    upgrade,
+)
 
 
 console = Console()
@@ -82,6 +89,10 @@ app.command(
 )(generate_dataset.run)
 
 app.command(name="setup", help="Setup a new workspace")(setup.run)
+
+app.command(name="uninstall", help="Remove RAG Facile and its toolchain")(uninstall.run)
+
+app.command(name="upgrade", help="Upgrade to the latest version")(upgrade.run)
 
 
 if __name__ == "__main__":
