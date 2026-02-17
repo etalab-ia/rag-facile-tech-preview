@@ -7,6 +7,12 @@ Uses LibCST for Python code parameterization.
 Usage:
     python generate_templates.py --all
     python generate_templates.py --template chainlit-chat
+
+Note: App templates (chainlit-chat, reflex-chat) intentionally diverge from their
+golden master apps in one key way: the golden masters use workspace packages
+(pipelines, rag-core) for development within the rag-facile monorepo, but the
+generated templates use rag-facile-lib via git URL so that generated user workspaces
+don't copy pipeline sources.
 """
 
 import argparse
@@ -23,6 +29,9 @@ console = Console()
 # Repository root (tools/ is at repo/tools/)
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = REPO_ROOT / ".moon" / "templates"
+
+# GitHub repository URL — must match setup.py's _GITHUB_REPO
+_GITHUB_REPO = "https://github.com/etalab-ia/rag-facile.git"
 
 # Artifacts to ignore when copying
 ARTIFACTS = [
@@ -301,6 +310,38 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
                 "[\"{{ project_name | replace(from='-', to='_') }}*\"]",
             )
 
+        # Replace workspace pipeline deps with rag-facile-lib git URL.
+        # Generated user workspaces depend on the library package via git URL;
+        # they don't get individual pipeline package sources copied in.
+        rag_facile_source = (
+            'rag-facile-lib = { git = "'
+            + _GITHUB_REPO
+            + '", {{ rag_facile_ref_key }} = "{{ rag_facile_ref_value }}",'
+            ' subdirectory = "packages/rag-facile-lib" }'
+        )
+        # Remove individual pipeline workspace deps from dependencies list
+        for dep in [
+            '"albert-client",\n    ',
+            '"pipelines",\n    ',
+            '"rag-core",\n    ',
+        ]:
+            content = content.replace(dep, "")
+        # Insert rag-facile-lib as the first dependency
+        if '"chainlit' in content:
+            content = content.replace('"chainlit', '"rag-facile-lib",\n    "chainlit')
+        elif '"reflex' in content:
+            content = content.replace('"reflex', '"rag-facile-lib",\n    "reflex')
+        # Replace [tool.uv.sources] workspace entries with rag-facile-lib git source
+        old_sources = (
+            "[tool.uv.sources]\n"
+            "albert-client = { workspace = true }\n"
+            "pipelines = { workspace = true }\n"
+            "rag-core = { workspace = true }"
+        )
+        content = content.replace(
+            old_sources, f"[tool.uv.sources]\n{rag_facile_source}"
+        )
+
         # Add [tool.uv] package = true if not present
         if "[tool.uv]\npackage = true" not in content:
             content += "\n[tool.uv]\npackage = true\n"
@@ -397,6 +438,11 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
             "default": "Welcome to Chainlit! 🚀🤖",
             "prompt": "Header text for the welcome screen",
         }
+
+    # Internal variables injected by setup.py (no user prompt) for git ref resolution.
+    # setup.py passes these via: moon generate <app> -- --rag_facile_ref_key=branch ...
+    variables["rag_facile_ref_key"] = {"type": "string", "default": "branch"}
+    variables["rag_facile_ref_value"] = {"type": "string", "default": "main"}
 
     template_yml = {
         "title": app_name.replace("-", " ").title(),

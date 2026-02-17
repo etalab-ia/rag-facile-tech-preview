@@ -593,15 +593,8 @@ class TestWorkspaceCommand:
         mock_run = mocker.patch("subprocess.run")
         mock_run.return_value = MagicMock(returncode=0, stderr="")
 
-        # Mock shutil.copytree (templates copy)
+        # Mock shutil.copytree (copies frontend template into target workspace)
         mock_copytree = mocker.patch("shutil.copytree")
-
-        # Mock yaml operations
-        mocker.patch("yaml.safe_load", return_value={})
-        mocker.patch("yaml.dump")
-
-        # Mock open for .env file writing
-        mocker.patch("builtins.open", mocker.mock_open())
 
         return {
             "questionary": mock_q,
@@ -680,17 +673,19 @@ class TestWorkspaceCommand:
         assert len(moon_init_calls) >= 1
 
     def test_workspace_runs_moon_generate(self, mock_generation, tmp_path):
-        """Should run moon generate for templates."""
+        """Should run moon generate for the frontend app template."""
         target = tmp_path / "test-app"
 
         runner.invoke(main_app, ["setup", str(target), "--expert"])
 
-        # Check moon generate was called for sys-config and chainlit-chat
+        # Check moon generate was called for the frontend app
         calls = mock_generation["subprocess_run"].call_args_list
         generate_calls = [
             c for c in calls if "moon" in c[0][0] and "generate" in c[0][0]
         ]
-        assert len(generate_calls) >= 2  # sys-config + app
+        assert (
+            len(generate_calls) >= 1
+        )  # frontend app (no more sys-config or package templates)
 
     def test_workspace_with_force_flag(self, mock_generation, tmp_path):
         """Should pass --force flag to moon generate."""
