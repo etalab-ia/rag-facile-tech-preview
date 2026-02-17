@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0](https://github.com/etalab-ia/rag-facile/compare/v0.14.0...v0.15.0) (2026-02-17)
+
+
+### Features
+
+* add CI smoke test — scaffold, build and launch Chainlit app ([b70fd49](https://github.com/etalab-ia/rag-facile/commit/b70fd498d96121f611e3c259183fc69315820b83))
+* add CI smoke test — scaffold, build and launch Chainlit app ([2ffa86f](https://github.com/etalab-ia/rag-facile/commit/2ffa86f63d723911083eb04c4bdd104a14e23c82))
+* add public collections as RAG sources ([7c0fee8](https://github.com/etalab-ia/rag-facile/commit/7c0fee833db7039db55dadf4bb7a242f7501e8af))
+* **albert-client:** log API errors with gh issue command for 5xx ([3721c65](https://github.com/etalab-ia/rag-facile/commit/3721c656d8a4237a4a609e4b615eef1c928ccfba))
+* **albert-client:** log API errors with gh issue command for 5xx ([cff3299](https://github.com/etalab-ia/rag-facile/commit/cff3299909b73317dd2b2b5aee404316acc61122))
+* move frontend choice behind --expert flag ([88bb4b9](https://github.com/etalab-ia/rag-facile/commit/88bb4b9ad0d94a1de4a718554df7f14f90b720b4))
+* move frontend choice behind --expert flag in setup command ([5ed23bb](https://github.com/etalab-ia/rag-facile/commit/5ed23bbe9b215400c5f1c450becaf9b61da57d8b))
+
+
+### Bug Fixes
+
+* add collection ID logging to pipeline search ([8091901](https://github.com/etalab-ia/rag-facile/commit/80919018c426d6799618607457caadda434fdce1))
+* address Gemini review comments on public collections ([c69cd6b](https://github.com/etalab-ia/rag-facile/commit/c69cd6bfcd7f00e36fb48bcbaaefbb9493768907))
+* align pipeline tests with true RAG upload behavior ([8685147](https://github.com/etalab-ia/rag-facile/commit/8685147a712b902570198594d5490e05decdc282))
+* alphabetical option ordering in generate-dataset and uninstall ([14c4b0f](https://github.com/etalab-ia/rag-facile/commit/14c4b0fce3acf368dc51aa5118143fa81b31cf02))
+* alphabetical option ordering in setup command ([e52eb56](https://github.com/etalab-ia/rag-facile/commit/e52eb56d36d5669942b21349df482521a00ce85b))
+* ignore Chainlit translation files in nested paths ([ab50b8c](https://github.com/etalab-ia/rag-facile/commit/ab50b8c7a6ddeb4f8164ad34187467cf83e7a619))
+* ignore Chainlit translation files in nested paths ([1e62d7c](https://github.com/etalab-ia/rag-facile/commit/1e62d7cf59707793e369574a46358d6838a3e756))
+* make curl command in gh issue dynamic based on HTTP method ([119cff2](https://github.com/etalab-ia/rag-facile/commit/119cff2068ea25e2cb883969bee9b7b97e577f2d))
+* remove JSON file type from Albert ingestion provider ([17fd077](https://github.com/etalab-ia/rag-facile/commit/17fd07714edfcb89f9bacf3384a5f95b6395f473))
+* remove JSON file type from Albert ingestion provider ([60fb436](https://github.com/etalab-ia/rag-facile/commit/60fb436e1a909ed75803edf860e80dbd68e5a124))
+* respect disabled collection toggles in chat apps ([5500b9b](https://github.com/etalab-ia/rag-facile/commit/5500b9b19e4a767fee6003d7b26a896bde31c314))
+* respect disabled collection toggles in chat apps ([a7f03cb](https://github.com/etalab-ia/rag-facile/commit/a7f03cb73817aef32ca56f42348fed3d2e9b211d))
+* restrict file uploads to supported formats in Chainlit app ([fb56f4c](https://github.com/etalab-ia/rag-facile/commit/fb56f4c3bf45ece042bd8c8105b0c5cba357a03d))
+
 ## [0.14.0](https://github.com/etalab-ia/rag-facile/compare/v0.13.0...v0.14.0) (2026-02-17)
 
 
