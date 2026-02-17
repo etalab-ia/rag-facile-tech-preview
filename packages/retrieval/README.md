@@ -13,7 +13,7 @@ This package provides search capabilities via the Albert API:
 ## Usage
 
 ```python
-from retrieval import search_chunks
+from rag_facile.retrieval import search_chunks
 
 chunks = search_chunks(client, "energy transition", collection_ids=[1])
 ```

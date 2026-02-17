@@ -111,20 +111,17 @@ Your app will open in the browser, ready to use.
 
 ```
 my-rag-app/
-├── pyproject.toml          # All dependencies in one place
+├── pyproject.toml          # rag-facile-lib dependency (installed from GitHub)
 ├── .env                    # Your API credentials
 ├── ragfacile.toml          # RAG pipeline configuration
-├── app.py                  # Your application code
-├── chainlit.md             # Chat welcome message (Chainlit only)
-├── albert/                 # Albert API client
-├── rag_core/               # Configuration system
-├── pipelines/              # Pipeline orchestration
-├── ingestion/              # Document parsing
-├── retrieval/              # Vector search
-├── reranking/              # Cross-encoder re-scoring
-├── context/                # Context assembly
-└── storage/                # Collection management
+├── app.py                  # Your Chainlit application
+├── chainlit.md             # Chat welcome message
+└── src/
+    └── my_rag_app/         # Your custom code and extensions
+        └── __init__.py
 ```
+
+The entire RAG pipeline (`rag_facile.*`) comes from `rag-facile-lib`, installed automatically. No pipeline source directories to manage.
 
 ## Running Your App
 
@@ -147,26 +144,19 @@ Best for: **Quick prototypes, single-app deployments, learning RAG Facile**
 
 ### Monorepo
 
-Best for: **Team projects, multiple apps sharing code, production deployments**
+Best for: **Team projects, multiple apps, or adding your own pipeline packages**
 
 ```
 my-rag-app/
 ├── .moon/              # Moon workspace configuration
 ├── apps/
 │   └── chainlit-chat/  # Your selected frontend app
-├── packages/
-│   ├── rag-core/       # Configuration system
-│   ├── albert-client/  # Albert API SDK
-│   ├── retrieval/      # Vector search
-│   ├── reranking/      # Cross-encoder re-scoring
-│   ├── context/        # Context assembly
-│   ├── storage/        # Collection management
-│   ├── ingestion/      # Document parsing
-│   └── pipelines/      # Pipeline orchestration
 ├── ragfacile.toml      # RAG pipeline configuration
 ├── justfile            # Common commands
 └── pyproject.toml      # Workspace root
 ```
+
+The RAG pipeline comes from `rag-facile-lib` (same as standalone). Add your own packages under `packages/` when you need to extend the pipeline.
 
 **Advantages:**
 - Multiple apps can share packages

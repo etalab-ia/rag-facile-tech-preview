@@ -8,11 +8,11 @@ The `context` package provides utilities to convert retrieved document chunks in
 
 - Inline and footnote citation styles
 - Optional source attribution (file, page number)
-- Configurable formatting via `rag-core` config
+- Configurable formatting via `rag_facile.core` config
 
 ## Installation
 
-This package is part of the RAG pipeline workspace:
+This package is bundled into `rag-facile-lib`. To use it standalone in the workspace:
 
 ```bash
 uv pip install -e packages/context
@@ -21,8 +21,8 @@ uv pip install -e packages/context
 ## Usage
 
 ```python
-from context import format_context
-from rag_core import RetrievedChunk
+from rag_facile.context import format_context
+from rag_facile.core import RetrievedChunk
 
 # Format retrieved chunks with inline citations
 chunks = [
@@ -77,10 +77,10 @@ context_str = format_context(chunks, include_citations=False)
 
 ## Configuration
 
-Citation settings are inherited from `rag-core` config:
+Citation settings are inherited from `rag_facile.core` config:
 
 ```python
-from rag_core import get_config
+from rag_facile.core import get_config
 
 config = get_config()
 config.formatting.citations.enabled = True
@@ -89,7 +89,7 @@ config.formatting.citations.style = "inline"  # or "footnote"
 
 ## Dependencies
 
-- **rag-core**: Core types and configuration (workspace dependency)
+- **rag-facile-lib**: Bundled together with all other pipeline modules
 
 ## Related Packages
 

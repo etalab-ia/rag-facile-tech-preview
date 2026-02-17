@@ -5,7 +5,7 @@ RAG pipeline orchestration for chat applications. Coordinates document ingestion
 ## Usage
 
 ```python
-from pipelines import get_pipeline
+from rag_facile.pipelines import get_pipeline
 
 pipeline = get_pipeline()
 

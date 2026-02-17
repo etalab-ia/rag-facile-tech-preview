@@ -65,7 +65,7 @@ RAG Facile organizes the RAG pipeline into dedicated packages, each handling a s
 Manages vector store collections via the Albert API (or local SQLite, planned).
 
 ```python
-from storage import get_provider
+from rag_facile.storage import get_provider
 
 provider = get_provider()  # Backend from ragfacile.toml
 collection_id = provider.create_collection(client, "my-docs")
@@ -74,13 +74,13 @@ provider.ingest_documents(client, ["report.pdf"], collection_id)
 
 ### Retrieval → Reranking → Context
 
-Each phase is a self-contained package. The `pipelines` package orchestrates them:
+Each phase is a self-contained module under `rag_facile.*`. The `pipelines` module orchestrates them:
 
 ```python
-# Individual phase packages (used by pipelines internally)
-from retrieval import search_chunks
-from reranking import rerank_chunks
-from context import format_context
+# Individual phase modules (used by pipelines internally)
+from rag_facile.retrieval import search_chunks
+from rag_facile.reranking import rerank_chunks
+from rag_facile.context import format_context
 
 chunks = search_chunks(client, "energy transition", collection_ids=[1])
 reranked = rerank_chunks(client, "energy transition", chunks)

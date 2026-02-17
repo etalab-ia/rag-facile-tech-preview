@@ -10,7 +10,7 @@ Document ingestion package for RAG Facile. Parses and extracts text from files (
 ## Usage
 
 ```python
-from ingestion import get_provider
+from rag_facile.ingestion import get_provider
 
 provider = get_provider()  # reads ragfacile.toml
 text = provider.extract_text("document.pdf")

@@ -5,23 +5,20 @@ description = "{{ description }}"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "albert-client",
-    "pipelines",
-    "rag-core",
     "python-dotenv>=1.0.0",
+    "rag-facile-lib",
     "reflex>=0.7.11",
 ]
 
 [project.scripts]
-reflex-chat = "reflex.reflex:cli"
+reflex-chat = "rag-facile-lib",
+    "reflex.reflex:cli"
 
 [tool.setuptools.packages.find]
 include = ["{{ project_name | replace(from='-', to='_') }}*"]
 
 [tool.uv.sources]
-albert-client = { workspace = true }
-pipelines = { workspace = true }
-rag-core = { workspace = true }
+rag-facile-lib = { git = "https://github.com/etalab-ia/rag-facile.git", {{ rag_facile_ref_key }} = "{{ rag_facile_ref_value }}", subdirectory = "packages/rag-facile-lib" }
 
 [tool.uv]
 package = true

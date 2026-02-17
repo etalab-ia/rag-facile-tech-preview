@@ -12,7 +12,7 @@ Vector storage and collection management for the RAG pipeline.
 ## Usage
 
 ```python
-from storage import get_provider
+from rag_facile.storage import get_provider
 
 # Backend determined by ragfacile.toml [storage] section
 provider = get_provider()
