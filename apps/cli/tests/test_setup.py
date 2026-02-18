@@ -466,10 +466,8 @@ class TestGenerateStandalone:
         cmd = calls[0][0][0]
         assert cmd == ["uv", "run", "chainlit", "run", "app.py", "-w"]
 
-    def test_creates_gitignore(
-        self, standalone_target, mock_standalone_deps, preset_config
-    ):
-        """Should create a .gitignore file."""
+    def _run_generate_standalone(self, standalone_target, preset_config):
+        """Helper: invoke generate_standalone with default Chainlit/balanced args."""
         from cli.commands.setup import generate_standalone
 
         generate_standalone(
@@ -485,27 +483,18 @@ class TestGenerateStandalone:
             preset_config=preset_config,
         )
 
+    def test_creates_gitignore(
+        self, standalone_target, mock_standalone_deps, preset_config
+    ):
+        """Should create a .gitignore file."""
+        self._run_generate_standalone(standalone_target, preset_config)
         assert (standalone_target / ".gitignore").exists()
 
     def test_gitignore_protects_env_file(
         self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should include .env in .gitignore to prevent secret leaks."""
-        from cli.commands.setup import generate_standalone
-
-        generate_standalone(
-            target_path=standalone_target,
-            target_display=str(standalone_target),
-            frontend_choice="Chainlit",
-            selected_modules=[],
-            env_config={
-                "openai_api_key": "test-key",
-                "openai_base_url": "https://api.test.com",
-            },
-            preset="balanced",
-            preset_config=preset_config,
-        )
-
+        self._run_generate_standalone(standalone_target, preset_config)
         gitignore = (standalone_target / ".gitignore").read_text()
         assert ".env" in gitignore
         assert ".venv/" in gitignore
@@ -515,24 +504,9 @@ class TestGenerateStandalone:
         self, standalone_target, mock_standalone_deps, preset_config
     ):
         """Should call git init to initialize a repository."""
-        from cli.commands.setup import generate_standalone
-
-        generate_standalone(
-            target_path=standalone_target,
-            target_display=str(standalone_target),
-            frontend_choice="Chainlit",
-            selected_modules=[],
-            env_config={
-                "openai_api_key": "test-key",
-                "openai_base_url": "https://api.test.com",
-            },
-            preset="balanced",
-            preset_config=preset_config,
-        )
-
-        # run_command is mocked; check it was called with git init
+        self._run_generate_standalone(standalone_target, preset_config)
         calls = mock_standalone_deps["run_command"].call_args_list
-        git_init_calls = [c for c in calls if c[0][0] == ["git", "init"]]
+        git_init_calls = [c for c in calls if c.args[0] == ["git", "init"]]
         assert len(git_init_calls) == 1
 
 
@@ -801,8 +775,8 @@ class TestWorkspaceCommand:
         runner.invoke(main_app, ["setup", str(target), "--expert"])
 
         calls = mock_generation["subprocess_run"].call_args_list
-        git_init_calls = [c for c in calls if "git" in str(c) and "init" in str(c)]
-        assert len(git_init_calls) >= 1
+        git_init_calls = [c for c in calls if c.args[0] == ["git", "init"]]
+        assert len(git_init_calls) == 1
 
 
 class TestStandaloneWorkspaceCommand:

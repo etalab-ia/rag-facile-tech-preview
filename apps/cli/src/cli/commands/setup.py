@@ -484,10 +484,7 @@ def generate_standalone(
         target_path.mkdir(parents=True)
     console.print("[green]✓[/green] Directory created")
 
-    if not run_command(["git", "init"], "initialize git repository", cwd=target_path):
-        console.print("[yellow]  ⚠ git init failed — run manually: git init[/yellow]")
-    else:
-        console.print("[dim]  ✓ git repository initialized[/dim]")
+    _init_git_repo(target_path)
 
     # Step 2: Generate standalone pyproject.toml
     console.print()
@@ -645,6 +642,14 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
         dev_cmd = ["uv", "run", "reflex", "run"]
 
     subprocess.run(dev_cmd, cwd=target_path)
+
+
+def _init_git_repo(target_path: Path) -> None:
+    """Initialize a git repository at target_path, printing status."""
+    if not run_command(["git", "init"], "initialize git repository", cwd=target_path):
+        console.print("[yellow]  ⚠ git init failed — run manually: git init[/yellow]")
+    else:
+        console.print("[dim]  ✓ git repository initialized[/dim]")
 
 
 def run_command(cmd: list[str], description: str, cwd: Path | None = None) -> bool:
@@ -880,10 +885,7 @@ def run(
     if not target_path.exists():
         target_path.mkdir(parents=True)
 
-    if not run_command(["git", "init"], "initialize git repository", cwd=target_path):
-        console.print("[yellow]  ⚠ git init failed — run manually: git init[/yellow]")
-    else:
-        console.print("[dim]  ✓ git repository initialized[/dim]")
+    _init_git_repo(target_path)
 
     if not run_command(["moon", "init", "--yes"], "moon init", cwd=target_path):
         raise typer.Exit(1)
