@@ -75,7 +75,7 @@ rag-facile/
 │   └── reflex-chat/         # Reflex frontend (golden master)
 ├── packages/                # Shared packages
 │   ├── rag-core/            # Core config + schema (rag_facile.core)
-│   ├── albert-client/       # Albert API SDK
+│   ├── albert-client/       # Albert API SDK (uses `albert` namespace, not rag_facile.*)
 │   ├── ingestion/           # Document parsing (rag_facile.ingestion)
 │   ├── pipelines/           # Pipeline orchestration (rag_facile.pipelines)
 │   ├── retrieval/           # Vector search (rag_facile.retrieval)
@@ -124,6 +124,9 @@ RAG Facile uses a **phase-based pipeline** under the `rag_facile.*` namespace. E
 | `packages/context/` | `rag_facile.context` | Format retrieved chunks → LLM context |
 | `packages/pipelines/` | `rag_facile.pipelines` | Orchestrates all phases |
 | `packages/rag-facile-lib/` | — | Bundles all the above for external projects |
+| `packages/albert-client/` | `albert` | Low-level Albert API SDK — **not** under `rag_facile.*` |
+
+> **Note**: `albert-client` is versioned independently (tracks the Albert API OpenAPI spec) and is intentionally kept outside the `rag_facile.*` namespace so it can be used standalone.
 
 **Pipeline selection** is driven by `storage.provider` in `ragfacile.toml`:
 ```toml

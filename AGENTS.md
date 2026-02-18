@@ -46,9 +46,9 @@ rag-facile/
 │   ├── cli/                       # rag-facile CLI tool
 │   ├── chainlit-chat/             # Chainlit chat UI (golden master)
 │   └── reflex-chat/               # Reflex chat UI (golden master)
-├── packages/                      # Shared packages (rag_facile.* namespace)
+├── packages/                      # Shared packages
 │   ├── rag-core/                  # Core config + schema (rag_facile.core)
-│   ├── albert-client/             # Albert API SDK
+│   ├── albert-client/             # Albert API SDK (uses `albert` namespace, not rag_facile.*)
 │   ├── ingestion/                 # Document parsing (rag_facile.ingestion)
 │   ├── pipelines/                 # Pipeline orchestration (rag_facile.pipelines)
 │   ├── retrieval/                 # Vector search (rag_facile.retrieval)
