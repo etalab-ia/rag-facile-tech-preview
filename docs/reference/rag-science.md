@@ -316,7 +316,7 @@ results = eval(task)
 | Self-RAG — reflection tokens | Asai et al., 2023 | [arXiv:2310.11511](https://arxiv.org/abs/2310.11511) |
 | FLARE — active retrieval | Jiang et al., 2023 | [arXiv:2305.06983](https://arxiv.org/abs/2305.06983) |
 | LongCite — citation-enforced generation | Zhang et al., 2024 | [arXiv:2406.12931](https://arxiv.org/abs/2406.12931) |
-| Fixed vs semantic chunking | — | [arXiv:2410.13070](https://arxiv.org/abs/2410.13070) |
+| Fixed vs semantic chunking | The Impact of Chunking Strategies on Retrieval-Augmented Generation Performance | [arXiv:2410.13070](https://arxiv.org/abs/2410.13070) |
 | Dense X Retrieval — proposition indexing | Chen et al., 2023 | [arXiv:2312.06648](https://arxiv.org/abs/2312.06648) |
 | LLMLingua — context compression | Jiang et al., 2023 | [arXiv:2310.05736](https://arxiv.org/abs/2310.05736) |
 | Step-back prompting | Zheng et al., 2023 | [arXiv:2310.06117](https://arxiv.org/abs/2310.06117) |
