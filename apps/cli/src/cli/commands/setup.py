@@ -398,6 +398,7 @@ def generate_config_file(
     """
     from rag_facile.core import RAGConfig
     from rag_facile.core.loader import save_config
+    from rag_facile.core.presets import load_preset
     from rag_facile.core.schema import (
         ChunkingConfig,
         EvalConfig,
@@ -417,6 +418,12 @@ def generate_config_file(
     else:
         storage_backend = "local-sqlite"
 
+    # Load public collection IDs from the preset (only relevant for Albert backend).
+    # These populate the collection toggle buttons in the chat UI.
+    collections: list[int] = []
+    if storage_backend == "albert-collections":
+        collections = load_preset(preset).storage.collections
+
     # Create config with preset values
     config = RAGConfig(
         meta=MetaConfig(preset=preset, schema_version="1.0.0"),
@@ -433,7 +440,7 @@ def generate_config_file(
             ocr=OCRConfig(enabled=True, dpi=300),
         ),
         chunking=ChunkingConfig(strategy="semantic", chunk_size=512, chunk_overlap=50),
-        storage=StorageConfig(provider=storage_backend),
+        storage=StorageConfig(provider=storage_backend, collections=collections),
         formatting=FormattingConfig(
             output_format="markdown",
             include_confidence=False,
