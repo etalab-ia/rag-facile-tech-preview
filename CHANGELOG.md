@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0](https://github.com/etalab-ia/rag-facile/compare/v0.15.0...v0.16.0) (2026-02-18)
+
+
+### Features
+
+* add query expansion system (multi-query + HyDE) ([ef5418e](https://github.com/etalab-ia/rag-facile/commit/ef5418ef7d8ad3ac00bd3d5a591ec56815b6e7d7))
+* add query expansion system with multi-query and HyDE strategies ([7c44a3f](https://github.com/etalab-ia/rag-facile/commit/7c44a3f6149cd311280c4dc307d1e6145a65ff56))
+* bundle pipeline packages under rag_facile namespace for library distribution ([2271dc7](https://github.com/etalab-ia/rag-facile/commit/2271dc7daac78e07fc125a5d2053fca1b8ba9ef8))
+* bundle pipeline packages under rag_facile namespace for library distribution ([0867970](https://github.com/etalab-ia/rag-facile/commit/0867970e6b352cf1cafb9a6c6eb83129c2917569))
+* initialize git repo and add .gitignore on workspace setup ([3ff2fb0](https://github.com/etalab-ia/rag-facile/commit/3ff2fb09fdeb5cd9f246882a33d3b21b5d5fb18b))
+* initialize git repo and add .gitignore on workspace setup ([3a7fb7d](https://github.com/etalab-ia/rag-facile/commit/3a7fb7d23ab725e0ac65fb8f4520a7115d894a67))
+
+
+### Bug Fixes
+
+* add pkgutil namespace __init__.py and fix hatchling packages config ([d850889](https://github.com/etalab-ia/rag-facile/commit/d85088912fe9afd601ae605e6f093ed49ed6299a))
+* address PR [#125](https://github.com/etalab-ia/rag-facile/issues/125) review comments ([c2d7988](https://github.com/etalab-ia/rag-facile/commit/c2d7988249a9e331fd2b79fcd6a202b6ba62b132))
+* **docs:** correct reranker model — openweight-rerank is BAAI/bge-reranker-v2-m3 ([2b61048](https://github.com/etalab-ia/rag-facile/commit/2b61048a12d9f2f89679fe42ce3c951f4576d82d))
+* preset strategies not applied — stale bundled TOML files ([f3cd9e4](https://github.com/etalab-ia/rag-facile/commit/f3cd9e40dacbdf0cae2c5c4bed0d1c7b0119cb93))
+* stop generating pipeline packages in monorepo, add src/ to standalone ([174e855](https://github.com/etalab-ia/rag-facile/commit/174e85500a96a0ad56d7850104ee7b2969f3a2cb))
+
+
+### Documentation
+
+* add missing paper title in rag-science Key Papers table ([74e6085](https://github.com/etalab-ia/rag-facile/commit/74e6085121cce4460832500f5158c60cba3d2dd7))
+* add RAG science guides (end-user + contributor reference) ([31acdaf](https://github.com/etalab-ia/rag-facile/commit/31acdafe74996a29979abc1659fcb1b0488cfd0e))
+* add RAG science guides (end-user + contributor reference) ([eb1ac01](https://github.com/etalab-ia/rag-facile/commit/eb1ac018c1b3bd03ae1a768dd87cde960631e090))
+* clarify albert-client is outside rag_facile.* namespace ([41c8226](https://github.com/etalab-ia/rag-facile/commit/41c8226fbb2dbdf06829eb9794692175c67fd345))
+* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace ([9e86742](https://github.com/etalab-ia/rag-facile/commit/9e867423c65252fb21e27348740f60174ab9630a))
+* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace (PR [#121](https://github.com/etalab-ia/rag-facile/issues/121)) ([0fdb02a](https://github.com/etalab-ia/rag-facile/commit/0fdb02a80e8eff90e63d64f4dbda2928399b8c36))
+* update imports and project structures for rag_facile namespace ([a6f8e84](https://github.com/etalab-ia/rag-facile/commit/a6f8e840080761faa8ecde7b31175904c3d3e637))
+* update presets and documentation for query expansion ([dd9492e](https://github.com/etalab-ia/rag-facile/commit/dd9492e0b60cefdc3dfc521b7bd6092450835611))
+
 ## [0.15.0](https://github.com/etalab-ia/rag-facile/compare/v0.14.0...v0.15.0) (2026-02-17)
 
 
