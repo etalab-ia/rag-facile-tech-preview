@@ -758,11 +758,9 @@ def run(
     else:
         is_standalone = True
 
-    # Select preset
+    # Select preset (expert-only interactive picker; --preset flag still works for everyone)
     if not preset:
-        if yes:
-            preset = "balanced"
-        else:
+        if expert and not yes:
             preset = questionary.select(
                 "Choose a configuration preset:",
                 choices=[
@@ -777,6 +775,8 @@ def run(
             if not preset:
                 console.print("[red]Aborted.[/red]")
                 raise typer.Exit(1)
+        else:
+            preset = "balanced"
 
     # Validate preset if provided via flag
     if preset not in PRESET_CONFIGS:

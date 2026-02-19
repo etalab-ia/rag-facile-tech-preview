@@ -39,9 +39,9 @@ type-check:
 # Run all checks (format-check, lint, type-check)
 check: format-check lint type-check
 
-# Run a specific app (e.g., just run chainlit-chat)
-run name:
-    cd "apps/{{name}}" && just run
+# Run the chat UI: just run (chainlit) or just run reflex
+run ui="chainlit":
+    cd "apps/{{ui}}-chat" && just run
 
 # Add a new app from a template (e.g., just add chainlit-chat)
 add template:

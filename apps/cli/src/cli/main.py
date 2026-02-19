@@ -28,11 +28,27 @@ BANNER = """[magenta]
 [/magenta]"""
 
 
-class AlphabeticalGroup(typer.core.TyperGroup):
-    """Display commands in alphabetical order in help output."""
+# Getting Started command definitions — single source of truth for both
+# panel registration and sort-key logic in PanelAlphabeticalGroup.
+_GETTING_STARTED_DEFS: dict[str, tuple] = {
+    "setup": (setup.run, "Setup a new workspace"),
+    "uninstall": (uninstall.run, "Remove the RAG Facile CLI (--all for toolchain too)"),
+    "upgrade": (upgrade.run, "Upgrade to the latest version"),
+}
+
+_PANEL_GETTING_STARTED = "🚀 Getting Started"
+_PANEL_ADVANCED_TOOLS = "🔧 Advanced Tools"
+
+
+class PanelAlphabeticalGroup(typer.core.TyperGroup):
+    """Sort commands by panel (Getting Started first), then alphabetically within each panel."""
 
     def list_commands(self, ctx: click.Context) -> list[str]:
-        return sorted(super().list_commands(ctx))
+        all_names = list(super().list_commands(ctx))
+        return sorted(
+            all_names,
+            key=lambda n: (0 if n in _GETTING_STARTED_DEFS else 1, n),
+        )
 
     def main(self, *args: Any, **kwargs: Any) -> Any:
         # Print banner and version before any argument parsing or error handling,
@@ -51,7 +67,7 @@ class AlphabeticalGroup(typer.core.TyperGroup):
 
 
 app = typer.Typer(
-    cls=AlphabeticalGroup,
+    cls=PanelAlphabeticalGroup,
     add_completion=False,
     invoke_without_command=True,
     help="RAG Facile CLI - Build RAG applications for the French government",
@@ -78,7 +94,11 @@ def main_callback(
         raise typer.Exit()
 
 
-# Register commands in alphabetical order
+# Register Getting Started commands first so their panel renders at the top
+for _name, (_func, _help) in _GETTING_STARTED_DEFS.items():
+    app.command(name=_name, help=_help, rich_help_panel=_PANEL_GETTING_STARTED)(_func)
+
+# Advanced Tools — registered after Getting Started so their panel renders below
 
 # Collections command group
 collections_app = typer.Typer(
@@ -89,7 +109,9 @@ collections_app = typer.Typer(
 collections_app.command("list", help="List accessible collections")(
     collections.list_collections
 )
-app.add_typer(collections_app, name="collections")
+app.add_typer(
+    collections_app, name="collections", rich_help_panel=_PANEL_ADVANCED_TOOLS
+)
 
 # Config command group
 config_app = typer.Typer(
@@ -103,20 +125,13 @@ config_app.command("set", help="Set configuration value")(config.set_value)
 config_app.add_typer(
     config.preset(), name="preset", help="Manage configuration presets"
 )
-app.add_typer(config_app, name="config")
+app.add_typer(config_app, name="config", rich_help_panel=_PANEL_ADVANCED_TOOLS)
 
 app.command(
     name="generate-dataset",
     help="Generate synthetic Q/A evaluation dataset from documents",
+    rich_help_panel=_PANEL_ADVANCED_TOOLS,
 )(generate_dataset.run)
-
-app.command(name="setup", help="Setup a new workspace")(setup.run)
-
-app.command(
-    name="uninstall", help="Remove the RAG Facile CLI (--all for toolchain too)"
-)(uninstall.run)
-
-app.command(name="upgrade", help="Upgrade to the latest version")(upgrade.run)
 
 
 if __name__ == "__main__":

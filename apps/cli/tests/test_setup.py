@@ -788,11 +788,8 @@ class TestStandaloneWorkspaceCommand:
         # Mock shutil.which to pretend tools are installed
         mocker.patch("shutil.which", return_value="/usr/bin/uv")
 
-        # Mock questionary interactions - default mode skips structure, frontend, and pipeline
+        # Mock questionary interactions - default mode has no select calls (no preset/structure/frontend/pipeline)
         mock_q = mocker.patch("cli.commands.setup.questionary")
-        mock_q.select.return_value.ask.side_effect = [
-            "balanced",  # Only call: preset selection
-        ]
         mock_q.confirm.return_value.ask.return_value = True
         mock_q.text.return_value.ask.return_value = "test-value"
 
@@ -880,10 +877,7 @@ class TestPathNormalization:
         """Should normalize /private/tmp to /tmp in output."""
         # Create a path that looks like macOS /private/tmp
         mock_q = mocker.patch("cli.commands.setup.questionary")
-        # Default mode: only preset select (no structure/frontend/pipeline)
-        mock_q.select.return_value.ask.side_effect = [
-            "balanced",  # Preset
-        ]
+        # Default mode: no select calls (preset/structure/frontend/pipeline all default silently)
         mock_q.checkbox.return_value.ask.return_value = []
         mock_q.confirm.return_value.ask.return_value = False  # Abort early
 
@@ -942,29 +936,20 @@ class TestStructureSelectionPrompt:
         assert "Aborted" in result.output
 
     def test_default_mode_skips_structure_frontend_and_pipeline_prompts(self, mocker):
-        """Without --expert, should only ask for preset (1 select)."""
+        """Without --expert, should ask no select questions (preset/structure/frontend/pipeline all default)."""
         mock_q = mocker.patch("cli.commands.setup.questionary")
-        mock_q.select.return_value.ask.side_effect = [
-            "balanced",  # Only call: preset selection
-        ]
         mock_q.text.return_value.ask.return_value = "test-key"
         mock_q.confirm.return_value.ask.return_value = False  # Abort at confirmation
 
         runner.invoke(main_app, ["setup", "/tmp/test"])
 
-        # Should have been called once (preset only), no structure, frontend, or pipeline
-        assert mock_q.select.call_count == 1
-
-        # Only call should be for preset (not structure or frontend)
-        first_call_prompt = mock_q.select.call_args_list[0][0][0]
-        assert "preset" in first_call_prompt.lower()
+        # No select calls at all — all choices use silent defaults in non-expert mode
+        assert mock_q.select.call_count == 0
 
     def test_default_mode_defaults_to_standalone_chainlit_and_albert_rag(self, mocker):
-        """Without --expert, should default to standalone + Chainlit + Albert RAG."""
+        """Without --expert, should default to standalone + Chainlit + Albert RAG + balanced preset."""
         mock_q = mocker.patch("cli.commands.setup.questionary")
-        mock_q.select.return_value.ask.side_effect = [
-            "balanced",  # Only select: Preset
-        ]
+        # No select calls in non-expert mode — all choices use silent defaults
         mock_q.text.return_value.ask.return_value = "test-key"
         mock_q.confirm.return_value.ask.return_value = False  # Abort at confirmation
 
