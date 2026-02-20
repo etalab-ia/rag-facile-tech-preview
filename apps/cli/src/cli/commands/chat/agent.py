@@ -5,6 +5,7 @@ or explicitly via `rag-facile chat`.
 """
 
 import os
+import time
 from pathlib import Path
 
 import openai
@@ -70,6 +71,8 @@ _UI: dict[str, dict[str, str]] = {
             "J'ai eu besoin de trop d'étapes pour répondre. "
             "Pouvez-vous reformuler ou poser une question plus simple\u00a0?"
         ),
+        "rate_limited": "Limite de requêtes atteinte — nouvelle tentative dans {n}s\u00a0...",
+        "rate_limited_failed": "Limite de requêtes toujours atteinte. Attendez quelques secondes et réessayez.",
     },
     "en": {
         "greeting": "Bonjour! I'm your RAG assistant.",
@@ -90,8 +93,14 @@ _UI: dict[str, dict[str, str]] = {
             "I needed too many steps to answer that. "
             "Could you rephrase or break it into smaller questions?"
         ),
+        "rate_limited": "Rate limit reached — retrying in {n}s...",
+        "rate_limited_failed": "Still rate limited. Wait a few seconds and try again.",
     },
 }
+
+# Albert API allows 10 req/min; smolagents may use several calls per turn.
+# Wait 15s on 429 before one automatic retry.
+_RATE_LIMIT_WAIT = 15
 
 
 def _detect_workspace() -> Path | None:
@@ -193,22 +202,40 @@ def start_chat() -> None:
             console.print(f"[dim]{ui['goodbye']}[/dim]")
             break
 
+        response = None
         with console.status(f"[dim]{ui['thinking']}[/dim]", spinner="dots"):
-            try:
-                response = agent.run(user_input, reset=False)
-            except KeyboardInterrupt:
-                console.print(f"\n[yellow]{ui['interrupted']}[/yellow]")
-                continue
-            except openai.APIError as exc:
-                console.print(f"[red]API error: {exc}[/red]")
-                console.print(f"[dim]{ui['api_error_hint']}[/dim]")
-                continue
-            except AgentMaxStepsError:
-                console.print(f"[yellow]{ui['too_many_steps']}[/yellow]")
-                continue
-            except AgentError as exc:
-                console.print(f"[red]Agent error: {exc}[/red]")
-                continue
+            for _attempt in range(2):  # one automatic retry on 429
+                try:
+                    response = agent.run(user_input, reset=False)
+                    break
+                except KeyboardInterrupt:
+                    console.print(f"\n[yellow]{ui['interrupted']}[/yellow]")
+                    response = None
+                    break
+                except openai.APIError as exc:
+                    console.print(f"[red]API error: {exc}[/red]")
+                    console.print(f"[dim]{ui['api_error_hint']}[/dim]")
+                    response = None
+                    break
+                except AgentMaxStepsError:
+                    console.print(f"[yellow]{ui['too_many_steps']}[/yellow]")
+                    response = None
+                    break
+                except AgentError as exc:
+                    if "429" in str(exc) and _attempt == 0:
+                        msg = ui["rate_limited"].format(n=_RATE_LIMIT_WAIT)
+                        console.print(f"\n[yellow]{msg}[/yellow]")
+                        time.sleep(_RATE_LIMIT_WAIT)
+                        continue  # retry
+                    if "429" in str(exc):
+                        console.print(f"[yellow]{ui['rate_limited_failed']}[/yellow]")
+                    else:
+                        console.print(f"[red]Agent error: {exc}[/red]")
+                    response = None
+                    break
+
+        if response is None:
+            continue
 
         console.print("[bold green]Assistant[/bold green]:")
         console.print(Markdown(str(response)))
