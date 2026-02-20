@@ -225,3 +225,6 @@ private/
 
 # rag-facile chat assistant workspace state (belongs in user projects, not source repo)
 .rag-facile/
+
+# npx skills — installed per-workspace by users, not tracked in source repo
+.agents/

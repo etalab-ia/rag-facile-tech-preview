@@ -64,3 +64,4 @@ packages = ["src/cli"]
 "../../packages/storage/src/rag_facile/storage" = "cli/storage_src"
 "src/cli/templates/ragfacile.toml" = "cli/templates/ragfacile.toml"
 "../../docs" = "cli/docs"
+"src/cli/skills" = "cli/skills"

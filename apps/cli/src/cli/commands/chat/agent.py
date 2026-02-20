@@ -19,6 +19,13 @@ from smolagents.monitoring import LogLevel
 from smolagents.utils import AgentError, AgentMaxStepsError
 
 from cli.commands.chat.init import needs_init, read_language, run_init_wizard
+from cli.commands.chat.skills import (
+    auto_detect_skill,
+    discover_skills,
+    format_skills_list,
+    install_skill,
+    load_skill,
+)
 from cli.commands.chat.memory import (
     append_turn,
     git_commit_session,
@@ -78,6 +85,10 @@ _UI: dict[str, dict[str, str]] = {
             "Pouvez-vous reformuler ou poser une question plus simple\u00a0?"
         ),
         "rate_limited": "Limite de requêtes atteinte — nouvelle tentative dans {n}s (Ctrl+C pour annuler)\u00a0...",
+        "skill_loaded": "📚 Compétence '{name}' activée.",
+        "skill_cleared": "📚 Compétence désactivée.",
+        "skill_not_found": "Compétence '{name}' introuvable. Tapez /skills pour voir la liste.",
+        "skill_installing": "Installation de '{pkg}'...",
     },
     "en": {
         "greeting": "Bonjour! I'm your RAG assistant.",
@@ -99,12 +110,47 @@ _UI: dict[str, dict[str, str]] = {
             "Could you rephrase or break it into smaller questions?"
         ),
         "rate_limited": "Rate limit reached — retrying in {n}s (Ctrl+C to cancel)...",
+        "skill_loaded": "📚 Skill '{name}' activated.",
+        "skill_cleared": "📚 Skill deactivated.",
+        "skill_not_found": "Skill '{name}' not found. Type /skills to see the list.",
+        "skill_installing": "Installing '{pkg}'...",
     },
 }
 
 # Albert API allows 10 req/min; smolagents may use several calls per turn.
 # Wait 15s on 429 before one automatic retry.
 _RATE_LIMIT_WAIT = 15
+
+
+_TOOL_ICONS: dict[str, str] = {
+    "get_ragfacile_config": "⚙️",
+    "get_agents_md": "📋",
+    "get_recent_git_activity": "📜",
+    "get_docs": "📖",
+}
+
+
+def _with_notification(tool):  # type: ignore[no-untyped-def]
+    """Wrap a smolagents tool's forward() to print a dim notification before calling.
+
+    Shown unconditionally (not gated behind --debug) so users always see
+    what the agent is doing, without needing the full smolagents trace.
+    Guards against double-wrapping so repeated start_chat() calls are safe.
+    """
+    if getattr(tool, "_notification_wrapped", False):
+        return tool
+
+    _original = tool.forward
+    icon = _TOOL_ICONS.get(tool.name, "🔧")
+    name = tool.name
+
+    def _notifying(*args: object, **kwargs: object) -> object:
+        console.print(f"[dim]{icon} {name}[/dim]")
+        return _original(*args, **kwargs)
+
+    tool.forward = _notifying
+    tool._notification_wrapped = True
+    return tool
 
 
 def _detect_workspace() -> Path | None:
@@ -161,11 +207,27 @@ def start_chat(debug: bool = False) -> None:
     if workspace:
         increment_session_count(workspace)
 
+    # Discover skills: built-in + workspace (.agents/skills/)
+    available_skills = discover_skills(workspace)
+    active_skill: str | None = None  # name of currently loaded skill
+    active_skill_content: str | None = None  # SKILL.md content to inject
+    skill_injected = False  # True once content has been sent to agent
+
     # Build model + agent — typer.Exit propagates naturally on missing API key
     model = _build_model()
 
+    tools = [
+        _with_notification(t)
+        for t in [
+            get_ragfacile_config,
+            get_agents_md,
+            get_recent_git_activity,
+            get_docs,
+        ]
+    ]
+
     agent = ToolCallingAgent(
-        tools=[get_ragfacile_config, get_agents_md, get_recent_git_activity, get_docs],
+        tools=tools,
         model=model,
         instructions=_SYSTEM_PROMPT,
         verbosity_level=LogLevel.INFO if debug else LogLevel.OFF,
@@ -203,15 +265,89 @@ def start_chat(debug: bool = False) -> None:
             console.print(f"[dim]{ui['goodbye']}[/dim]")
             break
 
-        # On the first turn: prepend memory context so the model sees it
-        # right before the question (much better attention than end-of-system-prompt)
+        # ── /skills slash commands ────────────────────────────────────────────
+        _skill_bootstrap = (
+            False  # set True when explicit load should run agent immediately
+        )
+        if user_input == "/skills" or user_input.startswith("/skills "):
+            parts = user_input.split(None, 2)  # ["/skills", cmd?, arg?]
+            sub = parts[1].lower() if len(parts) > 1 else ""
+            arg = parts[2] if len(parts) > 2 else ""
+
+            if sub == "" or sub == "list":
+                # Refresh discovery so newly installed skills appear
+                available_skills = discover_skills(workspace)
+                console.print(format_skills_list(available_skills))
+
+            elif sub == "install":
+                if not arg:
+                    console.print("[yellow]Usage: /skills install <package>[/yellow]")
+                elif workspace is None:
+                    console.print(
+                        "[yellow]No workspace detected — cannot install skills.[/yellow]"
+                    )
+                else:
+                    with console.status(
+                        f"[dim]{ui['skill_installing'].format(pkg=arg)}[/dim]",
+                        spinner="dots",
+                    ):
+                        result = install_skill(arg, workspace)
+                    console.print(result)
+                    available_skills = discover_skills(workspace)
+
+            elif sub == "clear":
+                active_skill = None
+                active_skill_content = None
+                skill_injected = False
+                console.print(f"[dim]{ui['skill_cleared']}[/dim]")
+
+            elif sub in available_skills:
+                # /skills <name> — explicit load: activate and bootstrap the flow
+                active_skill = sub
+                active_skill_content = load_skill(available_skills[sub])
+                console.print(f"[dim]{ui['skill_loaded'].format(name=sub)}[/dim]")
+                # Inject skill + trigger word so the agent starts its flow immediately
+                user_input = (
+                    f"[Compétence chargée: {sub}]\n{active_skill_content}\n\n---\n\n"
+                    "Commence."
+                )
+                skill_injected = True
+                _skill_bootstrap = (
+                    True  # skip the outer continue — fall through to agent
+                )
+
+            else:
+                console.print(f"[dim]{ui['skill_not_found'].format(name=sub)}[/dim]")
+
+            if not _skill_bootstrap:
+                continue
+
+        # ── Auto-detect skill from message (only if none active) ─────────────
+        if active_skill is None:
+            detected = auto_detect_skill(user_input, available_skills)
+            if detected:
+                active_skill = detected
+                active_skill_content = load_skill(available_skills[detected])
+                skill_injected = False
+                console.print(f"[dim]{ui['skill_loaded'].format(name=detected)}[/dim]")
+
+        # Build effective_input — layer memory (first turn) + skill (on load) + message
+        effective_input = user_input
+
+        # Inject memory on first turn of the session
         if memory_context and not session_turns:
             effective_input = (
                 f"[Mémoire des sessions précédentes]\n{memory_context}\n\n---\n\n"
-                f"{user_input}"
+                f"{effective_input}"
             )
-        else:
-            effective_input = user_input
+
+        # Inject skill content the first time a skill becomes active
+        if active_skill_content and not skill_injected:
+            effective_input = (
+                f"[Compétence chargée: {active_skill}]\n{active_skill_content}\n\n---\n\n"
+                f"{effective_input}"
+            )
+            skill_injected = True
 
         # Retry loop — keeps retrying on 429 until success or Ctrl+C
         response = None
