@@ -1,7 +1,7 @@
 ---
 name: learn-retrieval
-description: Guided walkthrough of retrieval tuning — top_k, reranking, hybrid search.
-triggers: ["retrieval", "top_k", "top_n", "search", "results bad", "résultats", "mauvais résultats", "not finding", "ne trouve pas"]
+description: Diagnose retrieval quality problems — use when results are bad, irrelevant, or missing. NOT for changing parameter values directly.
+triggers: ["results bad", "mauvais résultats", "not finding", "ne trouve pas", "wrong results", "irrelevant", "non pertinent", "retrieval problem"]
 ---
 
 # Skill: Learn Retrieval Tuning
