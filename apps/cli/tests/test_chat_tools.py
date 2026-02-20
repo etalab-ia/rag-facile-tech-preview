@@ -83,9 +83,19 @@ class TestGetRecentGitActivity:
     def test_returns_log_output(self, workspace):
         mock_result = MagicMock()
         mock_result.stdout = "abc1234 feat: initial commit\n"
-        with patch("cli.commands.chat.tools.subprocess.run", return_value=mock_result):
+        with patch(
+            "cli.commands.chat.tools.subprocess.run", return_value=mock_result
+        ) as mock_run:
             result = get_recent_git_activity()
-        assert "feat: initial commit" in result
+
+        mock_run.assert_called_once_with(
+            ["git", "log", "--oneline", "--decorate", "--no-merges", "-15"],
+            cwd=workspace,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        assert result == "abc1234 feat: initial commit"
 
     def test_returns_no_commits_message_on_empty_log(self, workspace):
         mock_result = MagicMock()
@@ -110,7 +120,7 @@ class TestGetRecentGitActivity:
             ),
         ):
             result = get_recent_git_activity()
-        assert "git log failed" in result
+        assert result == "git log failed: not a git repo"
 
 
 # ── get_docs ──────────────────────────────────────────────────────────────────

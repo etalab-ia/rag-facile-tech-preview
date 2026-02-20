@@ -96,7 +96,7 @@ def get_agents_md() -> str:
 
 @tool
 def get_recent_git_activity() -> str:
-    """Show the last 10 git commits in the workspace.
+    """Show the last 15 git commits in the workspace.
 
     Use this to answer questions about what changed recently, what the user
     has been working on, or whether the project is up to date.
