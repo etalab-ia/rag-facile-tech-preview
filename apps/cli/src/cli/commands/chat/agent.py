@@ -12,6 +12,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 from smolagents import ToolCallingAgent, OpenAIServerModel
+from smolagents.monitoring import LogLevel
 from smolagents.utils import AgentError, AgentMaxStepsError
 
 from cli.commands.chat.tools import get_ragfacile_config, set_workspace_root
@@ -68,16 +69,15 @@ def _build_model() -> OpenAIServerModel:
 
 def start_chat() -> None:
     """Launch the interactive RAG assistant chat loop."""
-    # Detect workspace
+    # Detect workspace — walk up from cwd for ragfacile.toml
     workspace = _detect_workspace()
+    no_workspace_hint = ""
     if workspace:
         set_workspace_root(workspace)
-        console.print(f"[dim]Workspace: {workspace}[/dim]")
     else:
-        console.print(
-            "[yellow]⚠ No ragfacile.toml found. "
-            "Run 'rag-facile setup' to create a workspace, "
-            "or start chatting to learn about RAG.[/yellow]"
+        no_workspace_hint = (
+            "\n[dim]💡 No ragfacile.toml found — run [bold]rag-facile setup[/bold] "
+            "to create a workspace.[/dim]"
         )
 
     # Build model + agent
@@ -90,16 +90,19 @@ def start_chat() -> None:
         tools=[get_ragfacile_config],
         model=model,
         instructions=_SYSTEM_PROMPT,
-        verbosity_level=0,
+        verbosity_level=LogLevel.OFF,  # -1: suppress all smolagents output incl. errors
         max_steps=5,
     )
 
     # Welcome
+    workspace_line = (
+        f"\n[dim]Workspace: {workspace}[/dim]" if workspace else no_workspace_hint
+    )
     console.print(
         Panel(
             "[bold]Bonjour! I'm your RAG assistant.[/bold]\n"
             "[dim]Ask me anything about RAG, your pipeline config, or how to improve your results.\n"
-            "Type [bold]q[/bold] or press Ctrl+C to quit.[/dim]",
+            "Type [bold]q[/bold] or press Ctrl+C to quit.[/dim]" + workspace_line,
             border_style="magenta",
             padding=(0, 1),
         )
