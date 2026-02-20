@@ -39,6 +39,8 @@ from cli.commands.chat.tools import (
     get_docs,
     get_ragfacile_config,
     get_recent_git_activity,
+    list_collections,
+    run_generate_dataset,
     set_available_skills,
     set_workspace_root,
     update_config,
@@ -66,11 +68,13 @@ in terms of speed vs. quality vs. cost so the user can make an informed decision
 Before responding to any message, decide whether one of these skills applies \
 and call activate_skill(name) as your FIRST action if so:
 
-- explain-rag       → user asks what something IS (concept, definition, "comment ça marche")
-- learn-retrieval   → user reports a PROBLEM with results (bad, irrelevant, missing, "ne trouve pas")
-- tune-pipeline     → user wants to CHANGE or SET a parameter (top_k, top_n, chunk_size, preset…)
-- explore-codebase  → user asks WHERE something is in the code or how it is implemented
-- skill-creator     → user wants to CREATE a new custom skill
+- explain-rag         → user asks what something IS (concept, definition, "comment ça marche")
+- learn-retrieval     → user reports a PROBLEM with results (bad, irrelevant, missing)
+- tune-pipeline       → user wants to CHANGE or SET a parameter (top_k, top_n, preset…)
+- manage-collections  → user asks about collections, wants to enable/disable public datasets
+- generate-dataset    → user wants to generate an evaluation dataset from their documents
+- explore-codebase    → user asks WHERE something is in the code or how it is implemented
+- skill-creator       → user wants to CREATE a new custom skill
 
 Only activate ONE skill per session. If no skill clearly applies, respond directly.
 
@@ -162,6 +166,8 @@ _TOOL_ICONS: dict[str, str] = {
     "get_agents_md": "📋",
     "get_recent_git_activity": "📜",
     "get_docs": "📖",
+    "list_collections": "🗂️",
+    "run_generate_dataset": "🔬",
     "update_config": "✏️",
 }
 
@@ -289,6 +295,8 @@ def start_chat(debug: bool = False) -> None:
             get_agents_md,
             get_recent_git_activity,
             get_docs,
+            list_collections,
+            run_generate_dataset,
             update_config,
         ]
     ] + [_wrap_activate_skill(activate_skill)]

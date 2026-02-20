@@ -226,6 +226,121 @@ def activate_skill(name: str) -> str:
     return load_skill(_available_skills[name])
 
 
+# ── Collections ───────────────────────────────────────────────────────────────
+
+
+@tool
+def list_collections() -> str:
+    """List all collections accessible on the Albert API.
+
+    Use this when the user asks which collections are available, wants to know
+    what public datasets exist, or needs collection IDs to enable in ragfacile.toml.
+    Returns a plain-text table with ID, name, document count and visibility.
+    """
+    try:
+        from albert import AlbertClient
+        import httpx
+    except ImportError:
+        return "albert-client package not available. Install with: uv pip install albert-client"
+
+    try:
+        client = AlbertClient()
+    except ValueError as exc:
+        return (
+            f"Albert API not configured: {exc}. Set OPENAI_API_KEY in your .env file."
+        )
+
+    try:
+        result = client.list_collections(limit=100)
+    except httpx.HTTPStatusError as exc:
+        return f"Failed to fetch collections from Albert API: {exc}"
+
+    collections = result.data
+    if not collections:
+        return "No collections found. Your account may not have access to any collections yet."
+
+    lines = [f"{'ID':<8} {'Visibility':<12} {'Docs':<8} Name"]
+    lines.append("-" * 70)
+    for col in collections:
+        visibility = col.visibility or "—"
+        docs = f"{col.documents:,}" if col.documents else "0"
+        name = col.name or "—"
+        lines.append(f"{col.id!s:<8} {visibility:<12} {docs:<8} {name}")
+
+    public_ids = [str(c.id) for c in collections if c.visibility == "public"]
+    lines.append("")
+    if public_ids:
+        lines.append(f"Public collection IDs: {', '.join(public_ids)}")
+        lines.append(
+            "To enable them: update ragfacile.toml storage.collections with these IDs."
+        )
+
+    return "\n".join(lines)
+
+
+# ── Dataset generation ────────────────────────────────────────────────────────
+
+
+@tool
+def run_generate_dataset(
+    docs_path: str, output_file: str, num_questions: int = 20
+) -> str:
+    """Generate a synthetic Q&A evaluation dataset from documents in a directory.
+
+    Use this after the user has confirmed the docs path and output file.
+    Runs rag-facile generate-dataset under the hood using the albert provider.
+    This can take several minutes — let the user know before calling.
+
+    Args:
+        docs_path: Path to the directory containing source documents (PDF, Markdown, HTML).
+        output_file: Path for the output JSONL file, e.g. 'golden_dataset.jsonl'.
+        num_questions: Number of Q&A pairs to generate (default 20, max 100).
+    """
+    if _workspace_root is None:
+        return "No workspace detected. Run 'rag-facile setup' to create a workspace."
+
+    docs = Path(docs_path)
+    if not docs.exists():
+        return f"Directory '{docs_path}' does not exist. Please provide a valid path."
+    if not docs.is_dir():
+        return f"'{docs_path}' is a file, not a directory. Please provide a directory path."
+
+    num_questions = max(1, min(num_questions, 100))
+
+    try:
+        result = subprocess.run(
+            [
+                "rag-facile",
+                "generate-dataset",
+                str(docs),
+                "--output",
+                output_file,
+                "--num-questions",
+                str(num_questions),
+                "--provider",
+                "albert",
+            ],
+            cwd=_workspace_root,
+            capture_output=True,
+            text=True,
+            timeout=600,  # 10 minutes — generation can be slow
+        )
+    except FileNotFoundError:
+        return "rag-facile CLI not found. Ensure the package is installed correctly."
+    except subprocess.TimeoutExpired:
+        return (
+            "Dataset generation timed out after 10 minutes. Try with fewer questions."
+        )
+
+    if result.returncode == 0:
+        return (
+            f"✓ Dataset generated: {output_file}\n"
+            f"  {num_questions} Q&A pairs from documents in {docs_path}.\n"
+            "  Use this file with 'rag-facile eval' to measure retrieval quality."
+        )
+    return f"Generation failed:\n{result.stderr.strip() or result.stdout.strip()}"
+
+
 # ── Config editing ────────────────────────────────────────────────────────────
 
 
