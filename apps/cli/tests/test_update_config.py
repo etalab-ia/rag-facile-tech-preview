@@ -97,31 +97,16 @@ class TestNestedHelpers:
 
 
 class TestUpdateConfig:
-    def _run(self, key: str, value: str, answer: str = "o") -> str:
-        with (
-            patch("cli.commands.chat.tools.console.input", return_value=answer),
-            patch("cli.commands.chat.tools.console.print"),
-        ):
-            return update_config(key, value)
-
-    def test_updates_value_on_confirm(self, workspace):
-        result = self._run("retrieval.top_k", "20")
+    def test_updates_value(self, workspace):
+        result = update_config("retrieval.top_k", "20")
         assert "✓" in result
         config = tomllib.loads(
             (workspace / "ragfacile.toml").read_text(encoding="utf-8")
         )
         assert config["retrieval"]["top_k"] == 20
 
-    def test_cancels_on_n(self, workspace):
-        result = self._run("retrieval.top_k", "20", answer="n")
-        assert "annulée" in result.lower()
-        config = tomllib.loads(
-            (workspace / "ragfacile.toml").read_text(encoding="utf-8")
-        )
-        assert config["retrieval"]["top_k"] == 10  # unchanged
-
     def test_coerces_to_int(self, workspace):
-        self._run("retrieval.top_k", "15")
+        update_config("retrieval.top_k", "15")
         config = tomllib.loads(
             (workspace / "ragfacile.toml").read_text(encoding="utf-8")
         )
@@ -129,73 +114,49 @@ class TestUpdateConfig:
         assert isinstance(config["retrieval"]["top_k"], int)
 
     def test_updates_string_value(self, workspace):
-        self._run("generation.model", "openweight-large")
+        update_config("generation.model", "openweight-large")
         config = tomllib.loads(
             (workspace / "ragfacile.toml").read_text(encoding="utf-8")
         )
         assert config["generation"]["model"] == "openweight-large"
 
     def test_creates_new_key(self, workspace):
-        self._run("retrieval.top_n", "5")
+        update_config("retrieval.top_n", "5")
         config = tomllib.loads(
             (workspace / "ragfacile.toml").read_text(encoding="utf-8")
         )
         assert config["retrieval"]["top_n"] == 5
 
     def test_commits_to_git(self, workspace):
-        with (
-            patch("cli.commands.chat.tools.console.input", return_value="o"),
-            patch("cli.commands.chat.tools.console.print"),
-            patch("cli.commands.chat.tools.subprocess.run") as mock_run,
-        ):
+        with patch("cli.commands.chat.tools.subprocess.run") as mock_run:
             mock_run.return_value.returncode = 0
             result = update_config("retrieval.top_k", "20")
 
         assert mock_run.call_count == 2  # git add + git commit
-        first_call = mock_run.call_args_list[0][0][0]
-        assert first_call == ["git", "add", "ragfacile.toml"]
+        assert mock_run.call_args_list[0][0][0] == ["git", "add", "ragfacile.toml"]
         assert "committé" in result
 
     def test_skips_commit_silently_on_git_error(self, workspace):
-        with (
-            patch("cli.commands.chat.tools.console.input", return_value="o"),
-            patch("cli.commands.chat.tools.console.print"),
-            patch(
-                "cli.commands.chat.tools.subprocess.run",
-                side_effect=subprocess.CalledProcessError(1, "git"),
-            ),
-        ):
-            result = update_config("retrieval.top_k", "20")
-        assert "✓" in result
-        assert "committé" not in result  # committed note absent
-
-    def test_returns_hint_when_no_workspace(self):
-        result = self._run("retrieval.top_k", "20")
-        assert "No workspace detected" in result
-
-    def test_rejects_invalid_key(self, workspace):
-        result = self._run("retrieval..top_k", "20")
-        assert "Invalid config key" in result
-
-    def test_skips_commit_silently_on_file_not_found(self, workspace):
-        with (
-            patch("cli.commands.chat.tools.console.input", return_value="o"),
-            patch("cli.commands.chat.tools.console.print"),
-            patch(
-                "cli.commands.chat.tools.subprocess.run",
-                side_effect=FileNotFoundError,
-            ),
+        with patch(
+            "cli.commands.chat.tools.subprocess.run",
+            side_effect=subprocess.CalledProcessError(1, "git"),
         ):
             result = update_config("retrieval.top_k", "20")
         assert "✓" in result
         assert "committé" not in result
 
-    def test_handles_keyboard_interrupt_on_prompt(self, workspace):
-        with (
-            patch(
-                "cli.commands.chat.tools.console.input", side_effect=KeyboardInterrupt
-            ),
-            patch("cli.commands.chat.tools.console.print"),
+    def test_skips_commit_silently_on_file_not_found(self, workspace):
+        with patch(
+            "cli.commands.chat.tools.subprocess.run", side_effect=FileNotFoundError
         ):
             result = update_config("retrieval.top_k", "20")
-        assert "Annulé" in result
+        assert "✓" in result
+        assert "committé" not in result
+
+    def test_returns_hint_when_no_workspace(self):
+        result = update_config("retrieval.top_k", "20")
+        assert "No workspace detected" in result
+
+    def test_rejects_invalid_key(self, workspace):
+        result = update_config("retrieval..top_k", "20")
+        assert "Invalid config key" in result

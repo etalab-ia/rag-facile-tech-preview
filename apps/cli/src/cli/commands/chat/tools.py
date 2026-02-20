@@ -12,8 +12,6 @@ from typing import Any
 import tomli_w
 from smolagents import tool
 
-from cli.commands.chat._console import console
-
 # ── Docs index ────────────────────────────────────────────────────────────────
 # Maps topic keywords to doc paths relative to the docs root.
 # Keys are lowercase — matched against lowercased user query.
@@ -259,20 +257,11 @@ def update_config(key: str, value: str) -> str:
 
     old_value = _get_nested(current, keys)
     new_value = _coerce_value(value)
-
-    # Confirmation prompt — shown inline, spinner pauses for input
     old_display = repr(old_value) if old_value is not None else "(not set)"
-    console.print(
-        f"\n[bold]Modifier la configuration[/bold] : "
-        f"[cyan]{key}[/cyan] {old_display} → [green]{new_value!r}[/green]"
-    )
-    try:
-        answer = console.input("[dim]Confirmer ? [o/N] [/dim]").strip().lower()
-    except (KeyboardInterrupt, EOFError):
-        return "Annulé."
 
-    if answer not in ("o", "oui", "y", "yes"):
-        return "Modification annulée — aucun fichier n'a été modifié."
+    # No confirmation prompt here — the user already confirmed in the chat.
+    # The tool docstring instructs the agent to only call this after explicit
+    # user agreement, so calling it IS the confirmation.
 
     # Write updated config
     _set_nested(current, keys, new_value)
