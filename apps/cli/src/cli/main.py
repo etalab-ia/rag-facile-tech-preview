@@ -88,6 +88,12 @@ def main_callback(
         "-v",
         help="Show the CLI version and exit",
     ),
+    debug: bool = typer.Option(
+        False,
+        "--debug",
+        help="Show agent tool calls and reasoning steps.",
+        is_eager=False,
+    ),
 ) -> None:
     """RAG Facile CLI - Build RAG applications for the French government."""
     if version:
@@ -95,7 +101,7 @@ def main_callback(
 
     # No subcommand → drop directly into the RAG assistant (like `letta`).
     if ctx.invoked_subcommand is None:
-        chat.start_chat()
+        chat.start_chat(debug=debug)
         raise typer.Exit()
 
 

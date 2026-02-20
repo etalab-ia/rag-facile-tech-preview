@@ -136,7 +136,7 @@ def _build_model() -> OpenAIServerModel:
     )
 
 
-def start_chat() -> None:
+def start_chat(debug: bool = False) -> None:
     """Launch the interactive RAG assistant chat loop."""
     # Detect workspace — walk up from cwd for ragfacile.toml
     workspace = _detect_workspace()
@@ -168,7 +168,7 @@ def start_chat() -> None:
         tools=[get_ragfacile_config, get_agents_md, get_recent_git_activity, get_docs],
         model=model,
         instructions=_SYSTEM_PROMPT,
-        verbosity_level=LogLevel.OFF,  # -1: suppress all smolagents output incl. errors
+        verbosity_level=LogLevel.INFO if debug else LogLevel.OFF,
         max_steps=5,
     )
 
