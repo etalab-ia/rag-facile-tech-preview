@@ -245,6 +245,76 @@ def activate_skill(name: str) -> str:
     return load_skill(_available_skills[name])
 
 
+# ── CLI runner ────────────────────────────────────────────────────────────────
+
+# Subcommands the agent is allowed to run — prevents accidental execution of
+# unrelated system commands if the model hallucinates an argument.
+_ALLOWED_SUBCOMMANDS = frozenset(
+    [
+        "collections",
+        "config",
+        "generate-dataset",
+        "setup",
+        "upgrade",
+        "version",
+        "uninstall",
+    ]
+)
+
+
+@tool
+def run_rag_facile(subcommand: str) -> str:
+    """Run a rag-facile CLI subcommand and return its output.
+
+    Use this for read-only commands (collections list, config show, version)
+    and for long-running operations like generate-dataset.
+    For writing ragfacile.toml parameters, prefer update_config instead.
+
+    Always confirm with the user before running commands that create files
+    or make API calls (generate-dataset).
+
+    Args:
+        subcommand: Subcommand and arguments as a single string, e.g.
+                    'collections list', 'config show', 'version',
+                    'generate-dataset ./docs -o dataset.jsonl -n 20 --provider albert'
+    """
+    import shlex
+
+    try:
+        parts = shlex.split(subcommand)
+    except ValueError as exc:
+        return f"Invalid command syntax: {exc}"
+
+    if not parts:
+        return "No subcommand provided. Example: 'collections list'"
+
+    if parts[0] not in _ALLOWED_SUBCOMMANDS:
+        allowed = ", ".join(sorted(_ALLOWED_SUBCOMMANDS))
+        return (
+            f"Subcommand '{parts[0]}' is not available. Allowed subcommands: {allowed}"
+        )
+
+    # Use workspace as cwd when available (for commands that read ragfacile.toml).
+    # Commands like 'collections list' and 'version' work fine without one.
+    cwd = _workspace_root
+
+    try:
+        result = subprocess.run(
+            ["rag-facile"] + parts,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=600,  # generous — generate-dataset can be slow
+        )
+    except FileNotFoundError:
+        return "rag-facile CLI not found. Ensure the package is installed."
+    except subprocess.TimeoutExpired:
+        return "Command timed out after 10 minutes."
+
+    output = result.stdout.strip() or result.stderr.strip()
+    return output if output else "(no output)"
+
+
 # ── Config editing ────────────────────────────────────────────────────────────
 
 

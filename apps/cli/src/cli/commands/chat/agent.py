@@ -39,6 +39,7 @@ from cli.commands.chat.tools import (
     get_docs,
     get_ragfacile_config,
     get_recent_git_activity,
+    run_rag_facile,
     set_available_skills,
     set_workspace_root,
     update_config,
@@ -82,6 +83,10 @@ If the user BOTH reports a problem AND asks to change a value, prefer tune-pipel
 - explore-codebase → user asks WHERE something is implemented in the rag-facile source code, \
 or wants to navigate a specific package or file. \
 DO NOT use for conceptual questions about how RAG works — use explain-rag for that.
+
+- rag-cli          → user wants to run a CLI operation: list collections, generate an \
+evaluation dataset, inspect config output, or any other rag-facile command. \
+Use run_rag_facile() for read operations; use update_config() for config writes.
 
 - skill-creator    → user explicitly wants to CREATE a new custom skill file. \
 Requires the user to have stated a skill topic or purpose. \
@@ -178,6 +183,7 @@ _TOOL_ICONS: dict[str, str] = {
     "get_agents_md": "📋",
     "get_recent_git_activity": "📜",
     "get_docs": "📖",
+    "run_rag_facile": "🖥️",
     "update_config": "✏️",
 }
 
@@ -305,6 +311,7 @@ def start_chat(debug: bool = False) -> None:
             get_agents_md,
             get_recent_git_activity,
             get_docs,
+            run_rag_facile,
             update_config,
         ]
     ] + [_wrap_activate_skill(activate_skill)]
