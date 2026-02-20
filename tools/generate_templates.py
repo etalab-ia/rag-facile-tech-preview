@@ -504,6 +504,7 @@ def main():
             "reranking",
             "retrieval",
             "storage",
+            "tracing",
         ],
         help="Generate a specific template",
     )
@@ -540,6 +541,7 @@ def main():
             "reranking",
             "retrieval",
             "storage",
+            "tracing",
         ]
     else:
         templates_to_generate = [args.template]
@@ -616,6 +618,14 @@ def main():
             result = generate_package_template(
                 "storage",
                 REPO_ROOT / "packages" / "storage",
+                force=args.force,
+            )
+            if result is False:
+                success = False
+        elif template == "tracing":
+            result = generate_package_template(
+                "tracing",
+                REPO_ROOT / "packages" / "tracing",
                 force=args.force,
             )
             if result is False:

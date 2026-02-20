@@ -46,3 +46,4 @@ packages = []
 "../reranking/src/rag_facile/reranking" = "rag_facile/reranking"
 "../retrieval/src/rag_facile/retrieval" = "rag_facile/retrieval"
 "../storage/src/rag_facile/storage" = "rag_facile/storage"
+"../tracing/src/rag_facile/tracing" = "rag_facile/tracing"

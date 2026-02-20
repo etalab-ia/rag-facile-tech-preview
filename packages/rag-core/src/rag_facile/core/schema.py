@@ -494,6 +494,32 @@ class FormattingConfig(BaseModel):
 
 
 # ==============================================================================
+# TRACING
+# ==============================================================================
+
+
+class TracingConfig(BaseModel):
+    """Configuration for conversation tracing and user feedback collection."""
+
+    enabled: bool = Field(
+        default=True,
+        description="Log RAG turns to SQLite (.rag-facile/traces.db)",
+    )
+    db_path: str = Field(
+        default=".rag-facile/traces.db",
+        description="SQLite database path (relative to workspace root)",
+    )
+    capture_prompt: bool = Field(
+        default=True,
+        description="Store full prompt with injected context (disable for RGPD if needed)",
+    )
+    capture_chunks: bool = Field(
+        default=True,
+        description="Store raw retrieved chunks with relevance scores",
+    )
+
+
+# ==============================================================================
 # ROOT CONFIG
 # ==============================================================================
 
@@ -565,6 +591,10 @@ class RAGConfig(BaseModel):
     formatting: FormattingConfig = Field(
         default_factory=FormattingConfig,
         description="Answer formatting",
+    )
+    tracing: TracingConfig = Field(
+        default_factory=TracingConfig,
+        description="Conversation tracing and user feedback",
     )
 
     model_config = {
@@ -705,6 +735,13 @@ PIPELINE_STAGES: list[PipelineStage] = [
         description="Generate synthetic Q/A datasets to measure RAG pipeline quality.",
         emoji="\U0001f4ca",
         model=EvalConfig,
+    ),
+    PipelineStage(
+        key="tracing",
+        title="Conversation Tracing",
+        description="Log RAG turns (question, chunks, prompt, answer, model, config) to SQLite for quality analysis and user feedback collection.",
+        emoji="\U0001f4dd",
+        model=TracingConfig,
     ),
 ]
 

@@ -1,8 +1,9 @@
 """Pipelines - RAG pipeline coordination for chat applications.
 
 Provides a unified :class:`RAGPipeline` interface that coordinates
-document ingestion and retrieval.  Chat apps depend on this package
-instead of importing from rag_facile.ingestion or rag_facile.retrieval directly.
+document ingestion, retrieval, LLM generation, and conversation tracing.
+Chat apps depend on this package instead of importing from individual
+phase packages directly.
 
 Pipeline selection is driven by ``ragfacile.toml``::
 
@@ -12,10 +13,16 @@ Pipeline selection is driven by ``ragfacile.toml``::
 
 Example usage::
 
-    from rag_facile.pipelines import get_pipeline
+    from rag_facile.pipelines import get_pipeline, stream_answer
 
     pipeline = get_pipeline()
+
+    # Upload a document
     context = pipeline.process_file("document.pdf")
+
+    # Full RAG turn — stream tokens from the LLM
+    async for token in stream_answer("Quels sont vos horaires ?", history):
+        print(token, end="", flush=True)
 
 Convenience functions are also available for simpler call sites::
 
@@ -26,9 +33,13 @@ from __future__ import annotations
 
 import threading
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, AsyncGenerator
 
 from rag_facile.pipelines._base import RAGPipeline
+
+
+if TYPE_CHECKING:
+    pass
 
 
 # ── Singleton pipeline cache ──
@@ -152,6 +163,47 @@ def get_accepted_mime_types() -> dict[str, list[str]]:
     return _get_or_create_pipeline().accepted_mime_types
 
 
+async def stream_answer(
+    question: str,
+    message_history: list[dict[str, Any]],
+    **kwargs: object,
+) -> AsyncGenerator[str, None]:
+    """Full RAG turn: retrieve context, stream LLM answer, record trace.
+
+    Convenience wrapper around :meth:`RAGPipeline.stream_answer` using
+    the singleton pipeline.
+
+    Args:
+        question: Current user question (raw, without context injection).
+        message_history: Previous conversation turns — must **not** include
+            the current turn.
+        **kwargs: Forwarded to the pipeline — e.g. ``collection_ids``,
+            ``trace_id``, ``session_id``.
+
+    Yields:
+        Token strings as they arrive from the LLM.
+
+    Example::
+
+        from rag_facile.pipelines import stream_answer
+
+        async for token in stream_answer(
+            "Quels sont vos horaires ?",
+            message_history,
+            trace_id=trace_id,
+            session_id=session_id,
+            collection_ids=[785],
+        ):
+            print(token, end="", flush=True)
+    """
+    async for token in _get_or_create_pipeline().stream_answer(
+        question,
+        message_history,
+        **kwargs,  # ty: ignore[invalid-argument-type]
+    ):
+        yield token
+
+
 __all__ = [
     "RAGPipeline",
     "get_accepted_mime_types",
@@ -159,4 +211,5 @@ __all__ = [
     "process_bytes",
     "process_file",
     "process_query",
+    "stream_answer",
 ]

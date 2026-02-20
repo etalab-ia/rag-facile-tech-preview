@@ -12,6 +12,7 @@ dependencies = [
     "reranking",
     "retrieval",
     "storage",
+    "tracing",
 ]
 
 [tool.uv.sources]
@@ -22,6 +23,7 @@ rag-core = { workspace = true }
 reranking = { workspace = true }
 retrieval = { workspace = true }
 storage = { workspace = true }
+tracing = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

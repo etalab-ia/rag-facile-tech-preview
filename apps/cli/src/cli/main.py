@@ -12,6 +12,7 @@ from cli.commands import (
     config,
     generate_dataset,
     setup,
+    traces,
     uninstall,
     upgrade,
 )
@@ -143,6 +144,24 @@ app.command(
     help="Generate synthetic Q/A evaluation dataset from documents",
     rich_help_panel=_PANEL_ADVANCED_TOOLS,
 )(generate_dataset.run)
+
+# Traces command group
+traces_app = typer.Typer(
+    name="traces",
+    help="Inspect and export RAG conversation traces",
+    no_args_is_help=True,
+)
+traces_app.command("show", help="Show recent conversation traces")(traces.show)
+traces_app.command("export", help="Export traces as JSONL or RAGAS format")(
+    traces.export
+)
+traces_app.command("stats", help="Show quality statistics over all traces")(
+    traces.stats
+)
+traces_app.command("prune", help="Delete old traces (RGPD data retention)")(
+    traces.prune
+)
+app.add_typer(traces_app, name="traces", rich_help_panel=_PANEL_ADVANCED_TOOLS)
 
 
 if __name__ == "__main__":

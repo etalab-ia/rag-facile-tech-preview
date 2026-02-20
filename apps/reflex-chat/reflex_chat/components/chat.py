@@ -5,7 +5,7 @@ from typing import cast
 from collections.abc import Sequence
 
 from rag_facile.pipelines import get_accepted_mime_types
-from reflex_chat.state import QA, State
+from reflex_chat.state import NEGATIVE_TAGS, POSITIVE_TAGS, QA, State
 
 
 def _get_upload_accept() -> dict[str, Sequence[str]]:
@@ -58,10 +58,188 @@ def message(qa: QA) -> rx.Component:
     )
 
 
+def star_button(i: int) -> rx.Component:
+    """A single star in the rating row."""
+    return rx.icon_button(
+        rx.icon(
+            rx.cond(State.feedback_star >= i, "star", "star"),
+            size=18,
+            color=rx.cond(
+                State.feedback_star >= i,
+                rx.color("yellow", 9),
+                rx.color("mauve", 8),
+            ),
+        ),
+        variant="ghost",
+        on_click=State.set_feedback_star(i),
+        cursor="pointer",
+        size="1",
+    )
+
+
+def tag_chip(tag: str) -> rx.Component:
+    """A toggleable quality tag chip."""
+    is_selected = State.feedback_tags.contains(tag)
+    return rx.badge(
+        tag,
+        variant=rx.cond(is_selected, "solid", "outline"),
+        color_scheme=rx.cond(
+            State.feedback_sentiment == "positive",
+            rx.cond(is_selected, "green", "gray"),
+            rx.cond(is_selected, "red", "gray"),
+        ),
+        cursor="pointer",
+        on_click=State.toggle_feedback_tag(tag),
+        size="1",
+    )
+
+
+def feedback_panel() -> rx.Component:
+    """Collapsible user feedback panel shown after each answer."""
+    return rx.cond(
+        State.feedback_visible,
+        rx.box(
+            rx.vstack(
+                # Header
+                rx.hstack(
+                    rx.text(
+                        "Comment évaluez-vous la réponse ?",
+                        font_size="0.9em",
+                        font_weight="600",
+                        color=rx.color("mauve", 12),
+                    ),
+                    rx.spacer(),
+                    rx.icon_button(
+                        rx.icon("chevron-up", size=14),
+                        variant="ghost",
+                        size="1",
+                        on_click=State.dismiss_feedback,
+                        cursor="pointer",
+                        color=rx.color("mauve", 10),
+                    ),
+                    width="100%",
+                    align_items="center",
+                ),
+                # Star rating row
+                rx.hstack(
+                    star_button(1),
+                    star_button(2),
+                    star_button(3),
+                    star_button(4),
+                    star_button(5),
+                    spacing="1",
+                ),
+                # Thumbs up/down row
+                rx.hstack(
+                    rx.icon_button(
+                        rx.icon("thumbs-up", size=16),
+                        variant=rx.cond(
+                            State.feedback_sentiment == "positive", "solid", "soft"
+                        ),
+                        color_scheme=rx.cond(
+                            State.feedback_sentiment == "positive", "green", "gray"
+                        ),
+                        on_click=State.set_feedback_sentiment("positive"),
+                        cursor="pointer",
+                        size="2",
+                    ),
+                    rx.flex(
+                        rx.foreach(
+                            POSITIVE_TAGS,
+                            lambda t: rx.cond(
+                                State.feedback_sentiment == "positive",
+                                tag_chip(t),
+                                rx.fragment(),
+                            ),
+                        ),
+                        wrap="wrap",
+                        gap="1",
+                    ),
+                    spacing="2",
+                    align_items="flex-start",
+                    width="100%",
+                ),
+                rx.hstack(
+                    rx.icon_button(
+                        rx.icon("thumbs-down", size=16),
+                        variant=rx.cond(
+                            State.feedback_sentiment == "negative", "solid", "soft"
+                        ),
+                        color_scheme=rx.cond(
+                            State.feedback_sentiment == "negative", "red", "gray"
+                        ),
+                        on_click=State.set_feedback_sentiment("negative"),
+                        cursor="pointer",
+                        size="2",
+                    ),
+                    rx.flex(
+                        rx.foreach(
+                            NEGATIVE_TAGS,
+                            lambda t: rx.cond(
+                                State.feedback_sentiment == "negative",
+                                tag_chip(t),
+                                rx.fragment(),
+                            ),
+                        ),
+                        wrap="wrap",
+                        gap="1",
+                    ),
+                    spacing="2",
+                    align_items="flex-start",
+                    width="100%",
+                ),
+                # Comment field
+                rx.vstack(
+                    rx.text(
+                        "Commentaires",
+                        font_size="0.8em",
+                        color=rx.color("mauve", 11),
+                    ),
+                    rx.text_area(
+                        placeholder="Entrez vos commentaires",
+                        value=State.feedback_comment,
+                        on_change=State.set_feedback_comment,
+                        width="100%",
+                        rows="3",
+                        resize="none",
+                        font_size="0.85em",
+                        border_color=rx.color("mauve", 6),
+                        border_radius="6px",
+                    ),
+                    width="100%",
+                    spacing="1",
+                ),
+                # Submit button
+                rx.hstack(
+                    rx.spacer(),
+                    rx.button(
+                        "Enregistrer",
+                        on_click=State.submit_feedback,
+                        color_scheme="blue",
+                        size="2",
+                        cursor="pointer",
+                    ),
+                    width="100%",
+                ),
+                spacing="3",
+                width="100%",
+                padding="16px",
+            ),
+            max_width="50em",
+            margin_inline="auto",
+            margin_block="8px",
+            border="1px solid var(--gray-a5)",
+            border_radius="12px",
+            background_color=rx.color("mauve", 2),
+        ),
+    )
+
+
 def chat() -> rx.Component:
     """List all the messages in a single conversation."""
     return rx.auto_scroll(
         rx.foreach(State.selected_chat, message),
+        rx.cond(State.feedback_visible, feedback_panel()),
         flex="1",
         padding="8px",
     )

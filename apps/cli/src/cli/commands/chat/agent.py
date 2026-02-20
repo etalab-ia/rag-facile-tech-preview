@@ -267,7 +267,7 @@ def start_chat(debug: bool = False) -> None:
         skill_injected = True  # content already in agent context this turn
         console.print(f"[dim]{ui['skill_loaded'].format(name=skill_name)}[/dim]")
 
-    def _wrap_activate_skill(tool_obj):  # type: ignore[no-untyped-def]
+    def _wrap_activate_skill(tool_obj):  # noqa: ANN001
         """Extend _with_notification to also persist skill state."""
         _original_forward = tool_obj.forward
 

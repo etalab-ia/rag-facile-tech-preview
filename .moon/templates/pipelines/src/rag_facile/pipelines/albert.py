@@ -21,6 +21,7 @@ from ._base import RAGPipeline
 
 if TYPE_CHECKING:
     from albert import AlbertClient
+    from rag_facile.core.schema import RetrievedChunk
 
 
 logger = logging.getLogger(__name__)
@@ -31,11 +32,14 @@ class AlbertPipeline(RAGPipeline):
 
     Documents are uploaded to an auto-managed Albert collection on first
     file upload.  At query time, relevant chunks are retrieved via
-    search -> optional rerank -> context formatting.
+    search -> optional rerank.
 
     Collection management is delegated to the storage package.
-    Query-time retrieval orchestrates: search -> rerank -> format
-    using the retrieval, reranking, and context packages.
+    Query-time retrieval orchestrates: search -> rerank
+    using the retrieval and reranking packages.
+
+    Generation (LLM streaming) and tracing are handled by the base class
+    :meth:`~RAGPipeline.stream_answer` method.
     """
 
     def __init__(self, config: Any | None = None) -> None:
@@ -138,14 +142,14 @@ class AlbertPipeline(RAGPipeline):
         logger.info("Ingested '%s' into collection %s", filename, collection_id)
         return f"[Document indexed: {filename}]"
 
-    # ── Query-time: [expand ->] search -> [fuse ->] rerank -> format ──
+    # ── Query-time: raw chunk retrieval ──
 
-    def process_query(
+    def retrieve_chunks(
         self,
         query: str,
         **kwargs: object,
-    ) -> str:
-        """Retrieve relevant context from Albert collections.
+    ) -> list[RetrievedChunk]:
+        """Retrieve raw chunks from Albert collections.
 
         Orchestrates the full retrieval pipeline:
 
@@ -153,22 +157,21 @@ class AlbertPipeline(RAGPipeline):
         1. Search for relevant chunks — one call per expanded query (retrieval)
         2. Fuse multi-query results via RRF (retrieval) — only when expanded
         3. Rerank results using the original query (reranking)
-        4. Format chunks as LLM context (context)
 
         All parameters default to ragfacile.toml config values.
 
         Args:
-            query: User query to retrieve context for.
+            query: User query to retrieve chunks for.
             **kwargs: Pipeline options.
                 ``collection_ids``: Albert collection IDs to search.
                     Falls back to the auto-managed session collection.
                 ``client``: Optional pre-configured Albert client.
 
         Returns:
-            Formatted context string ready for LLM injection.
-            Empty string if no collection exists or no results found.
+            List of :class:`~rag_facile.core.schema.RetrievedChunk` dicts,
+            sorted by relevance score.  Empty list when no collections are
+            available or no results are found.
         """
-        from rag_facile.context import format_context
         from rag_facile.core import get_config
         from rag_facile.reranking import rerank_chunks
         from rag_facile.retrieval import fuse_results, search_chunks
@@ -196,13 +199,11 @@ class AlbertPipeline(RAGPipeline):
 
         if not ids:
             logger.info("No collection IDs to search — skipping retrieval")
-            return ""
+            return []
         collection_ids = list(ids)
         logger.info("Searching collections: %s", collection_ids)
 
         # Step 0: Query expansion (optional)
-        # When enabled, generates N query variants in formal French administrative
-        # language. Results are merged via RRF before reranking.
         if config.query.strategy != "none":
             from rag_facile.query import get_expander
 
@@ -240,9 +241,9 @@ class AlbertPipeline(RAGPipeline):
             )
 
         if not chunks:
-            return ""
+            return []
 
-        # Step 2 (was Step 2): Rerank — always uses the ORIGINAL query for precision
+        # Step 2: Rerank — always uses the ORIGINAL query for precision
         if config.reranking.enabled:
             chunks = rerank_chunks(
                 client,
@@ -252,8 +253,7 @@ class AlbertPipeline(RAGPipeline):
                 top_n=config.reranking.top_n,
             )
 
-        # Step 3 (was Step 3): Format as LLM context
-        return format_context(chunks)
+        return chunks
 
     # ── Collection management (delegated to storage) ──
 

@@ -23,6 +23,7 @@ members = [
     "reranking",
     "retrieval",
     "storage",
+    "tracing",
 ]
 
 [[package]]
@@ -2047,6 +2048,7 @@ dependencies = [
     { name = "reranking" },
     { name = "retrieval" },
     { name = "storage" },
+    { name = "tracing" },
 ]
 
 [package.metadata]
@@ -2058,6 +2060,7 @@ requires-dist = [
     { name = "reranking", editable = "packages/reranking" },
     { name = "retrieval", editable = "packages/retrieval" },
     { name = "storage", editable = "packages/storage" },
+    { name = "tracing", editable = "packages/tracing" },
 ]
 
 [[package]]
@@ -2498,6 +2501,7 @@ dependencies = [
     { name = "reranking" },
     { name = "retrieval" },
     { name = "storage" },
+    { name = "tracing" },
 ]
 
 [package.dev-dependencies]
@@ -2527,6 +2531,7 @@ requires-dist = [
     { name = "reranking", editable = "packages/reranking" },
     { name = "retrieval", editable = "packages/retrieval" },
     { name = "storage", editable = "packages/storage" },
+    { name = "tracing", editable = "packages/tracing" },
 ]
 
 [package.metadata.requires-dev]
@@ -3110,6 +3115,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/79/a9/54792db1f9f472e88
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fc/49/6b88371489dfc1e89ade57cfb3f9ffb7e5ec27a4dcd7a104cfb183fc2483/traceloop_sdk-0.52.2-py3-none-any.whl", hash = "sha256:dc31068404d7f120965d752112115dd1f0fc1b3c9ffb6d87e1eb99cdae521f6e", size = 74380, upload-time = "2026-02-08T10:06:37.085Z" },
 ]
+
+[[package]]
+name = "tracing"
+version = "0.17.0"
+source = { editable = "packages/tracing" }
+dependencies = [
+    { name = "rag-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "rag-core", editable = "packages/rag-core" }]
 
 [[package]]
 name = "ty"

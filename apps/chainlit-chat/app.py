@@ -1,17 +1,16 @@
-import ast
-import json
 import os
+from datetime import datetime, timezone
+from uuid import uuid4
 
 import chainlit as cl
 import engineio
 import engineio.payload
 from chainlit.input_widget import Switch
-from rag_facile.pipelines import get_accepted_mime_types, process_file, process_query
 from dotenv import load_dotenv
-
-from albert import AsyncAlbertClient
 from rag_facile.core import get_config
 from rag_facile.core.mediatech import get_collection_name
+from rag_facile.pipelines import get_accepted_mime_types, process_file, stream_answer
+from rag_facile.tracing import FeedbackRecord, get_store
 
 
 # Increase the number of packets allowed in a single payload to prevent "Too
@@ -24,63 +23,35 @@ load_dotenv()
 # Load RAG configuration
 rag_config = get_config()
 
-# Configure OpenAI (API credentials still from env vars)
-api_key = os.getenv("OPENAI_API_KEY")
-base_url = os.getenv("OPENAI_BASE_URL")
-# Model comes from config with env var override
-model = os.getenv("OPENAI_MODEL") or rag_config.generation.model
 
-client = AsyncAlbertClient(api_key=api_key, base_url=base_url)
+# ---------------------------------------------------------------------------
+# Feedback tag taxonomy
+# ---------------------------------------------------------------------------
 
-
-# Example dummy function
-def get_current_weather(location, unit="fahrenheit"):
-    """Get the current weather in a given location"""
-    if "paris" in location.lower():
-        return json.dumps({"location": "Paris", "temperature": "22", "unit": "celsius"})
-    elif "london" in location.lower():
-        return json.dumps(
-            {"location": "London", "temperature": "18", "unit": "celsius"}
-        )
-    elif "new york" in location.lower():
-        return json.dumps(
-            {"location": "New York", "temperature": "72", "unit": "fahrenheit"}
-        )
-    else:
-        return json.dumps({"location": location, "temperature": "unknown"})
-
-
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_current_weather",
-            "description": "Get the current weather in a given location",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": "The city and state, e.g. San Francisco, CA",
-                    },
-                    "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-                },
-                "required": ["location"],
-            },
-        },
-    }
+_POSITIVE_TAGS = ["Pertinent", "Complet", "Clair", "Utile", "Précis"]
+_NEGATIVE_TAGS = [
+    "Non pertinent",
+    "Incomplet",
+    "Confus",
+    "Éléments faux",
+    "Sources manquantes",
+    "Sources erronées / obsolètes",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Lifecycle hooks
+# ---------------------------------------------------------------------------
 
 
 @cl.on_chat_start
 async def start_chat():
-    # Use system prompt from config
     cl.user_session.set(
         "message_history",
         [{"role": "system", "content": rag_config.generation.system_prompt}],
     )
 
-    # Initialize active collections from config
+    # Initialise active collections from config
     active_collections = list(rag_config.storage.collections)
     cl.user_session.set("active_collections", active_collections)
 
@@ -104,34 +75,15 @@ async def on_settings_update(settings: dict) -> None:
     cl.user_session.set("active_collections", active)
 
 
-@cl.step(type="tool")
-async def call_tool(tool_call, message_history):
-    function_name = tool_call.function.name
-    arguments = ast.literal_eval(tool_call.function.arguments)
-
-    if function_name == "get_current_weather":
-        current_weather = get_current_weather(
-            location=arguments.get("location"),
-            unit=arguments.get("unit"),
-        )
-
-        message_history.append(
-            {
-                "role": "tool",
-                "tool_call_id": tool_call.id,
-                "name": function_name,
-                "content": current_weather,
-            }
-        )
-
-        return current_weather
-    else:
-        return "Function not found"
+# ---------------------------------------------------------------------------
+# Main message handler
+# ---------------------------------------------------------------------------
 
 
 @cl.on_message
 async def main(message: cl.Message):
     message_history = cl.user_session.get("message_history")
+    active_collections: list[int] = cl.user_session.get("active_collections") or []
 
     # Handle attachments — ingest into Albert collection for RAG retrieval
     if message.elements:
@@ -150,128 +102,155 @@ async def main(message: cl.Message):
                 try:
                     status = process_file(element.path, element.name)
                     await cl.Message(content=status).send()
-                except Exception as e:
+                except (OSError, ValueError) as e:
                     await cl.Message(
                         content=f"Error indexing '{element.name}': {e!s}"
                     ).send()
 
-    # Retrieve relevant context using active collections
-    active_collections: list[int] = cl.user_session.get("active_collections") or []
-    retrieved_context = process_query(
-        message.content, collection_ids=active_collections
-    )
-
-    user_content = message.content
-    if retrieved_context:
-        user_content = (
-            "Use the following context to answer the user's question:\n\n"
-            f"{retrieved_context}\n\n"
-            f"Question: {message.content}"
-        )
-
-    message_history.append({"role": "user", "content": user_content})
+    # Pre-generate trace_id so we can attach feedback before stream ends
+    trace_id = str(uuid4())
+    cl.user_session.set("last_trace_id", trace_id)
 
     msg = cl.Message(content="")
-
-    # Send an empty message to start the stream UI
     await msg.send()
 
-    # Common generation parameters from config
-    gen_params = {
-        "stream": rag_config.generation.streaming,
-        "temperature": rag_config.generation.temperature,
-        "max_tokens": rag_config.generation.max_tokens,
-    }
+    # Full RAG turn: retrieve → prompt → stream → trace (all inside stream_answer)
+    async for token in stream_answer(
+        message.content,
+        message_history,
+        trace_id=trace_id,
+        session_id=cl.user_session.get("id", ""),
+        collection_ids=active_collections,
+    ):
+        await msg.stream_token(token)
 
-    # TODO: OpenAI SDK can't infer correct return type when stream parameter is a variable
-    # This causes ty to report no-matching-overload error. Need to either:
-    # 1. Split into separate streaming/non-streaming code paths with literal True/False
-    # 2. Wait for OpenAI SDK to improve overload inference with runtime booleans
-    stream = await client.chat.completions.create(  # ty: ignore[no-matching-overload]
-        model=model,
-        messages=message_history,
-        tools=tools,
-        tool_choice="auto",
-        **gen_params,
+    # Append clean question + answer to history (no injected context)
+    message_history.append({"role": "user", "content": message.content})
+    message_history.append({"role": "assistant", "content": msg.content})
+    await msg.update()
+
+    # Feedback UI — created OUTSIDE any cl.Step to avoid issue #1202
+    if rag_config.tracing.enabled:
+        await _show_feedback_ui(trace_id)
+
+
+# ---------------------------------------------------------------------------
+# Feedback UI helpers
+# ---------------------------------------------------------------------------
+
+
+async def _show_feedback_ui(trace_id: str) -> None:
+    """Send star-rating action row for the last answer."""
+    await cl.Message(
+        content="**Comment évaluez-vous la réponse ?**",
+        actions=[
+            cl.Action(
+                name=f"star_{i}",
+                value=str(i),
+                label="⭐" * i,
+                payload={"trace_id": trace_id},
+            )
+            for i in range(1, 6)
+        ],
+    ).send()
+
+
+async def _ask_sentiment(trace_id: str, star: int) -> None:
+    """Prompt thumbs up/down after a star rating."""
+    res = await cl.AskActionMessage(
+        content="👍 Positive ou 👎 Négative ?",
+        actions=[
+            cl.Action(name="positive", label="👍 Positive", value="positive"),
+            cl.Action(name="negative", label="👎 Négative", value="negative"),
+        ],
+        timeout=120,
+    ).send()
+    if res:
+        await _ask_tags(trace_id, star, res.get("value", ""))
+
+
+async def _ask_tags(trace_id: str, star: int, sentiment: str) -> None:
+    """Prompt quality tags, then free-text comment, then persist."""
+    tags_list = _POSITIVE_TAGS if sentiment == "positive" else _NEGATIVE_TAGS
+    tag_res = await cl.AskActionMessage(
+        content="Sélectionnez les étiquettes applicables :",
+        actions=[cl.Action(name=f"tag_{t}", label=t, value=t) for t in tags_list],
+        timeout=120,
+    ).send()
+    selected_tags = [tag_res["value"]] if tag_res else []
+
+    comment_res = await cl.AskUserMessage(
+        content="Commentaires (optionnel — appuyez sur Entrée pour ignorer) :",
+        timeout=120,
+    ).send()
+    comment = comment_res["output"].strip() if comment_res else None
+    if not comment:
+        comment = None
+
+    _persist_feedback(
+        trace_id=trace_id,
+        star=star,
+        sentiment=sentiment,
+        tags=selected_tags,
+        comment=comment,
     )
 
-    cur_tool_calls = []
 
+def _persist_feedback(
+    trace_id: str,
+    star: int | None,
+    sentiment: str | None,
+    tags: list[str],
+    comment: str | None,
+) -> None:
+    """Write feedback record to the trace store."""
+    fb: FeedbackRecord = {
+        "feedback_id": str(uuid4()),
+        "trace_id": trace_id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "star_rating": star,
+        "sentiment": sentiment,
+        "tags": tags,
+        "comment": comment,
+    }
     try:
-        async for part in stream:
-            if not part.choices:
-                continue
+        get_store().record_feedback(fb)
+    except (OSError, RuntimeError) as exc:
+        import logging
 
-            # Handle new tool calls
-            if part.choices[0].delta.tool_calls:
-                for tool_call_delta in part.choices[0].delta.tool_calls:
-                    index = tool_call_delta.index
+        logging.getLogger(__name__).warning("Failed to record feedback: %s", exc)
 
-                    if index == len(cur_tool_calls):
-                        cur_tool_calls.append(tool_call_delta)
-                    else:
-                        # We are updating an existing tool call
-                        if tool_call_delta.id:
-                            cur_tool_calls[index].id = tool_call_delta.id
-                        if tool_call_delta.function.name:
-                            cur_tool_calls[index].function.name = (
-                                cur_tool_calls[index].function.name or ""
-                            ) + tool_call_delta.function.name
-                        if tool_call_delta.function.arguments:
-                            cur_tool_calls[index].function.arguments = (
-                                cur_tool_calls[index].function.arguments or ""
-                            ) + tool_call_delta.function.arguments
 
-            # Handle content
-            if part.choices[0].delta.content:
-                token = part.choices[0].delta.content
-                await msg.stream_token(token)
-    except json.JSONDecodeError:
-        # Albert API occasionally sends malformed SSE events; continue
-        # with whatever content was streamed so far.
-        pass
+# ---------------------------------------------------------------------------
+# Star rating callbacks (one per rating level)
+# ---------------------------------------------------------------------------
 
-    # We are done with the first stream
 
-    if cur_tool_calls:
-        # We have tool calls to execute
-        message_history.append(
-            {
-                "role": "assistant",
-                "tool_calls": [
-                    {
-                        "id": tool_call.id,
-                        "type": "function",
-                        "function": {
-                            "name": tool_call.function.name,
-                            "arguments": tool_call.function.arguments,
-                        },
-                    }
-                    for tool_call in cur_tool_calls
-                ],
-            }
-        )
+@cl.action_callback("star_1")
+async def on_star_1(action: cl.Action):
+    cl.user_session.set("pending_star", 1)
+    await _ask_sentiment(action.payload["trace_id"], 1)
 
-        # Execute tools
-        for tool_call in cur_tool_calls:
-            await call_tool(tool_call, message_history)
 
-        # Now we need to get the final response from the model (uses config values)
-        stream_post_tool = await client.chat.completions.create(
-            model=model,
-            messages=message_history,
-            **gen_params,
-        )
+@cl.action_callback("star_2")
+async def on_star_2(action: cl.Action):
+    cl.user_session.set("pending_star", 2)
+    await _ask_sentiment(action.payload["trace_id"], 2)
 
-        # Type ignore: SDK can't infer stream type when stream parameter is variable
-        async for part in stream_post_tool:  # type: ignore[union-attr]
-            if not part.choices:
-                continue
-            if part.choices[0].delta.content:
-                token = part.choices[0].delta.content
-                await msg.stream_token(token)
 
-    # Add assistant response to history for proper conversation continuity
-    message_history.append({"role": "assistant", "content": msg.content})
+@cl.action_callback("star_3")
+async def on_star_3(action: cl.Action):
+    cl.user_session.set("pending_star", 3)
+    await _ask_sentiment(action.payload["trace_id"], 3)
 
-    await msg.update()
+
+@cl.action_callback("star_4")
+async def on_star_4(action: cl.Action):
+    cl.user_session.set("pending_star", 4)
+    await _ask_sentiment(action.payload["trace_id"], 4)
+
+
+@cl.action_callback("star_5")
+async def on_star_5(action: cl.Action):
+    cl.user_session.set("pending_star", 5)
+    await _ask_sentiment(action.payload["trace_id"], 5)
