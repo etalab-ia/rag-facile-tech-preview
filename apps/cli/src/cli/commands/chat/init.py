@@ -172,26 +172,27 @@ def run_init_wizard(workspace: Path) -> str:
     console.print()
 
     # ── Ask 2 questions (language first so the rest adapts) ──────────────────
+    # questionary returns None on Ctrl+C — check after each question so we
+    # don't fall through to the next one when the user cancels.
+    language = "fr"
+    experience = "new"
     try:
-        language = questionary.select(
+        result = questionary.select(
             "Preferred language for our conversations?",
             choices=_LANGUAGE_CHOICES,
             style=_STYLE,
         ).ask()
-
-        experience = questionary.select(
-            "Your experience with RAG?",
-            choices=_EXPERIENCE_CHOICES,
-            style=_STYLE,
-        ).ask()
+        if result is not None:
+            language = result
+            result = questionary.select(
+                "Your experience with RAG?",
+                choices=_EXPERIENCE_CHOICES,
+                style=_STYLE,
+            ).ask()
+            if result is not None:
+                experience = result
     except Exception:  # noqa: BLE001 — non-interactive / unexpected env
-        language, experience = "fr", "new"
-
-    # questionary returns None on Ctrl+C — fall back to defaults
-    if language is None:
-        language = "fr"
-    if experience is None:
-        experience = "new"
+        pass  # keep defaults set above
 
     # ── Create directory structure ────────────────────────────────────────────
     agent_dir = workspace / _AGENT_DIR
