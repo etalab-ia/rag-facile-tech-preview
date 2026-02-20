@@ -1,0 +1,216 @@
+"""Tests for the chat first-run init wizard."""
+
+from unittest.mock import patch
+
+from typer.testing import CliRunner
+
+from cli.commands.chat.init import (
+    _profile_template,
+    _read_preset,
+    needs_init,
+    read_language,
+    run_init_wizard,
+)
+from cli.main import app as main_app
+
+
+runner = CliRunner()
+
+
+class TestNeedsInit:
+    def test_returns_true_when_no_agent_dir(self, tmp_path):
+        assert needs_init(tmp_path) is True
+
+    def test_returns_false_when_agent_dir_exists(self, tmp_path):
+        (tmp_path / ".rag-facile" / "agent").mkdir(parents=True)
+        assert needs_init(tmp_path) is False
+
+
+class TestReadPreset:
+    def test_returns_balanced_when_no_config(self, tmp_path):
+        assert _read_preset(tmp_path) == "balanced"
+
+    def test_reads_preset_from_toml(self, tmp_path):
+        (tmp_path / "ragfacile.toml").write_text(
+            '[meta]\npreset = "accurate"\n', encoding="utf-8"
+        )
+        assert _read_preset(tmp_path) == "accurate"
+
+    def test_returns_balanced_on_missing_key(self, tmp_path):
+        (tmp_path / "ragfacile.toml").write_text("[meta]\n", encoding="utf-8")
+        assert _read_preset(tmp_path) == "balanced"
+
+
+class TestProfileTemplate:
+    def test_contains_experience_and_language(self):
+        result = _profile_template("new", "fr")
+        assert "New to RAG" in result
+        assert "Language: fr" in result
+
+    def test_session_count_starts_at_zero(self):
+        result = _profile_template("intermediate", "en")
+        assert "0" in result
+
+
+class TestReadLanguage:
+    def test_returns_fr_when_no_profile(self, tmp_path):
+        assert read_language(tmp_path) == "fr"
+
+    def test_reads_language_from_profile(self, tmp_path):
+        (tmp_path / ".rag-facile" / "agent").mkdir(parents=True)
+        (tmp_path / ".rag-facile" / "agent" / "profile.md").write_text(
+            "## Preferences\n- Language: en\n", encoding="utf-8"
+        )
+        assert read_language(tmp_path) == "en"
+
+    def test_returns_fr_as_default_when_language_line_absent(self, tmp_path):
+        (tmp_path / ".rag-facile" / "agent").mkdir(parents=True)
+        (tmp_path / ".rag-facile" / "agent" / "profile.md").write_text(
+            "## Preferences\n", encoding="utf-8"
+        )
+        assert read_language(tmp_path) == "fr"
+
+
+# questionary.select mock helpers (language first, then experience)
+def _lang_fr_exp_new():
+    return [
+        type("Q", (), {"ask": lambda self: "fr"})(),
+        type("Q", (), {"ask": lambda self: "new"})(),
+    ]
+
+
+def _lang_en_exp_intermediate():
+    return [
+        type("Q", (), {"ask": lambda self: "en"})(),
+        type("Q", (), {"ask": lambda self: "intermediate"})(),
+    ]
+
+
+class TestRunInitWizard:
+    def test_creates_memory_and_profile_files(self, tmp_path):
+        """Wizard creates MEMORY.md and profile.md in the workspace."""
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=_lang_fr_exp_new(),
+            ),
+            patch("cli.commands.chat.init._git_add"),
+        ):
+            run_init_wizard(tmp_path)
+
+        assert (tmp_path / ".rag-facile" / "agent" / "MEMORY.md").exists()
+        assert (tmp_path / ".rag-facile" / "agent" / "profile.md").exists()
+
+    def test_returns_selected_language(self, tmp_path):
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=_lang_en_exp_intermediate(),
+            ),
+            patch("cli.commands.chat.init._git_add"),
+        ):
+            lang = run_init_wizard(tmp_path)
+        assert lang == "en"
+
+    def test_creates_skills_directory(self, tmp_path):
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=_lang_en_exp_intermediate(),
+            ),
+            patch("cli.commands.chat.init._git_add"),
+        ):
+            run_init_wizard(tmp_path)
+
+        assert (tmp_path / ".rag-facile" / "skills").is_dir()
+
+    def test_experience_reflected_in_memory(self, tmp_path):
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=[
+                    type("Q", (), {"ask": lambda self: "en"})(),
+                    type("Q", (), {"ask": lambda self: "expert"})(),
+                ],
+            ),
+            patch("cli.commands.chat.init._git_add"),
+        ):
+            run_init_wizard(tmp_path)
+
+        memory = (tmp_path / ".rag-facile" / "agent" / "MEMORY.md").read_text()
+        assert "expert" in memory
+
+    def test_falls_back_to_defaults_on_non_interactive(self, tmp_path):
+        """If questionary raises EOFError (non-interactive env), defaults are used."""
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=EOFError("non-interactive terminal"),
+            ),
+            patch("cli.commands.chat.init._git_add"),
+        ):
+            run_init_wizard(tmp_path)  # should not raise
+
+        assert (tmp_path / ".rag-facile" / "agent" / "MEMORY.md").exists()
+
+    def test_git_add_called_for_workspace_git(self, tmp_path):
+        with (
+            patch(
+                "cli.commands.chat.init.questionary.select",
+                side_effect=_lang_fr_exp_new(),
+            ),
+            patch("cli.commands.chat.init._git_add") as mock_git,
+        ):
+            run_init_wizard(tmp_path)
+
+        mock_git.assert_called_once_with(tmp_path)
+
+    def test_idempotent_when_run_twice(self, tmp_path):
+        """Running wizard twice overwrites files cleanly without error."""
+        for _ in range(2):
+            with (
+                patch(
+                    "cli.commands.chat.init.questionary.select",
+                    side_effect=_lang_fr_exp_new(),
+                ),
+                patch("cli.commands.chat.init._git_add"),
+            ):
+                run_init_wizard(tmp_path)
+
+        assert (tmp_path / ".rag-facile" / "agent" / "MEMORY.md").exists()
+
+
+class TestChatInitIntegration:
+    def test_init_runs_when_no_rag_facile_dir(self, tmp_path, monkeypatch):
+        """start_chat() calls init wizard when .rag-facile/ is absent."""
+        (tmp_path / "ragfacile.toml").write_text('[meta]\npreset = "balanced"\n')
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+
+        with (
+            patch("cli.commands.chat.agent._detect_workspace", return_value=tmp_path),
+            patch("cli.commands.chat.agent.OpenAIServerModel"),
+            patch("cli.commands.chat.agent.ToolCallingAgent"),
+            patch("cli.commands.chat.agent.run_init_wizard") as mock_init,
+            patch("cli.commands.chat.agent.needs_init", return_value=True),
+        ):
+            result = runner.invoke(main_app, [], input="q\n")
+
+        assert result.exit_code == 0
+        mock_init.assert_called_once_with(tmp_path)
+
+    def test_init_skipped_when_already_initialised(self, tmp_path, monkeypatch):
+        """start_chat() skips init wizard when .rag-facile/agent/ already exists."""
+        (tmp_path / "ragfacile.toml").write_text('[meta]\npreset = "balanced"\n')
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+
+        with (
+            patch("cli.commands.chat.agent._detect_workspace", return_value=tmp_path),
+            patch("cli.commands.chat.agent.OpenAIServerModel"),
+            patch("cli.commands.chat.agent.ToolCallingAgent"),
+            patch("cli.commands.chat.agent.run_init_wizard") as mock_init,
+            patch("cli.commands.chat.agent.needs_init", return_value=False),
+        ):
+            result = runner.invoke(main_app, [], input="q\n")
+
+        assert result.exit_code == 0
+        mock_init.assert_not_called()
