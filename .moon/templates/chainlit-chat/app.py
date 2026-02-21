@@ -161,13 +161,21 @@ async def _ask_sentiment(trace_id: str, star: int) -> None:
     res = await cl.AskActionMessage(
         content="👍 Positive ou 👎 Négative ?",
         actions=[
-            cl.Action(name="positive", label="👍 Positive", value="positive"),
-            cl.Action(name="negative", label="👎 Négative", value="negative"),
+            cl.Action(
+                name="positive", label="👍 Positive", value="positive", payload={}
+            ),
+            cl.Action(
+                name="negative", label="👎 Négative", value="negative", payload={}
+            ),
         ],
         timeout=120,
     ).send()
     if res:
-        await _ask_tags(trace_id, star, res.get("value", ""))
+        sentiment = res.get("value") or res.get("name", "")
+        if sentiment in ("positive", "negative"):
+            await _ask_tags(trace_id, star, sentiment)
+        else:
+            await _ask_tags(trace_id, star, "")
 
 
 async def _ask_tags(trace_id: str, star: int, sentiment: str) -> None:
@@ -175,10 +183,16 @@ async def _ask_tags(trace_id: str, star: int, sentiment: str) -> None:
     tags_list = _POSITIVE_TAGS if sentiment == "positive" else _NEGATIVE_TAGS
     tag_res = await cl.AskActionMessage(
         content="Sélectionnez les étiquettes applicables :",
-        actions=[cl.Action(name=f"tag_{t}", label=t, value=t) for t in tags_list],
+        actions=[
+            cl.Action(name=f"tag_{t}", label=t, value=t, payload={}) for t in tags_list
+        ],
         timeout=120,
     ).send()
-    selected_tags = [tag_res["value"]] if tag_res else []
+    selected_tags = []
+    if tag_res:
+        tag_val = tag_res.get("value") or tag_res.get("name", "").replace("tag_", "")
+        if tag_val:
+            selected_tags.append(tag_val)
 
     comment_res = await cl.AskUserMessage(
         content="Commentaires (optionnel — appuyez sur Entrée pour ignorer) :",
