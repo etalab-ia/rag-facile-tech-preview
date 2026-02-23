@@ -1,0 +1,158 @@
+/*
+ * DSFR Theme Overrides for Chainlit
+ *
+ * This stylesheet loads the Marianne font (DSFR typeface) and applies
+ * DSFR-specific visual adjustments on top of Chainlit's Shadcn theme.
+ *
+ * The primary color palette (Blue France #000091) is set via theme.json.
+ * This file handles font loading and component-level refinements.
+ */
+
+/* ==========================================================================
+   Marianne Font - Systeme de Design de l'Etat
+   Self-hosted from /public/dsfr/fonts/ (required by DSFR licensing)
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Regular.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Regular_Italic.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Regular_Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Medium.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Medium_Italic.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Medium_Italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Bold.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marianne';
+  src: url('/public/dsfr/fonts/Marianne-Bold_Italic.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Marianne-Bold_Italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Spectral - serif accent font used by DSFR for editorial content */
+@font-face {
+  font-family: 'Spectral';
+  src: url('/public/dsfr/fonts/Spectral-Regular.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Spectral-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Spectral';
+  src: url('/public/dsfr/fonts/Spectral-ExtraBold.woff2') format('woff2'),
+       url('/public/dsfr/fonts/Spectral-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ==========================================================================
+   DSFR Color Tokens as CSS Custom Properties
+   These complement theme.json for elements outside Shadcn's variable system.
+   ========================================================================== */
+
+:root {
+  /* Blue France — primary action color */
+  --dsfr-blue-france: #000091;
+  --dsfr-blue-france-hover: #1212ff;
+  --dsfr-blue-france-active: #2323ff;
+
+  /* Red Marianne — accent, used sparingly */
+  --dsfr-red-marianne: #e1000f;
+
+  /* Grey scale (light mode) */
+  --dsfr-grey-1000: #161616;
+  --dsfr-grey-900: #2a2a2a;
+  --dsfr-grey-800: #3a3a3a;
+  --dsfr-grey-625: #666666;
+  --dsfr-grey-425: #929292;
+  --dsfr-grey-200: #cecece;
+  --dsfr-grey-100: #e5e5e5;
+  --dsfr-grey-50: #eeeeee;
+
+  /* Info / Success / Warning / Error */
+  --dsfr-info: #0063cb;
+  --dsfr-success: #18753c;
+  --dsfr-warning: #b34000;
+  --dsfr-error: #ce0500;
+}
+
+
+/* ==========================================================================
+   Focus Styles - DSFR Accessibility
+   DSFR uses a 2px blue outline + 2px offset for focus indicators.
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--dsfr-blue-france);
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   Chainlit Component Overrides
+   ========================================================================== */
+
+/* Ensure Marianne is applied everywhere */
+body {
+  font-family: 'Marianne', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Links follow DSFR underline convention */
+a {
+  text-underline-offset: 4px;
+}
+
+/* Primary buttons — Blue France */
+button[data-variant="default"],
+button[data-variant="outline"] {
+  border-radius: 0; /* DSFR buttons have no border-radius */
+}
+
+/* Code blocks use monospace from theme.json, but we ensure consistency */
+pre, code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

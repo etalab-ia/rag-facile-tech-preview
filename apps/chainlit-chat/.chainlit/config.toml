@@ -92,13 +92,13 @@ reaction_on_message_received = false
 
 [UI]
 # Name of the assistant.
-name = "Assistant"
+name = "Assistant RAG Facile"
 
-# default_theme = "dark"
+# Default to light theme (DSFR preference for government sites)
+# default_theme = "light"
 
-# Force a specific language for all users (e.g., "en-US", "he-IL", "fr-FR")
-# If not set, the browser's language will be used
-# language = "en-US"
+# Force French for all users (DSFR government applications)
+language = "fr-FR"
 
 # layout = "wide"
 
@@ -119,16 +119,11 @@ confirm_new_chat = true
 # Chain of Thought (CoT) display mode. Can be "hidden", "tool_call" or "full".
 cot = "full"
 
-# Specify a CSS file that can be used to customize the user interface.
-# The CSS file can be served from the public directory or via an external link.
-# custom_css = "/public/test.css"
+# DSFR theme stylesheet (Marianne font + color overrides)
+custom_css = "/public/dsfr-theme.css"
 
-# Specify additional attributes for a custom CSS file
-# custom_css_attributes = "media=\"print\""
-
-# Specify a JavaScript file that can be used to customize the user interface.
-# The JavaScript file can be served from the public directory.
-# custom_js = "/public/test.js"
+# DSFR JavaScript behaviors (theme switching, accessibility, disclosure patterns)
+custom_js = "/public/dsfr-init.js"
 
 # The style of alert boxes. Can be "classic" or "modern".
 alert_style = "classic"
