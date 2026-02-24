@@ -1,18 +1,18 @@
 """DSFR React component wrappers for Reflex.
 
 Reflex v0.8.0+ uses Vite + React Router (SPA).
-Initialization (DsfrInit) + header/footer components.
+Single-init pattern to avoid Reflex issue #5923 (duplicate identifier errors).
 
 Architecture:
-- DsfrInit: runs custom code once to init DSFR + import subcomponents
-- DsfrHeader/Footer: reference the pre-initialized components without custom code
-  (avoids Reflex issue #5923: duplicate identifier errors)
+- Only DsfrHeader defines _get_custom_code() — initialize + import both subcomponents
+- DsfrFooter: no custom code, just references the wrapper
+- This prevents duplicate const declarations in generated JS
 """
 
 import reflex as rx
 
 
-# Custom code for DsfrInit: import + initialize DSFR + define wrappers
+# Custom code for DsfrHeader only: import + initialize DSFR + export both wrappers
 _DSFR_INIT_CODE = """
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import HeaderBase from "@codegouvfr/react-dsfr/Header";
@@ -21,36 +21,16 @@ import FooterBase from "@codegouvfr/react-dsfr/Footer";
 // Initialize DSFR once at app startup
 startReactDsfr({ defaultColorScheme: "system" });
 
-// Export wrapped components for use by DsfrHeader/DsfrFooter
+// Export wrapped components for use by DsfrHeader and DsfrFooter
 export const DsfrHeaderComponent = HeaderBase;
 export const DsfrFooterComponent = FooterBase;
 """
 
 
-class DsfrInit(rx.Component):
-    """Initialize DSFR library at app startup.
-
-    Renders as an empty fragment but injects custom code to initialize
-    DSFR and import Header/Footer components. Must be placed at the top
-    of the app before DsfrHeader/DsfrFooter.
-
-    Workaround for Reflex issue #5923: duplicate identifier errors
-    when multiple components define _get_custom_code().
-    """
-
-    library: str = "@codegouvfr/react-dsfr"
-    tag: str = "Fragment"  # Render nothing visible
-
-    @classmethod
-    def _get_custom_code(cls) -> str:
-        return _DSFR_INIT_CODE
-
-
 class DsfrHeader(rx.NoSSRComponent):
     """DSFR Header component (Vite + React Router).
 
-    Requires DsfrInit to be rendered first in the app.
-    Initialized via DsfrInit._get_custom_code().
+    Initializes DSFR and imports both Header/Footer components.
     """
 
     library: str = "@codegouvfr/react-dsfr"
@@ -61,12 +41,16 @@ class DsfrHeader(rx.NoSSRComponent):
     service_tagline: rx.Var[str]
     home_link_props: rx.Var[dict]
 
+    @classmethod
+    def _get_custom_code(cls) -> str:
+        return _DSFR_INIT_CODE
+
 
 class DsfrFooter(rx.NoSSRComponent):
     """DSFR Footer component (Vite + React Router).
 
-    Requires DsfrInit to be rendered first in the app.
-    Initialized via DsfrInit._get_custom_code().
+    Initialized by DsfrHeader._get_custom_code() — no custom code here.
+    (Avoids Reflex issue #5923: duplicate identifier errors)
     """
 
     library: str = "@codegouvfr/react-dsfr"
@@ -76,11 +60,6 @@ class DsfrFooter(rx.NoSSRComponent):
     accessibility: rx.Var[str]
     content_description: rx.Var[str]
     home_link_props: rx.Var[dict]
-
-
-def dsfr_init() -> rx.Component:
-    """Initialize DSFR at app startup (place at top of layout)."""
-    return DsfrInit.create()
 
 
 def dsfr_header() -> rx.Component:
