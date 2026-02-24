@@ -70,13 +70,15 @@ def run(
         dataset = str(jsonl_files[-1])
         console.print(f"[cyan]Using latest dataset:[/cyan] {dataset}")
 
-    dataset_path = Path(dataset)
+    dataset_path = Path(dataset).resolve()
     if not dataset_path.exists():
         console.print(f"[red]Dataset not found:[/red] {dataset}")
         raise typer.Exit(code=1)
 
     # Resolve log directory
-    effective_log_dir = Path(log_dir) if log_dir else _resolve_log_dir()
+    effective_log_dir = (
+        Path(log_dir).resolve() if log_dir else _resolve_log_dir().resolve()
+    )
     effective_log_dir.mkdir(parents=True, exist_ok=True)
 
     console.print("[cyan]Running evaluation...[/cyan]")
@@ -86,7 +88,7 @@ def run(
 
     # Verify the evaluation package is installed
     try:
-        import rag_facile.evaluation._tasks  # noqa: F401  # ty: ignore[unresolved-import]
+        from rag_facile.evaluation._tasks import rag_eval  # ty: ignore[unresolved-import]
     except ImportError:
         console.print(
             "[red]evaluation package not installed. "
@@ -94,34 +96,28 @@ def run(
         )
         raise typer.Exit(code=1)
 
-    # Run Inspect AI via subprocess.
-    # Pass the dotted module name — Inspect AI's task loader accepts both
-    # relative file paths and importable module names.  Absolute file paths
-    # fail on Python 3.13 because pathlib.glob() rejects non-relative patterns.
-    cmd = [
-        sys.executable,
-        "-m",
-        "inspect_ai._cli.main",
-        "eval",
-        "rag_facile.evaluation._tasks",
-        "--model",
-        model,
-        "--log-dir",
-        str(effective_log_dir),
-        "-T",
-        f"dataset_path={dataset_path}",
-        "-T",
-        f"grader_model={model}",
-    ]
-
+    # Run evaluation via the Inspect AI Python API (not subprocess CLI).
+    # The CLI path-based task discovery fails on Python 3.13 because
+    # pathlib.glob() rejects absolute paths. The Python API takes the
+    # @task function object directly — no path resolution needed.
     try:
-        result = subprocess.run(cmd, check=False)
-        if result.returncode != 0:
-            console.print(
-                f"\n[red]Evaluation exited with code {result.returncode}[/red]"
-            )
-            raise typer.Exit(code=result.returncode)
-    except FileNotFoundError:
+        from inspect_ai import eval as inspect_eval
+
+        results = inspect_eval(
+            rag_eval(
+                dataset_path=str(dataset_path),
+                grader_model=model,
+            ),
+            model=model,
+            log_dir=str(effective_log_dir),
+        )
+
+        failed = [r for r in results if r.status == "error"]
+        if failed:
+            console.print(f"\n[red]Evaluation failed: {failed[0].error}[/red]")
+            raise typer.Exit(code=1)
+
+    except ImportError:
         console.print(
             "[red]inspect-ai not found. Install with: uv add inspect-ai[/red]"
         )
