@@ -52,7 +52,7 @@ def _call_pipeline(question: str) -> tuple[str, list[int]]:
                 score_threshold=config.retrieval.score_threshold,
             )
 
-            # Apply reranking if enabled in config
+            # Apply reranking if enabled (filter to top_n)
             final_chunks = chunks
             if config.reranking.enabled:
                 final_chunks = rerank_chunks(
@@ -63,12 +63,14 @@ def _call_pipeline(question: str) -> tuple[str, list[int]]:
                     top_n=config.reranking.top_n,
                 )
 
-            chunk_ids = [
+            reranked_chunk_ids = [
                 chunk.get("chunk_id", 0)
                 for chunk in final_chunks
                 if chunk.get("chunk_id")
             ]
-            return context, chunk_ids
+
+            # For eval, store reranked chunk IDs (what the pipeline actually retrieves)
+            return context, reranked_chunk_ids
     except Exception:
         logger.warning("Failed to extract chunk IDs from search", exc_info=True)
 

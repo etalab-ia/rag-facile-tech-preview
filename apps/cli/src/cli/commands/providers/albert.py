@@ -188,14 +188,16 @@ class AlbertApiProvider:
                 data = json.loads(line)
                 if "user_input" in data and "reference" in data:
                     sample = GeneratedSample.from_dict(data)
-                    # Search for this specific question to get ground truth relevant chunks
-                    chunk_ids, chunk_contents = self._search_for_chunk_ids(
-                        sample.user_input
-                    )
-                    # Store as both relevant (ground truth) and retrieved (from search)
-                    sample.relevant_chunk_ids = [str(cid) for cid in chunk_ids]
-                    sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
-                    # Also store retrieved contexts (text of chunks)
+                    # Search and rerank for this specific question
+                    (
+                        search_chunk_ids,
+                        reranked_chunk_ids,
+                        chunk_contents,
+                    ) = self._search_for_chunk_ids(sample.user_input)
+                    # Store search results (retrieved) and reranked (relevant ground truth)
+                    sample.retrieved_chunk_ids = [str(cid) for cid in search_chunk_ids]
+                    sample.relevant_chunk_ids = [str(cid) for cid in reranked_chunk_ids]
+                    # Also store retrieved contexts (text of reranked chunks)
                     if "retrieved_contexts" not in data:
                         sample.retrieved_contexts = chunk_contents
                     if sample.user_input not in seen_samples:
@@ -208,19 +210,20 @@ class AlbertApiProvider:
         if not seen_samples:
             yield from self._extract_json_objects(text, seen_samples)
 
-    def _search_for_chunk_ids(self, question: str) -> tuple[list[int], list[str]]:
+    def _search_for_chunk_ids(
+        self, question: str
+    ) -> tuple[list[int], list[int], list[str]]:
         """Search and optionally rerank chunks using configured pipeline settings.
 
-        Uses the same retrieval and reranking config as the evaluation pipeline.
-        If reranking is enabled in ragfacile.toml, applies it here so the
-        "relevant" chunks captured during generation match what the eval pipeline
-        retrieves.
+        Returns both search results and reranked results so we capture:
+        - retrieved_chunk_ids: all search candidates (top_k)
+        - relevant_chunk_ids: reranked ground truth (top_n)
 
         Returns:
-            tuple of (chunk_ids, chunk_contents) — top-k search or top-n reranked
+            tuple of (search_chunk_ids, reranked_chunk_ids, reranked_contents)
         """
         if not self.collection_id:
-            return [], []
+            return [], [], []
 
         try:
             from rag_facile.core import get_config
@@ -230,7 +233,7 @@ class AlbertApiProvider:
             # Load config — same settings as eval time
             config = get_config()
 
-            # Search using configured strategy
+            # Search using configured strategy (top_k candidates)
             search_results = search_chunks(
                 self.client,
                 question,
@@ -241,9 +244,15 @@ class AlbertApiProvider:
             )
 
             if not search_results:
-                return [], []
+                return [], [], []
 
-            # Apply reranking if enabled in config
+            search_chunk_ids = [
+                chunk.get("chunk_id", 0)
+                for chunk in search_results
+                if chunk.get("chunk_id")
+            ]
+
+            # Apply reranking if enabled (filter to top_n)
             final_chunks = search_results
             if config.reranking.enabled:
                 final_chunks = rerank_chunks(
@@ -254,16 +263,17 @@ class AlbertApiProvider:
                     top_n=config.reranking.top_n,
                 )
 
-            chunk_ids = [
+            reranked_chunk_ids = [
                 chunk.get("chunk_id", 0)
                 for chunk in final_chunks
                 if chunk.get("chunk_id")
             ]
             chunk_contents = [chunk.get("content", "") for chunk in final_chunks]
-            return chunk_ids, chunk_contents
+
+            return search_chunk_ids, reranked_chunk_ids, chunk_contents
         except Exception as e:
             logger.debug(f"Failed to retrieve/rerank chunks: {e}")
-            return [], []
+            return [], [], []
 
     def _extract_json_objects(
         self,
@@ -286,14 +296,20 @@ class AlbertApiProvider:
                         data = json.loads(candidate)
                         if "user_input" in data and "reference" in data:
                             sample = GeneratedSample.from_dict(data)
-                            # Search for this specific question to get ground truth relevant chunks
-                            chunk_ids, chunk_contents = self._search_for_chunk_ids(
-                                sample.user_input
-                            )
-                            # Store as both relevant (ground truth) and retrieved (from search)
-                            sample.relevant_chunk_ids = [str(cid) for cid in chunk_ids]
-                            sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
-                            # Also store retrieved contexts (text of chunks)
+                            # Search and rerank for this specific question
+                            (
+                                search_chunk_ids,
+                                reranked_chunk_ids,
+                                chunk_contents,
+                            ) = self._search_for_chunk_ids(sample.user_input)
+                            # Store search results (retrieved) and reranked (relevant ground truth)
+                            sample.retrieved_chunk_ids = [
+                                str(cid) for cid in search_chunk_ids
+                            ]
+                            sample.relevant_chunk_ids = [
+                                str(cid) for cid in reranked_chunk_ids
+                            ]
+                            # Also store retrieved contexts (text of reranked chunks)
                             if "retrieved_contexts" not in data:
                                 sample.retrieved_contexts = chunk_contents
                             if sample.user_input not in seen_samples:
