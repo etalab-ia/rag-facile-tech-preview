@@ -172,6 +172,35 @@ def _reset_tracer() -> None:
     _tracer = None
 
 
+# ── Convenience helper (used by Chainlit + Reflex apps) ───────────────────────
+
+
+def update_trace_with_response(response: str, query_start_time: float) -> None:
+    """Update the current trace with the final LLM response and latency.
+
+    Call this from application code after the LLM stream completes.
+    No-op when there is no active trace (e.g. tracing disabled, or
+    the query returned no context).
+
+    Args:
+        response: The complete LLM-generated answer.
+        query_start_time: Value of ``time.monotonic()`` captured just
+            before ``process_query()`` was called.
+    """
+    import time
+    from datetime import datetime, timezone
+
+    trace_id = get_current_trace_id()
+    if trace_id:
+        latency_ms = int((time.monotonic() - query_start_time) * 1000)
+        get_tracer().update_trace(
+            trace_id,
+            response=response,
+            latency_ms=latency_ms,
+            response_at=datetime.now(timezone.utc),
+        )
+
+
 __all__ = [
     "FeedbackUpdate",
     "TraceRecord",
@@ -182,4 +211,5 @@ __all__ = [
     "get_tracer",
     "set_current_trace_id",
     "set_trace_hook",
+    "update_trace_with_response",
 ]

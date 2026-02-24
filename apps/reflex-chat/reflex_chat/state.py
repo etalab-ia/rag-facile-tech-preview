@@ -5,7 +5,7 @@ from typing import Any, TypedDict
 
 import reflex as rx
 from rag_facile.pipelines import process_bytes, process_query
-from rag_facile.tracing import get_current_trace_id, get_tracer
+from rag_facile.tracing import update_trace_with_response
 from dotenv import load_dotenv
 
 from albert import AlbertClient, ChatCompletionMessageParam
@@ -269,18 +269,8 @@ class State(rx.State):
             pass
 
         # Update trace with LLM response and latency
-        trace_id = get_current_trace_id()
-        if trace_id:
-            from datetime import datetime, timezone
-
-            answer = self._chats[self.current_chat][-1]["answer"]
-            latency_ms = int((time.monotonic() - _query_start) * 1000)
-            get_tracer().update_trace(
-                trace_id,
-                response=answer,
-                latency_ms=latency_ms,
-                response_at=datetime.now(timezone.utc),
-            )
+        answer = self._chats[self.current_chat][-1]["answer"]
+        update_trace_with_response(answer, _query_start)
 
         # Toggle the processing flag.
         self.processing = False

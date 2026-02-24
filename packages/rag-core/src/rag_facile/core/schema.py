@@ -716,6 +716,13 @@ PIPELINE_STAGES: list[PipelineStage] = [
         model=GenerationConfig,
     ),
     PipelineStage(
+        key="tracing",
+        title="Tracing & Observability",
+        description="Log queries, retrieved context, responses, and user feedback for pipeline improvement.",
+        emoji="\U0001f50d",
+        model=TracingConfig,
+    ),
+    PipelineStage(
         key="hallucination",
         title="Hallucination Detection",
         description="Verify the generated response is grounded in the provided context.",
@@ -735,13 +742,6 @@ PIPELINE_STAGES: list[PipelineStage] = [
         description="Generate synthetic Q/A datasets to measure RAG pipeline quality.",
         emoji="\U0001f4ca",
         model=EvalConfig,
-    ),
-    PipelineStage(
-        key="tracing",
-        title="Tracing & Observability",
-        description="Log queries, retrieved context, responses, and user feedback for pipeline improvement.",
-        emoji="\U0001f4ca",
-        model=TracingConfig,
     ),
 ]
 

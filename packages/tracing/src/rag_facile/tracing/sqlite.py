@@ -85,6 +85,30 @@ _JSON_FIELDS = frozenset(
 # Datetime columns
 _DATETIME_FIELDS = frozenset({"created_at", "response_at"})
 
+# Valid column names for UPDATE — derived from TraceRecord fields.
+# Prevents SQL injection via crafted keys in update_trace(**fields).
+_VALID_COLUMNS = frozenset(
+    {
+        "session_id",
+        "user_id",
+        "created_at",
+        "response_at",
+        "query",
+        "expanded_queries",
+        "retrieved_chunks",
+        "reranked_chunks",
+        "formatted_context",
+        "collection_ids",
+        "response",
+        "model",
+        "temperature",
+        "latency_ms",
+        "feedback_score",
+        "feedback_tags",
+        "feedback_comment",
+    }
+)
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -125,7 +149,7 @@ def _row_to_trace(row: sqlite3.Row) -> TraceRecord:
         if isinstance(raw, str):
             data[key] = json.loads(raw)
     for key in _DATETIME_FIELDS:
-        data[key] = _iso_to_dt(data.get(key))  # type: ignore[arg-type]
+        data[key] = _iso_to_dt(data.get(key))
     return TraceRecord(**data)
 
 
@@ -158,13 +182,46 @@ class SQLiteProvider(TracingProvider):
         return conn
 
     def _init_db(self) -> None:
-        """Create the traces + config_snapshots tables and indexes."""
+        """Create the traces + config_snapshots tables and indexes.
+
+        Also migrates databases created before the config normalisation
+        refactor (``config_snapshot`` column → ``config_hash`` FK).
+        """
         conn = self._connect()
         try:
             conn.execute(_CREATE_CONFIG_TABLE)
             conn.execute(_CREATE_TABLE)
             for idx_sql in _CREATE_INDEXES:
                 conn.execute(idx_sql)
+
+            # ── Migration: config_snapshot → config_hash ──
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(traces);").fetchall()
+            }
+            if "config_snapshot" in columns and "config_hash" not in columns:
+                logger.info("Migrating traces table: config_snapshot → config_hash")
+                # 1. Add new column
+                conn.execute(
+                    "ALTER TABLE traces ADD COLUMN config_hash TEXT NOT NULL DEFAULT '';"
+                )
+                # 2. Move existing snapshots into config_snapshots table
+                rows = conn.execute("SELECT id, config_snapshot FROM traces").fetchall()
+                for row in rows:
+                    snapshot = row[1] or "{}"
+                    c_hash = _config_hash(json.loads(snapshot))
+                    conn.execute(
+                        "INSERT OR IGNORE INTO config_snapshots (hash, config) "
+                        "VALUES (?, ?)",
+                        (c_hash, snapshot),
+                    )
+                    conn.execute(
+                        "UPDATE traces SET config_hash = ? WHERE id = ?",
+                        (c_hash, row[0]),
+                    )
+                # 3. Drop the old column (SQLite 3.35+)
+                conn.execute("ALTER TABLE traces DROP COLUMN config_snapshot;")
+                logger.info("Migration complete: %d traces migrated", len(rows))
+
             conn.commit()
         finally:
             conn.close()
@@ -241,6 +298,12 @@ class SQLiteProvider(TracingProvider):
         """Update specific fields on an existing trace."""
         if not fields:
             return
+
+        # Validate column names to prevent SQL injection
+        invalid = fields.keys() - _VALID_COLUMNS
+        if invalid:
+            msg = f"Invalid field names for trace update: {invalid!r}"
+            raise ValueError(msg)
 
         # Serialise JSON and datetime fields
         processed: dict[str, object] = {}

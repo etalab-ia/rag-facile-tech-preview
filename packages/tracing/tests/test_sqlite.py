@@ -191,6 +191,14 @@ class TestUpdateTrace:
         provider.log_trace(trace)
         provider.update_trace(trace.id)  # should not raise
 
+    def test_update_rejects_invalid_column(self, provider: SQLiteProvider):
+        """Passing an invalid column name should raise ValueError."""
+        trace = TraceRecord(query="test")
+        provider.log_trace(trace)
+
+        with pytest.raises(ValueError, match="Invalid field names"):
+            provider.update_trace(trace.id, **{"malicious; DROP TABLE traces": "x"})
+
 
 class TestAddFeedback:
     """Tests for add_feedback."""
@@ -307,3 +315,61 @@ class TestGetTrace:
         assert retrieved.created_at.isoformat() == now.isoformat()
         assert retrieved.response_at is not None
         assert retrieved.response_at.isoformat() == now.isoformat()
+
+
+class TestSchemaMigration:
+    """Tests for old → new schema migration (config_snapshot → config_hash)."""
+
+    def test_migrates_old_schema(self, tmp_path: Path):
+        """A database with the old config_snapshot column should be migrated."""
+        db_path = tmp_path / "old.db"
+
+        # 1. Create a database with the OLD schema
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("""
+            CREATE TABLE traces (
+                id TEXT PRIMARY KEY,
+                session_id TEXT, user_id TEXT,
+                created_at TEXT NOT NULL, response_at TEXT,
+                query TEXT NOT NULL DEFAULT '',
+                expanded_queries TEXT NOT NULL DEFAULT '[]',
+                retrieved_chunks TEXT NOT NULL DEFAULT '[]',
+                reranked_chunks TEXT NOT NULL DEFAULT '[]',
+                formatted_context TEXT NOT NULL DEFAULT '',
+                collection_ids TEXT NOT NULL DEFAULT '[]',
+                response TEXT, model TEXT NOT NULL DEFAULT '',
+                temperature REAL NOT NULL DEFAULT 0.0,
+                latency_ms INTEGER,
+                config_snapshot TEXT NOT NULL DEFAULT '{}',
+                feedback_score INTEGER,
+                feedback_tags TEXT NOT NULL DEFAULT '[]',
+                feedback_comment TEXT
+            );
+        """)
+        config = '{"meta": {"preset": "balanced"}}'
+        conn.execute(
+            "INSERT INTO traces (id, created_at, query, config_snapshot) "
+            "VALUES (?, ?, ?, ?)",
+            ("old-1", "2026-02-24T10:00:00+00:00", "test query", config),
+        )
+        conn.commit()
+        conn.close()
+
+        # 2. Open with the new SQLiteProvider — should auto-migrate
+        provider = SQLiteProvider(db_path)
+
+        # 3. Verify the old trace is readable with config_snapshot reconstructed
+        trace = provider.get_trace("old-1")
+        assert trace is not None
+        assert trace.query == "test query"
+        assert trace.config_snapshot["meta"]["preset"] == "balanced"
+
+        # 4. Verify config_snapshot column is gone, config_hash exists
+        conn = sqlite3.connect(str(db_path))
+        columns = {
+            row[1] for row in conn.execute("PRAGMA table_info(traces);").fetchall()
+        }
+        conn.close()
+        assert "config_hash" in columns
+        assert "config_snapshot" not in columns
