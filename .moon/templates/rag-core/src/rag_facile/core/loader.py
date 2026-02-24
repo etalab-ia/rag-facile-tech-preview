@@ -281,7 +281,16 @@ def get_env_override_docs() -> str:
         >>> print(get_env_override_docs())
     """
     sections = [
-        ("eval", ["provider", "target_samples"]),
+        (
+            "eval",
+            [
+                "provider",
+                "target_samples",
+                "output_format",
+                "data_dir",
+                "inspect_log_dir",
+            ],
+        ),
         ("embedding", ["model", "batch_size"]),
         ("retrieval", ["strategy", "top_k", "score_threshold"]),
         ("reranking", ["enabled", "model", "top_n"]),

@@ -56,6 +56,7 @@ rag-facile/
 │   ├── context/                   # Context formatting (rag_facile.context)
 │   ├── storage/                   # Collection management (rag_facile.storage)
 │   ├── tracing/                   # Pipeline tracing & observability (rag_facile.tracing)
+│   ├── evaluation/                # RAG evaluation with Inspect AI (rag_facile.evaluation)
 │   └── rag-facile-lib/            # Library bundle for external projects
 ├── .moon/                         # Moon workspace config
 │   ├── templates/                 # App/package templates (Tera syntax)
@@ -282,7 +283,7 @@ When adding a new package to the monorepo (`packages/mypkg/`):
 
 ### Library Package + rag_facile Namespace (✅ PR #121, Feb 17, 2026)
 - **What changed**: All 7 pipeline packages now live under `rag_facile.*` namespace
-- **Packages**: `rag_facile.core`, `rag_facile.ingestion`, `rag_facile.pipelines`, `rag_facile.retrieval`, `rag_facile.reranking`, `rag_facile.context`, `rag_facile.storage`, `rag_facile.tracing`
+- **Packages**: `rag_facile.core`, `rag_facile.ingestion`, `rag_facile.pipelines`, `rag_facile.retrieval`, `rag_facile.reranking`, `rag_facile.context`, `rag_facile.storage`, `rag_facile.tracing`, `rag_facile.evaluation`
 - **New bundle**: `packages/rag-facile-lib/` bundles all pipeline packages for external projects
 - **Generated projects** now depend on `rag-facile-lib` via git URL (no more copying pipeline source)
 - **Standalone** structure: `pyproject.toml` + frontend app + `src/<name>/` for user code

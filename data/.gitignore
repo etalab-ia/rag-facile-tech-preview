@@ -1,0 +1,4 @@
+# Regenerable / large evaluation artifacts
+traces/
+evals/
+documents/processed/

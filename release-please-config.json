@@ -20,7 +20,8 @@
 				"packages/retrieval/pyproject.toml",
 				"packages/rag-facile-lib/pyproject.toml",
 			"packages/storage/pyproject.toml",
-			"packages/tracing/pyproject.toml"
+			"packages/tracing/pyproject.toml",
+			"packages/evaluation/pyproject.toml"
 			]
 		}
 	}
