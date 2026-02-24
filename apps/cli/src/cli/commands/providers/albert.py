@@ -188,9 +188,16 @@ class AlbertApiProvider:
                 data = json.loads(line)
                 if "user_input" in data and "reference" in data:
                     sample = GeneratedSample.from_dict(data)
-                    # Search for this specific question to get question-relevant chunk IDs
-                    chunk_ids = self._search_for_chunk_ids(sample.user_input)
+                    # Search for this specific question to get ground truth relevant chunks
+                    chunk_ids, chunk_contents = self._search_for_chunk_ids(
+                        sample.user_input
+                    )
+                    # Store as both relevant (ground truth) and retrieved (from search)
+                    sample.relevant_chunk_ids = [str(cid) for cid in chunk_ids]
                     sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
+                    # Also store retrieved contexts (text of chunks)
+                    if "retrieved_contexts" not in data:
+                        sample.retrieved_contexts = chunk_contents
                     if sample.user_input not in seen_samples:
                         seen_samples.add(sample.user_input)
                         yield sample
@@ -201,14 +208,15 @@ class AlbertApiProvider:
         if not seen_samples:
             yield from self._extract_json_objects(text, seen_samples)
 
-    def _search_for_chunk_ids(self, question: str) -> list[int]:
+    def _search_for_chunk_ids(self, question: str) -> tuple[list[int], list[str]]:
         """Search the collection for chunks relevant to a specific question.
 
         Returns:
-            List of chunk IDs from the search results for this question
+            tuple of (chunk_ids, chunk_contents)
+            These become the ground truth for recall@k/precision@k metrics.
         """
         if not self.collection_id:
-            return []
+            return [], []
 
         try:
             from rag_facile.retrieval import search_chunks
@@ -221,12 +229,14 @@ class AlbertApiProvider:
                 method=self.config.retrieval.strategy,
                 score_threshold=self.config.retrieval.score_threshold,
             )
-            return [
+            chunk_ids = [
                 chunk.get("chunk_id", 0) for chunk in chunks if chunk.get("chunk_id")
             ]
+            chunk_contents = [chunk.get("content", "") for chunk in chunks]
+            return chunk_ids, chunk_contents
         except Exception as e:
             logger.debug(f"Failed to search for chunk IDs for question: {e}")
-            return []
+            return [], []
 
     def _extract_json_objects(
         self,
@@ -249,9 +259,16 @@ class AlbertApiProvider:
                         data = json.loads(candidate)
                         if "user_input" in data and "reference" in data:
                             sample = GeneratedSample.from_dict(data)
-                            # Search for this specific question to get question-relevant chunk IDs
-                            chunk_ids = self._search_for_chunk_ids(sample.user_input)
+                            # Search for this specific question to get ground truth relevant chunks
+                            chunk_ids, chunk_contents = self._search_for_chunk_ids(
+                                sample.user_input
+                            )
+                            # Store as both relevant (ground truth) and retrieved (from search)
+                            sample.relevant_chunk_ids = [str(cid) for cid in chunk_ids]
                             sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
+                            # Also store retrieved contexts (text of chunks)
+                            if "retrieved_contexts" not in data:
+                                sample.retrieved_contexts = chunk_contents
                             if sample.user_input not in seen_samples:
                                 seen_samples.add(sample.user_input)
                                 yield sample
