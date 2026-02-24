@@ -89,6 +89,53 @@ def modal(trigger) -> rx.Component:
     )
 
 
+def theme_toggle() -> rx.Component:
+    """DSFR-style theme switcher dropdown (Clair / Sombre / Systeme)."""
+    return rx.menu.root(
+        rx.menu.trigger(
+            rx.icon_button(
+                rx.color_mode_cond(
+                    rx.icon("sun", size=18),
+                    rx.icon("moon", size=18),
+                ),
+                variant="ghost",
+                color_scheme="gray",
+                cursor="pointer",
+                size="2",
+            ),
+        ),
+        rx.menu.content(
+            rx.menu.item(
+                rx.hstack(
+                    rx.icon("sun", size=14),
+                    rx.text("Theme clair"),
+                    spacing="2",
+                    align_items="center",
+                ),
+                on_click=rx.set_color_mode("light"),
+            ),
+            rx.menu.item(
+                rx.hstack(
+                    rx.icon("moon", size=14),
+                    rx.text("Theme sombre"),
+                    spacing="2",
+                    align_items="center",
+                ),
+                on_click=rx.set_color_mode("dark"),
+            ),
+            rx.menu.item(
+                rx.hstack(
+                    rx.icon("monitor", size=14),
+                    rx.text("Suivre le systeme"),
+                    spacing="2",
+                    align_items="center",
+                ),
+                on_click=rx.set_color_mode("system"),
+            ),
+        ),
+    )
+
+
 def navbar():
     return rx.hstack(
         rx.badge(
@@ -110,6 +157,7 @@ def navbar():
                 background_color=rx.color("slate", 6),
             )
         ),
+        theme_toggle(),
         justify_content="space-between",
         align_items="center",
         padding="12px",
