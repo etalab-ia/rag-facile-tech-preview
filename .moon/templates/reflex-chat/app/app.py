@@ -3,17 +3,20 @@
 import reflex as rx
 
 from {{ project_name | replace(from='-', to='_') }}.components import chat, navbar
+from {{ project_name | replace(from='-', to='_') }}.components.dsfr import dsfr_footer, dsfr_header
 
 
 def index() -> rx.Component:
     """The main app."""
     return rx.vstack(
+        dsfr_header(),
         navbar(),
         chat.chat(),
         chat.action_bar(),
+        dsfr_footer(),
         background_color=rx.color("slate", 1),
         color=rx.color("slate", 12),
-        height="100dvh",
+        min_height="100dvh",
         align_items="stretch",
         spacing="0",
     )
