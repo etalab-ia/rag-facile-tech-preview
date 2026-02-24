@@ -1,27 +1,32 @@
 """DSFR React component wrappers for Reflex.
 
 Reflex v0.8.0+ uses Vite + React Router (SPA).
-Follows react-dsfr Vite setup pattern: call startReactDsfr() once in custom code.
+Uses root package + local wrapper functions imported from subpaths via custom code.
 """
 
 import reflex as rx
 
 
-# Custom code injected via _get_custom_code() - runs at module load time
+# Custom code: import from subpaths + define wrapper functions
 _DSFR_INIT_CODE = """
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
+import HeaderBase from "@codegouvfr/react-dsfr/Header";
+import FooterBase from "@codegouvfr/react-dsfr/Footer";
 
 // Initialize DSFR once at module load
 startReactDsfr({ defaultColorScheme: "system" });
+
+// Export wrapped components for use by Reflex
+export const DsfrHeaderComponent = HeaderBase;
+export const DsfrFooterComponent = FooterBase;
 """
 
 
 class DsfrHeader(rx.NoSSRComponent):
     """DSFR Header component (Vite + React Router)."""
 
-    library: str = "@codegouvfr/react-dsfr/Header"
-    tag: str = "Header"
-    is_default: bool = True
+    library: str = "@codegouvfr/react-dsfr"
+    tag: str = "DsfrHeaderComponent"
 
     brand_top: rx.Var[str]
     service_title: rx.Var[str]
@@ -34,11 +39,10 @@ class DsfrHeader(rx.NoSSRComponent):
 
 
 class DsfrFooter(rx.NoSSRComponent):
-    """DSFR Footer component (Vite + React Router) — custom code via DsfrHeader."""
+    """DSFR Footer component (Vite + React Router)."""
 
-    library: str = "@codegouvfr/react-dsfr/Footer"
-    tag: str = "Footer"
-    is_default: bool = True
+    library: str = "@codegouvfr/react-dsfr"
+    tag: str = "DsfrFooterComponent"
 
     brand_top: rx.Var[str]
     accessibility: rx.Var[str]
