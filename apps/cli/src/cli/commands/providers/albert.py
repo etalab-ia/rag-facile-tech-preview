@@ -108,8 +108,8 @@ class AlbertApiProvider:
                 "No collection ID available. Call upload_documents first."
             )
 
-        # Retrieve sample passages from the collection to ground the generation
-        document_context = self._retrieve_document_context()
+        # Retrieve sample passages and chunk IDs from the collection
+        document_context, chunk_ids = self._retrieve_document_context()
 
         # Build the generation prompt with document context
         prompt = self._build_prompt(num_samples, document_context)
@@ -142,14 +142,14 @@ class AlbertApiProvider:
 
             # Parse after streaming is complete — handles both single-line JSONL
             # and multi-line pretty-printed JSON objects from the LLM
-            yield from self._parse_response(total_response, seen_samples)
+            yield from self._parse_response(total_response, seen_samples, chunk_ids)
 
         except Exception as e:
             logger.error(f"LLM generation failed: {e}", exc_info=True)
             raise RuntimeError(f"LLM generation failed: {e}") from e
 
     def _parse_response(
-        self, response: str, seen_samples: set[str]
+        self, response: str, seen_samples: set[str], chunk_ids: list[int]
     ) -> Iterator[GeneratedSample]:
         """Parse the full LLM response, extracting all valid JSON samples.
 
@@ -157,6 +157,9 @@ class AlbertApiProvider:
         - One JSON object per line (JSONL format)
         - Multi-line pretty-printed JSON objects
         - Markdown code fences (```json ... ```)
+
+        Populates each sample's retrieved_chunk_ids with the chunk IDs from
+        the collection search that grounded the generation.
         """
         # Strip markdown code fences wrapping the whole response
         text = response.strip()
@@ -179,6 +182,8 @@ class AlbertApiProvider:
                 data = json.loads(line)
                 if "user_input" in data and "reference" in data:
                     sample = GeneratedSample.from_dict(data)
+                    # Populate chunk IDs from the search that grounded generation
+                    sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
                     if sample.user_input not in seen_samples:
                         seen_samples.add(sample.user_input)
                         yield sample
@@ -187,10 +192,13 @@ class AlbertApiProvider:
 
         # If nothing found, try to extract all JSON objects via brace matching
         if not seen_samples:
-            yield from self._extract_json_objects(text, seen_samples)
+            yield from self._extract_json_objects(text, seen_samples, chunk_ids)
 
     def _extract_json_objects(
-        self, text: str, seen_samples: set[str]
+        self,
+        text: str,
+        seen_samples: set[str],
+        chunk_ids: list[int],
     ) -> Iterator[GeneratedSample]:
         """Extract JSON objects from text using brace depth tracking."""
         depth = 0
@@ -208,6 +216,8 @@ class AlbertApiProvider:
                         data = json.loads(candidate)
                         if "user_input" in data and "reference" in data:
                             sample = GeneratedSample.from_dict(data)
+                            # Populate chunk IDs from the search
+                            sample.retrieved_chunk_ids = [str(cid) for cid in chunk_ids]
                             if sample.user_input not in seen_samples:
                                 seen_samples.add(sample.user_input)
                                 yield sample
@@ -223,17 +233,18 @@ class AlbertApiProvider:
             except Exception:
                 pass  # Non-critical
 
-    def _retrieve_document_context(self) -> str:
-        """Retrieve sample passages from the collection to ground generation.
+    def _retrieve_document_context(self) -> tuple[str, list[int]]:
+        """Retrieve sample passages and chunk IDs from the collection.
 
         Uses the rag_facile retrieval package with configured search strategy
         to get representative passages from the uploaded documents.
 
         Returns:
-            A formatted string containing sample passages from the document
+            tuple of (formatted_context_string, list_of_chunk_ids)
+            where chunk_ids are the IDs of chunks used in the context
         """
         if not self.collection_id:
-            return "[Document context not available]"
+            return "[Document context not available]", []
 
         try:
             from rag_facile.retrieval import search_chunks
@@ -251,6 +262,7 @@ class AlbertApiProvider:
             ]
 
             passages = []
+            chunk_ids = []
             for query in search_queries:
                 try:
                     # Use the retrieval package with configured strategy
@@ -265,27 +277,37 @@ class AlbertApiProvider:
 
                     if chunks:
                         for chunk in chunks:
-                            # RetrievedChunk TypedDicts use 'content' key
+                            # RetrievedChunk TypedDicts use 'content' and 'chunk_id' keys
                             text = chunk.get("content", "")
+                            cid = chunk.get("chunk_id")
                             if text and text not in passages:
                                 passages.append(text[:500])  # Limit passage length
+                                if cid is not None:
+                                    chunk_ids.append(cid)
                 except Exception as e:
                     logger.debug(f"Search for '{query}' failed: {e}")
                     continue
 
             if passages:
                 context = "\n\n---\n\n".join(passages[:5])  # Max 5 passages
-                return f"Sample passages from the document:\n\n{context}"
+                return (
+                    f"Sample passages from the document:\n\n{context}",
+                    chunk_ids[:5],
+                )
             else:
                 return (
                     "A document has been uploaded to the collection. "
                     "Please generate Q/A pairs based on the document content, "
-                    "ensuring each answer is grounded in the uploaded material."
+                    "ensuring each answer is grounded in the uploaded material.",
+                    [],
                 )
 
         except Exception as e:
             logger.warning(f"Failed to retrieve document context: {e}")
-            return "[Document context retrieval failed. Proceeding without context.]"
+            return (
+                "[Document context retrieval failed. Proceeding without context.]",
+                [],
+            )
 
     def _build_prompt(self, num_samples: int, document_context: str) -> str:
         """Build the generation prompt for the LLM with document context.

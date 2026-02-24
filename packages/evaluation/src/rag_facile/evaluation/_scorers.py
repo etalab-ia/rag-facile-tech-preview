@@ -171,9 +171,18 @@ def answer_correctness(model: str | None = None) -> Scorer:
 
 
 # ── Combined scorer ───────────────────────────────────────────────────────────
+# Note: For multiple metrics, use scorer=[faithfulness(model=...), answer_correctness(model=...)]
+# in the Task definition rather than a combined scorer. This gives each metric
+# its own row in the results.
 
 
-def rag_eval_scorer(model: str | None = None) -> Scorer:
+def rag_eval_scorer(model: str | None = None) -> list[Scorer]:
+    """Return a list of all RAG evaluation scorers.
+
+    Convenience function returning [faithfulness, answer_correctness].
+    For Inspect AI, pass this as ``scorer=rag_eval_scorer(model)``.
+    """
+    return [faithfulness(model=model), answer_correctness(model=model)]
     """Combined RAG evaluation scorer: faithfulness + answer correctness.
 
     Returns a multi-value score dict so Inspect AI tracks both metrics

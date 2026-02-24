@@ -33,9 +33,13 @@ def _make_state(question: str = "What is RAG?") -> MagicMock:
 
 @pytest.mark.asyncio
 async def test_retrieve_injects_context() -> None:
-    """When the pipeline returns context it is injected into the prompt."""
+    """When the pipeline returns context + chunk IDs, both are stored."""
     with patch(
-        _PIPELINE_HELPER, return_value="RAG stands for Retrieval-Augmented Generation."
+        _PIPELINE_HELPER,
+        return_value=(
+            "RAG stands for Retrieval-Augmented Generation.",
+            [1, 2, 3],
+        ),
     ):
         solver = retrieve_rag_context()
         state = _make_state("What is RAG?")
@@ -46,6 +50,10 @@ async def test_retrieve_injects_context() -> None:
     assert len(result.metadata["retrieved_contexts"]) == 1
     assert "Retrieval-Augmented Generation" in result.metadata["retrieved_contexts"][0]
 
+    # Chunk IDs stored for precision@k and recall@k
+    assert "retrieved_chunk_ids" in result.metadata
+    assert result.metadata["retrieved_chunk_ids"] == ["1", "2", "3"]
+
     # Context injected into the first message
     first_message = result.messages[0]
     assert "Retrieval-Augmented Generation" in first_message.content
@@ -55,7 +63,7 @@ async def test_retrieve_injects_context() -> None:
 @pytest.mark.asyncio
 async def test_retrieve_no_context_passthrough() -> None:
     """When the pipeline returns no context, state is passed through unchanged."""
-    with patch(_PIPELINE_HELPER, return_value=""):
+    with patch(_PIPELINE_HELPER, return_value=("", [])):
         solver = retrieve_rag_context()
         state = _make_state("What is RAG?")
         original_messages = state.messages[:]

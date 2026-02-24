@@ -6,7 +6,12 @@ from inspect_ai import Task, task
 from inspect_ai.solver import generate
 
 from rag_facile.evaluation._dataset import load_rag_dataset
-from rag_facile.evaluation._scorers import rag_eval_scorer
+from rag_facile.evaluation._scorers import (
+    answer_correctness,
+    faithfulness,
+    precision_at_k,
+    recall_at_k,
+)
 from rag_facile.evaluation._solvers import retrieve_rag_context
 
 
@@ -38,5 +43,10 @@ def rag_eval(
     return Task(
         dataset=load_rag_dataset(dataset_path),
         solver=[retrieve_rag_context(), generate()],
-        scorer=rag_eval_scorer(model=grader_model),
+        scorer=[
+            recall_at_k(),
+            precision_at_k(),
+            faithfulness(model=grader_model),
+            answer_correctness(model=grader_model),
+        ],
     )
