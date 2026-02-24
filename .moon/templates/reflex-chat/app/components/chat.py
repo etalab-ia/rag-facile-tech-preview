@@ -44,7 +44,7 @@ def message(qa: QA) -> rx.Component:
     """
     return rx.box(
         rx.box(
-            message_content(qa["question"], "mauve"),
+            message_content(qa["question"], "slate"),
             text_align="right",
             margin_bottom="8px",
         ),
@@ -72,21 +72,21 @@ def render_attached_file(filename: str) -> rx.Component:
     return rx.hstack(
         rx.icon("file-text", size=14, color=rx.color("ruby", 11)),
         rx.text(
-            filename, font_size="0.75em", color=rx.color("mauve", 12), weight="medium"
+            filename, font_size="0.75em", color=rx.color("slate", 12), weight="medium"
         ),
         rx.icon(
             "x",
             size=14,
             on_click=State.clear_attachment(filename),
             cursor="pointer",
-            color=rx.color("mauve", 11),
-            _hover={"color": rx.color("mauve", 12)},
+            color=rx.color("slate", 11),
+            _hover={"color": rx.color("slate", 12)},
         ),
         align_items="center",
         padding="6px 10px",
         border="1px solid var(--gray-a4)",
         border_radius="8px",
-        background_color=rx.color("mauve", 3),
+        background_color=rx.color("slate", 3),
         spacing="2",
     )
 
@@ -119,7 +119,7 @@ def collection_badges() -> rx.Component:
             rx.text(
                 "📚",
                 font_size="0.75em",
-                color=rx.color("mauve", 10),
+                color=rx.color("slate", 10),
             ),
             rx.foreach(State.collection_items, collection_badge),
             wrap="wrap",
@@ -149,7 +149,7 @@ def action_bar() -> rx.Component:
                     ),
                     rx.hstack(
                         rx.upload(
-                            rx.icon("paperclip", size=18, color=rx.color("mauve", 11)),
+                            rx.icon("paperclip", size=18, color=rx.color("slate", 11)),
                             id="upload_file",
                             accept=_get_upload_accept(),
                             multiple=False,
@@ -157,12 +157,12 @@ def action_bar() -> rx.Component:
                             padding="4px",
                             cursor="pointer",
                             _hover={
-                                "background_color": rx.color("mauve", 3),
+                                "background_color": rx.color("slate", 3),
                                 "border_radius": "4px",
                             },
                         ),
                         rx.input(
-                            placeholder="Type a message...",
+                            placeholder="Posez votre question...",
                             id="question",
                             width="100%",
                             variant="soft",
@@ -189,7 +189,7 @@ def action_bar() -> rx.Component:
                         padding="8px 12px",
                         spacing="2",
                     ),
-                    background_color=rx.color("mauve", 1),
+                    background_color=rx.color("slate", 1),
                     border="1px solid var(--gray-a6)",
                     border_radius="12px",
                     width="100%",
@@ -204,11 +204,11 @@ def action_bar() -> rx.Component:
                 on_submit=State.process_question,
             ),
             rx.text(
-                "ReflexGPT may return factually incorrect or misleading "
-                "responses. Use discretion.",
+                "Cet assistant peut fournir des reponses inexactes ou "
+                "trompeuses. Verifiez les informations importantes.",
                 text_align="center",
                 font_size=".75em",
-                color=rx.color("mauve", 10),
+                color=rx.color("slate", 10),
             ),
             rx.logo(margin_block="-1em"),
             width="100%",
@@ -222,7 +222,7 @@ def action_bar() -> rx.Component:
         backdrop_filter="auto",
         backdrop_blur="lg",
         border_top=f"1px solid {rx.color('mauve', 3)}",
-        background_color=rx.color("mauve", 2),
+        background_color=rx.color("slate", 2),
         align="stretch",
         width="100%",
     )
