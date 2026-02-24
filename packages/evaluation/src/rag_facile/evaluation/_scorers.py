@@ -97,7 +97,13 @@ def precision_at_k() -> Scorer:
     """Fraction of retrieved chunks that are relevant.
 
     Reads ``relevant_chunk_ids`` and ``retrieved_chunk_ids`` from sample
-    metadata.  Returns 0.0 when nothing was retrieved.
+    metadata.  Returns 1.0 when no chunk IDs are defined (vacuously true,
+    symmetric with recall's treatment of missing relevant IDs).
+
+    Note: this metric is only meaningful when ``retrieved_chunk_ids`` are
+    explicitly populated in the dataset (e.g. by running the retrieval
+    pipeline against a golden set).  For static evals with pre-computed
+    contexts, faithfulness is the primary quality signal.
     """
 
     async def score(state: TaskState, target: Target) -> Score:
@@ -106,8 +112,8 @@ def precision_at_k() -> Scorer:
 
         if not retrieved:
             return Score(
-                value=0.0,
-                explanation="No chunks retrieved",
+                value=1.0,
+                explanation="No chunk IDs defined — vacuously true",
             )
 
         hits = relevant & retrieved

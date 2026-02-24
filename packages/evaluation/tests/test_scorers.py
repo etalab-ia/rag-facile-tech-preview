@@ -116,7 +116,8 @@ async def test_precision_no_retrieved() -> None:
     scorer = precision_at_k()
     state = _make_state(relevant_chunk_ids=["a"], retrieved_chunk_ids=[])
     result = await scorer(state, _make_target())
-    assert result.value == 0.0
+    # No retrieved chunk IDs = vacuously true (same symmetry as recall)
+    assert result.value == 1.0
 
 
 # ── faithfulness helper ──────────────────────────────────────────────────────
