@@ -139,7 +139,9 @@ body {
 
 /* ─── DSFR Button Adjustments ─── */
 
-/* Reduce border-radius for a more DSFR-aligned look */
+/* Reduce border-radius for a more DSFR-aligned look.
+ * !important is required because Radix Themes sets inline border-radius
+ * via style attributes, which cannot be overridden by specificity alone. */
 button, [role="button"] {
     border-radius: 4px !important;
 }

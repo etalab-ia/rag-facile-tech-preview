@@ -113,6 +113,6 @@ def navbar():
         justify_content="space-between",
         align_items="center",
         padding="12px",
-        border_bottom=f"1px solid {rx.color('mauve', 3)}",
+        border_bottom=f"1px solid {rx.color('slate', 3)}",
         background_color=rx.color("slate", 2),
     )

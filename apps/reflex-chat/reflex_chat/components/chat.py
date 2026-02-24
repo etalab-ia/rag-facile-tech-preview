@@ -221,7 +221,7 @@ def action_bar() -> rx.Component:
         padding_y="16px",
         backdrop_filter="auto",
         backdrop_blur="lg",
-        border_top=f"1px solid {rx.color('mauve', 3)}",
+        border_top=f"1px solid {rx.color('slate', 3)}",
         background_color=rx.color("slate", 2),
         align="stretch",
         width="100%",
