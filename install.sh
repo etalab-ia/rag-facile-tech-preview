@@ -339,7 +339,7 @@ if [[ -n "${RAG_FACILE_BRANCH:-}" ]]; then
     echo "Using branch/ref: $REF (from RAG_FACILE_BRANCH)"
 else
     echo "Fetching latest release tag..."
-    LATEST_TAG=$(curl -fsSL "https://api.github.com/repos/etalab-ia/rag-facile/releases/latest" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    LATEST_TAG=$(curl -fsSL "https://api.github.com/repos/etalab-ia/rag-facile/releases/latest" 2>/dev/null | sed -n -E 's/.*"tag_name": *"([^"]+)".*/\1/p')
     if [[ -z "$LATEST_TAG" ]]; then
         echo "WARNING: Could not fetch latest release tag, falling back to 'main'"
         REF="main"
