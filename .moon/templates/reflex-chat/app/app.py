@@ -3,12 +3,13 @@
 import reflex as rx
 
 from {{ project_name | replace(from='-', to='_') }}.components import chat, navbar
-from {{ project_name | replace(from='-', to='_') }}.dsfr_init import dsfr_footer, dsfr_header
+from {{ project_name | replace(from='-', to='_') }}.dsfr_init import DsfrInit, dsfr_footer, dsfr_header
 
 
 def index() -> rx.Component:
     """The main app."""
     return rx.vstack(
+        DsfrInit.create(),
         dsfr_header(),
         navbar(),
         chat.chat(),
