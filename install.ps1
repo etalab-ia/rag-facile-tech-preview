@@ -59,13 +59,28 @@ if (Test-Command "just") {
     Write-Host "OK just already installed" -ForegroundColor Green
 } else {
     Write-Host "==> Installing just..." -ForegroundColor Yellow
-    # Create target directory
+    # just has no official install.ps1 - download binary zip from GitHub Releases
+    try {
+        $justTag = (Invoke-RestMethod -Uri "https://api.github.com/repos/casey/just/releases/latest" -ErrorAction Stop).tag_name
+    } catch {
+        Write-Error "ERROR: Could not fetch just release info from GitHub API."
+        exit 1
+    }
+    $arch = if ([System.Environment]::Is64BitOperatingSystem) { "x86_64" } else { "i686" }
+    $justUrl = "https://github.com/casey/just/releases/download/$justTag/just-$justTag-$arch-pc-windows-msvc.zip"
+    $justZip = [System.IO.Path]::GetTempFileName() -replace "\.tmp$", ".zip"
+
+    try {
+        Invoke-WebRequest -Uri $justUrl -OutFile $justZip -ErrorAction Stop
+    } catch {
+        Write-Error "ERROR: Could not download just from $justUrl"
+        exit 1
+    }
+
     New-Item -ItemType Directory -Force -Path $LocalBin | Out-Null
-    # Download the just installer and run it
-    $justInstaller = [System.IO.Path]::GetTempFileName() + ".ps1"
-    Invoke-WebRequest -Uri "https://just.systems/install.ps1" -OutFile $justInstaller
-    & $justInstaller -To $LocalBin
-    Remove-Item $justInstaller -Force -ErrorAction SilentlyContinue
+    Expand-Archive -Path $justZip -DestinationPath $LocalBin -Force
+    Remove-Item $justZip -Force -ErrorAction SilentlyContinue
+
     $env:PATH = "$LocalBin;$env:PATH"
     if (-not (Test-Command "just")) {
         Write-Error "ERROR: just installation failed"
