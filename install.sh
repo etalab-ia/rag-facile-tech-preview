@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # RAG Facile installer for Unix / macOS / WSL / Git Bash
-# Prerequisites: curl
+# Prerequisites: curl, unzip (auto-installed on apt/dnf/yum systems if missing)
 # Installs: uv, just, then downloads and sets up the latest RAG Facile workspace.
 #
 # Usage:
@@ -31,6 +31,34 @@ ensure_bin_on_path() {
         export PATH="$LOCAL_BIN:$PATH"
     fi
 }
+
+# ── 0. Ensure prerequisites ───────────────────────────────────────────────────
+
+if ! check_tool unzip; then
+    echo "==> Installing prerequisite: unzip"
+    if [[ "$(uname)" == "Linux" ]]; then
+        if command -v apt-get &>/dev/null; then
+            if [[ $EUID -eq 0 ]]; then
+                apt-get update -qq && apt-get install -y -qq unzip
+            else
+                sudo apt-get update -qq && sudo apt-get install -y -qq unzip
+            fi
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y unzip 2>/dev/null || dnf install -y unzip
+        elif command -v yum &>/dev/null; then
+            sudo yum install -y unzip 2>/dev/null || yum install -y unzip
+        else
+            echo "ERROR: 'unzip' is required but could not be installed automatically."
+            echo "       Please install it manually, then re-run this script."
+            exit 1
+        fi
+    fi
+    if ! check_tool unzip; then
+        echo "ERROR: 'unzip' is required but is not available."
+        exit 1
+    fi
+    echo "✓ unzip installed"
+fi
 
 # ── 1. Install uv ─────────────────────────────────────────────────────────────
 
