@@ -205,3 +205,18 @@ fi
 if [[ -n "${GITHUB_PATH:-}" ]]; then
     echo "$LOCAL_BIN" >> "$GITHUB_PATH"
 fi
+
+# ── 7. Join the ALLiaNCE community ────────────────────────────────────────────
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "  🤝  Rejoignez la communauté ALLiaNCE !"
+echo ""
+echo "  ALLiaNCE est l'incubateur interministériel d'IA de l'État."
+echo "  Partagez vos retours, échangez avec d'autres équipes et contribuez"
+echo "  à l'IA au service du secteur public."
+echo ""
+echo \"  👉  https://alliance.numerique.gouv.fr/les-membres-de-lincubateur/rejoindre-la-communaut%C3%A9-alliance/\"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
