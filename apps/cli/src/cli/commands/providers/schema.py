@@ -37,22 +37,31 @@ class GeneratedSample:
         user_input: The question in French
         retrieved_contexts: List of context passages
         reference: The ground truth answer in French
+        relevant_chunk_ids: Ground-truth chunk IDs that should be retrieved
+        retrieved_chunk_ids: Chunk IDs that were actually retrieved
         metadata: Additional metadata about the sample
     """
 
     user_input: str
     retrieved_contexts: list[str]
     reference: str
+    relevant_chunk_ids: list[str] = field(default_factory=list)
+    retrieved_chunk_ids: list[str] = field(default_factory=list)
     metadata: SampleMetadata = field(default_factory=SampleMetadata)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to Ragas-compatible dictionary format."""
-        return {
+        result: dict[str, Any] = {
             "user_input": self.user_input,
             "retrieved_contexts": self.retrieved_contexts,
             "reference": self.reference,
             "_metadata": self.metadata.to_dict(),
         }
+        if self.relevant_chunk_ids:
+            result["relevant_chunk_ids"] = self.relevant_chunk_ids
+        if self.retrieved_chunk_ids:
+            result["retrieved_chunk_ids"] = self.retrieved_chunk_ids
+        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "GeneratedSample":
@@ -67,5 +76,7 @@ class GeneratedSample:
             user_input=data.get("user_input", ""),
             retrieved_contexts=data.get("retrieved_contexts", []),
             reference=data.get("reference", ""),
+            relevant_chunk_ids=data.get("relevant_chunk_ids", []),
+            retrieved_chunk_ids=data.get("retrieved_chunk_ids", []),
             metadata=metadata,
         )

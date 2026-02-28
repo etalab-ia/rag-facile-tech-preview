@@ -19,6 +19,7 @@ dependencies = [
     "reflex-chat",
     "storage",
     "tracing",
+    "evaluation",
 ]
 
 [tool.uv.sources]
@@ -36,6 +37,7 @@ retrieval = { workspace = true }
 reflex-chat = { workspace = true }
 storage = { workspace = true }
 tracing = { workspace = true }
+evaluation = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -57,7 +59,8 @@ exclude = [
     ".moon/templates",
     "apps/chainlit-chat/app.py",
     "apps/reflex-chat",
-    "packages/pipelines",
+    "apps/cli/tests",
+    "packages/evaluation/tests",
     "packages/tracing",
 ]
 

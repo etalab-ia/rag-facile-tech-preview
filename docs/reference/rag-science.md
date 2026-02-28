@@ -273,22 +273,24 @@ All of these are low-effort, high-signal changes:
 
 ## Evaluation
 
-Use **[Inspect AI](https://github.com/UKGovernmentBEIS/inspect_ai)** (UK AISI, MIT licence) as the evaluation orchestration framework. Route the judge to Albert for zero incremental cost:
+Uses **[Inspect AI](https://github.com/UKGovernmentBEIS/inspect_ai)** (UK AISI, MIT licence) as the evaluation orchestration framework. Implemented in `packages/evaluation/` (`rag_facile.evaluation`). Routes the judge to Albert for zero incremental cost:
 
 ```python
-from inspect_ai import eval, Task
-from inspect_ai.scorer import model_graded_qa
+from rag_facile.evaluation import rag_eval_scorer, load_rag_dataset
+from rag_facile.evaluation._solvers import inject_rag_context
+from inspect_ai import Task
+from inspect_ai.solver import generate
 
 task = Task(
-    dataset="french_gov_qa_benchmark",   # 500+ curated Q&A pairs
-    plan=[rag_pipeline_solver()],
-    scorer=model_graded_qa(
-        model="openai/openweight-medium",  # Albert via OpenAI-compatible endpoint
-        template=FRENCH_RAG_GRADING_TEMPLATE,
-    ),
+    dataset=load_rag_dataset("data/datasets/golden_v1.jsonl"),
+    solver=[inject_rag_context(), generate()],
+    scorer=rag_eval_scorer(model="openai/openweight-medium"),
 )
-results = eval(task)
 ```
+
+**CLI**: `rag-facile eval run`, `rag-facile eval view`, `rag-facile eval list`
+
+**Built-in scorers**: recall@k, precision@k, faithfulness (LLM-as-judge)
 
 **Tiered scoring strategy**:
 

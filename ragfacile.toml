@@ -6,6 +6,9 @@ preset = "balanced"
 provider = "albert"
 target_samples = 50
 output_format = "jsonl"
+data_dir = "data"
+inspect_log_dir = "data/evals/logs"
+generation_model = "openweight-large"
 
 [ingestion]
 provider = "local"

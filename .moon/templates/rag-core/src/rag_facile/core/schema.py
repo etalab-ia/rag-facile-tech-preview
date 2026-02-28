@@ -59,7 +59,7 @@ class MetaConfig(BaseModel):
 
 
 class EvalConfig(BaseModel):
-    """Configuration for synthetic Q/A dataset generation."""
+    """Configuration for evaluation: dataset generation and scoring."""
 
     provider: Literal["letta", "albert"] = Field(
         default="albert",
@@ -74,6 +74,18 @@ class EvalConfig(BaseModel):
     output_format: Literal["jsonl"] = Field(
         default="jsonl",
         description="Output format (currently only JSONL supported)",
+    )
+    data_dir: str = Field(
+        default="data",
+        description="Root directory for evaluation assets (datasets, traces, logs)",
+    )
+    inspect_log_dir: str = Field(
+        default="data/evals/logs",
+        description="Directory for Inspect AI evaluation logs",
+    )
+    generation_model: str = Field(
+        default="openweight-large",
+        description="Model for dataset generation (uses openweight-large for best Q/A quality)",
     )
 
 

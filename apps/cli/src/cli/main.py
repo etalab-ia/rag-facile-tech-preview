@@ -9,6 +9,7 @@ from rich.console import Console
 from cli.commands import (
     collections,
     config,
+    eval,
     generate_dataset,
     learn,
     setup,
@@ -133,6 +134,17 @@ config_app.add_typer(
     config.preset(), name="preset", help="Manage configuration presets"
 )
 app.add_typer(config_app, name="config", rich_help_panel=_PANEL_ADVANCED_TOOLS)
+
+# Eval command group
+eval_app = typer.Typer(
+    name="eval",
+    help="Run and view RAG evaluations (Inspect AI)",
+    no_args_is_help=True,
+)
+eval_app.command("run", help="Run evaluation on a dataset")(eval.run)
+eval_app.command("view", help="Open Inspect AI log viewer")(eval.view)
+eval_app.command("list", help="List past evaluation runs")(eval.list_runs)
+app.add_typer(eval_app, name="eval", rich_help_panel=_PANEL_ADVANCED_TOOLS)
 
 app.command(
     name="generate-dataset",
