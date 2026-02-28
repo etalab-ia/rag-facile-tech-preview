@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 
+import httpx
 from inspect_ai.model import ChatMessageUser
 from inspect_ai.solver import Solver, TaskState, solver
 
@@ -83,8 +84,11 @@ def retrieve_rag_context() -> Solver:
             context, chunk_texts = await loop.run_in_executor(
                 None, _call_pipeline, question
             )
-        except (OSError, RuntimeError, ValueError):
-            logger.warning("RAG pipeline retrieval failed", exc_info=True)
+        except (OSError, RuntimeError, ValueError, httpx.HTTPStatusError) as exc:
+            # httpx.HTTPStatusError covers Albert API 4xx/5xx responses.
+            # Retrieval failure is non-fatal: the solver falls back to the
+            # pre-baked retrieved_contexts from the dataset.
+            logger.warning("RAG pipeline retrieval failed: %s", exc)
             context = ""
             chunk_texts = []
 
