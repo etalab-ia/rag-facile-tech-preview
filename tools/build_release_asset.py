@@ -56,8 +56,17 @@ def _get_version() -> str:
 
 
 def _get_git_sha() -> str:
-    """Return the current HEAD commit SHA (full, 40 chars)."""
+    """Return the current HEAD commit SHA (full, 40 chars).
+
+    In CI pull-request contexts, GitHub Actions checks out an ephemeral merge
+    commit that does not exist on the remote.  Set BUILD_GIT_SHA to the actual
+    branch HEAD (e.g. github.event.pull_request.head.sha) to override.
+    """
+    import os
     import subprocess
+
+    if sha := os.environ.get("BUILD_GIT_SHA"):
+        return sha.strip()
 
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
