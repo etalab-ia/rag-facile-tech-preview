@@ -317,7 +317,13 @@ def start_chat(debug: bool = False) -> None:
             pass  # config missing or invalid — use defaults
 
     if debug:
-        logging.basicConfig(level=logging.DEBUG)
+        # Only enable DEBUG on our own logger — not the root logger.
+        # logging.basicConfig(level=DEBUG) would also enable openai/httpcore
+        # which dumps every request byte to the terminal.
+        handler = logging.StreamHandler()
+        handler.setLevel(logging.DEBUG)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
     logger.debug(
         "assistant_model=%s reasoning_effort=%s", assistant_model, reasoning_effort
     )
