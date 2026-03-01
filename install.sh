@@ -174,9 +174,23 @@ echo ""
 echo "  2. Start your app:"
 echo "       cd $WORKSPACE_DIR && just run"
 echo ""
-echo "  3. Chat with the RAG assistant:"
-echo "       cd $WORKSPACE_DIR && just learn"
-echo ""
+cat <<EOF
+  3. Learn, explore and configure with your AI assistant:
+       cd $WORKSPACE_DIR && just learn
+
+     Your assistant can help you:
+       • Understand the codebase you just installed
+       • Learn about RAG concepts
+       • Configure your app
+
+  4. New to RAG-based conversational assistants?
+     The official DINUM guide walks you through the methodology
+     step by step, from investigation to production — designed
+     for product owners, project managers and non-expert teams.
+
+     👉  https://docs.numerique.gouv.fr/docs/6bd3ca79-9cb9-4603-866a-6fa1788d2c8e/
+
+EOF
 
 # Guidance for shell profiles (so just/uv are found after terminal restart)
 if [[ ":$PATH:" != *":$LOCAL_BIN:"* ]]; then
