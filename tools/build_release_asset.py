@@ -198,6 +198,7 @@ learn:
     from rag_facile.core.loader import save_config  # noqa: PLC0415
     from rag_facile.core.presets import load_preset  # noqa: PLC0415
     from rag_facile.core.schema import (  # noqa: PLC0415
+        AssistantConfig,
         ChunkingConfig,
         EvalConfig,
         FormattingConfig,
@@ -231,6 +232,9 @@ learn:
             output_format="markdown",
             include_confidence=False,
             language="fr",
+        ),
+        assistant=AssistantConfig(
+            reasoning_effort="low",  # reduces latency; use "high" for deeper answers
         ),
     )
     save_config(config, target_dir / "ragfacile.toml")

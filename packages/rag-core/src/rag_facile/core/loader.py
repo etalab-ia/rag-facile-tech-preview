@@ -218,8 +218,10 @@ def save_config(config: RAGConfig, path: Path | str = "ragfacile.toml") -> None:
     """
     path = Path(path)
 
-    # Convert to dict and write
-    config_dict = config.model_dump()
+    # Convert to dict and write.
+    # exclude_none=True: TOML has no null type; a missing key reads back as
+    # None via Pydantic's Optional defaults, so omitting None values is correct.
+    config_dict = config.model_dump(exclude_none=True)
 
     with open(path, "wb") as f:
         tomli_w.dump(config_dict, f)

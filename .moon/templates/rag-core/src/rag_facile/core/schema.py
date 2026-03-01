@@ -532,6 +532,41 @@ class TracingConfig(BaseModel):
 
 
 # ==============================================================================
+# ASSISTANT CONFIG
+# ==============================================================================
+
+
+class AssistantConfig(BaseModel):
+    """Configuration for the rag-facile learn assistant (``just learn``).
+
+    Controls the AI model used for the interactive chat experience, which is
+    separate from the RAG pipeline model (``generation.model``).
+
+    Example ragfacile.toml section::
+
+        [assistant]
+        model = "openweight-large"
+        reasoning_effort = "low"
+    """
+
+    model: str = Field(
+        default="openweight-large",
+        description=(
+            "Model alias for the assistant. "
+            "Override at runtime with the RAG_ASSISTANT_MODEL env var."
+        ),
+    )
+    reasoning_effort: Literal["low", "medium", "high"] | None = Field(
+        default=None,
+        description=(
+            "Reasoning effort for the assistant model. "
+            '"low" reduces latency significantly; "high" gives deeper answers. '
+            "Set to null to let the API use its default."
+        ),
+    )
+
+
+# ==============================================================================
 # ROOT CONFIG
 # ==============================================================================
 
@@ -607,6 +642,10 @@ class RAGConfig(BaseModel):
     tracing: TracingConfig = Field(
         default_factory=TracingConfig,
         description="Pipeline tracing and observability",
+    )
+    assistant: AssistantConfig = Field(
+        default_factory=AssistantConfig,
+        description="Chat assistant (just learn) configuration",
     )
 
     model_config = {

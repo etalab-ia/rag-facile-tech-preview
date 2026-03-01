@@ -228,8 +228,14 @@ def _detect_workspace() -> Path | None:
     return None
 
 
-def _build_model() -> OpenAIServerModel:
-    """Construct the OpenAIServerModel pointed at Albert API."""
+def _build_model(reasoning_effort: str | None = None) -> OpenAIServerModel:
+    """Construct the OpenAIServerModel pointed at Albert API.
+
+    Args:
+        reasoning_effort: Optional reasoning effort level to pass to the API
+            (``"low"``, ``"medium"``, or ``"high"``). When set, trades answer
+            depth for latency. ``None`` lets the API use its default.
+    """
     api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("ALBERT_API_KEY", "")
     api_base = os.environ.get("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1")
     # Use Albert model aliases (resolved server-side) rather than raw model IDs.
@@ -246,10 +252,15 @@ def _build_model() -> OpenAIServerModel:
         )
         raise typer.Exit(code=1)
 
+    extra: dict[str, str] = {}
+    if reasoning_effort is not None:
+        extra["reasoning_effort"] = reasoning_effort
+
     return OpenAIServerModel(
         model_id=model_id,
         api_base=api_base,
         api_key=api_key,
+        **extra,
     )
 
 
@@ -285,8 +296,19 @@ def start_chat(debug: bool = False) -> None:
     active_skill_content: str | None = None  # SKILL.md content to inject
     skill_injected = False  # True once content has been sent to agent
 
+    # Load assistant config from ragfacile.toml (best-effort — no workspace = defaults)
+    reasoning_effort: str | None = None
+    if workspace:
+        try:
+            from rag_facile.core.loader import load_config  # noqa: PLC0415
+
+            rag_config = load_config(workspace / "ragfacile.toml")
+            reasoning_effort = rag_config.assistant.reasoning_effort
+        except (OSError, ValueError):
+            pass  # config missing or invalid — use defaults
+
     # Build model + agent — typer.Exit propagates naturally on missing API key
-    model = _build_model()
+    model = _build_model(reasoning_effort=reasoning_effort)
 
     # Side-effect hook: when the agent calls activate_skill(), persist the returned
     # content so it's injected into subsequent turns (same as explicit /skills load).
