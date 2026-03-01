@@ -83,7 +83,7 @@ class RAGPipeline(ABC):
         """
         return ""
 
-    def retrieve_chunks(self, query: str, **kwargs: object) -> list[RetrievedChunk]:
+    def retrieve_chunks(self, query: str, **kwargs: object) -> list["RetrievedChunk"]:
         """Return the individual chunks retrieved for a query.
 
         Unlike :meth:`process_query`, which returns a formatted string ready for

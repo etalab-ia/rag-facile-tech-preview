@@ -557,8 +557,9 @@ class AssistantConfig(BaseModel):
         default=None,
         description=(
             "Reasoning effort for the assistant model. "
-            '"low" reduces latency significantly; "high" gives deeper answers. '
-            "Set to null to let the API use its default."
+            "Injected as 'Reasoning: {level}' in the system prompt (gpt-oss chat template). "
+            '"low" reduces latency; "high" gives deeper answers. '
+            "Omit to use the model default (medium)."
         ),
     )
 

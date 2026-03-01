@@ -3,6 +3,7 @@
 Entry point: start_chat() — called when the user runs `rag-facile learn`.
 """
 
+import logging
 import os
 import time
 from pathlib import Path
@@ -41,6 +42,8 @@ from cli.commands.learn.tools import (
     set_available_skills,
     set_workspace_root,
 )
+
+logger = logging.getLogger(__name__)
 
 
 _SYSTEM_PROMPT = """\
@@ -228,18 +231,12 @@ def _detect_workspace() -> Path | None:
     return None
 
 
-def _build_model(
-    model_id: str, reasoning_effort: str | None = None
-) -> OpenAIServerModel:
+def _build_model(model_id: str) -> OpenAIServerModel:
     """Construct the OpenAIServerModel pointed at Albert API.
 
     Args:
         model_id: Albert model alias to use (e.g. ``"openweight-large"``).
             Configured via ``[assistant].model`` in ragfacile.toml.
-        reasoning_effort: Optional reasoning effort level to pass to the API
-            (``"low"``, ``"medium"``, or ``"high"``). When set, trades answer
-            depth for latency. ``None`` lets the API use its default.
-            Configured via ``[assistant].reasoning_effort`` in ragfacile.toml.
     """
     api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("ALBERT_API_KEY", "")
     api_base = os.environ.get("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1")
@@ -251,15 +248,10 @@ def _build_model(
         )
         raise typer.Exit(code=1)
 
-    extra: dict[str, str] = {}
-    if reasoning_effort is not None:
-        extra["reasoning_effort"] = reasoning_effort
-
     return OpenAIServerModel(
         model_id=model_id,
         api_base=api_base,
         api_key=api_key,
-        **extra,
     )
 
 
@@ -308,8 +300,18 @@ def start_chat(debug: bool = False) -> None:
         except (OSError, ValueError):
             pass  # config missing or invalid — use defaults
 
+    # gpt-oss reads reasoning effort from the system prompt: "Reasoning: low"
+    # (it's a chat template kwarg rendered into the system message, not an API param).
+    # Prepend it so the model honours the configured level instead of defaulting to medium.
+    instructions = _SYSTEM_PROMPT
+    if reasoning_effort is not None:
+        instructions = f"Reasoning: {reasoning_effort}\n\n" + instructions
+    logger.debug(
+        "assistant_model=%s reasoning_effort=%s", assistant_model, reasoning_effort
+    )
+
     # Build model + agent — typer.Exit propagates naturally on missing API key
-    model = _build_model(model_id=assistant_model, reasoning_effort=reasoning_effort)
+    model = _build_model(model_id=assistant_model)
 
     # Side-effect hook: when the agent calls activate_skill(), persist the returned
     # content so it's injected into subsequent turns (same as explicit /skills load).
@@ -348,7 +350,7 @@ def start_chat(debug: bool = False) -> None:
     agent = ToolCallingAgent(
         tools=tools,
         model=model,
-        instructions=_SYSTEM_PROMPT,
+        instructions=instructions,
         verbosity_level=LogLevel.INFO if debug else LogLevel.OFF,
         max_steps=5,
     )
