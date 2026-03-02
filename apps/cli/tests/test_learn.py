@@ -135,3 +135,63 @@ class TestNewCommand:
         assert result.exit_code == 0
         # _finalize called twice: once for /new, once for quit
         assert mock_finalize.call_count == 2
+
+
+# ── _trim_agent_memory ────────────────────────────────────────────────────────
+
+
+class TestTrimAgentMemory:
+    """Unit tests for the step callback that prunes old agent steps."""
+
+    def test_noop_when_under_limit(self):
+        from unittest.mock import MagicMock
+
+        from smolagents.memory import ActionStep, AgentMemory, TaskStep
+        from smolagents.monitoring import Timing
+
+        from cli.commands.learn.agent import _MAX_AGENT_STEPS, _trim_agent_memory
+
+        agent = MagicMock()
+        memory = AgentMemory(system_prompt="test")
+        memory.steps.append(TaskStep(task="test"))
+        for i in range(_MAX_AGENT_STEPS - 1):
+            memory.steps.append(
+                ActionStep(step_number=i, timing=Timing(start_time=0, end_time=0))
+            )
+        agent.memory = memory
+
+        step = memory.steps[-1]
+        _trim_agent_memory(step, agent=agent)
+        # All steps should remain (under limit)
+        action_count = sum(1 for s in memory.steps if isinstance(s, ActionStep))
+        assert action_count == _MAX_AGENT_STEPS - 1
+
+    def test_prunes_oldest_steps(self):
+        from unittest.mock import MagicMock
+
+        from smolagents.memory import ActionStep, AgentMemory, TaskStep
+        from smolagents.monitoring import Timing
+
+        from cli.commands.learn.agent import _MAX_AGENT_STEPS, _trim_agent_memory
+
+        agent = MagicMock()
+        memory = AgentMemory(system_prompt="test")
+        memory.steps.append(TaskStep(task="test"))
+        for i in range(_MAX_AGENT_STEPS + 10):
+            memory.steps.append(
+                ActionStep(step_number=i, timing=Timing(start_time=0, end_time=0))
+            )
+        agent.memory = memory
+
+        step = memory.steps[-1]
+        _trim_agent_memory(step, agent=agent)
+
+        action_count = sum(1 for s in memory.steps if isinstance(s, ActionStep))
+        assert action_count == _MAX_AGENT_STEPS
+        # TaskStep preserved
+        assert any(isinstance(s, TaskStep) for s in memory.steps)
+        # Oldest steps removed — highest step_number should survive
+        remaining_numbers = [
+            s.step_number for s in memory.steps if isinstance(s, ActionStep)
+        ]
+        assert remaining_numbers[-1] == _MAX_AGENT_STEPS + 9

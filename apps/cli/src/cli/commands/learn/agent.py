@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from rich.markdown import Markdown
 from rich.panel import Panel
 from smolagents import OpenAIServerModel, ToolCallingAgent
+from smolagents.memory import ActionStep, TaskStep
 from smolagents.monitoring import LogLevel
 from smolagents.utils import AgentError, AgentMaxStepsError
 
@@ -239,6 +240,38 @@ class _SessionState:
         self.skill_injected: bool = False
 
 
+# Maximum number of ActionSteps to keep in the agent's memory.
+# Older steps have their model_input_messages cleared to free memory,
+# and then are removed, keeping only the most recent ones.
+_MAX_AGENT_STEPS = 20
+
+
+def _trim_agent_memory(step: ActionStep, *, agent: ToolCallingAgent) -> None:
+    """Step callback: prune old steps from the agent's in-memory history.
+
+    Keeps:
+    - All ``TaskStep`` instances (required for context)
+    - The most recent *_MAX_AGENT_STEPS* ``ActionStep`` instances
+    Removes older ``ActionStep`` instances and clears their
+    ``model_input_messages`` to free the largest objects first.
+    """
+    action_steps = [s for s in agent.memory.steps if isinstance(s, ActionStep)]
+    if len(action_steps) <= _MAX_AGENT_STEPS:
+        return
+
+    # Steps to prune: oldest action steps beyond the limit
+    steps_to_prune = action_steps[:-_MAX_AGENT_STEPS]
+    to_prune = {id(s) for s in steps_to_prune}
+    for s in steps_to_prune:
+        s.model_input_messages = None  # free largest object first
+
+    agent.memory.steps = [
+        s
+        for s in agent.memory.steps
+        if isinstance(s, TaskStep) or id(s) not in to_prune
+    ]
+
+
 _TOOL_ICONS: dict[str, str] = {
     "activate_skill": "📚",
     "get_agents_md": "📋",
@@ -346,6 +379,12 @@ def start_chat(debug: bool = False) -> None:
     from rag_facile.memory.context import bootstrap_context
     from rag_facile.memory.stores import EpisodicLog, SemanticStore
 
+    # Compact old episodic logs before loading context (prunes stale data)
+    if workspace:
+        from rag_facile.memory.lifecycle import compact_episodic_logs
+
+        compact_episodic_logs(workspace)
+
     profile_context = bootstrap_context(workspace) if workspace else ""
 
     # Ensure MEMORY.md exists (creates from template on first session)
@@ -404,6 +443,7 @@ def start_chat(debug: bool = False) -> None:
         instructions=_SYSTEM_PROMPT,
         verbosity_level=LogLevel.INFO if debug else LogLevel.OFF,
         max_steps=5,
+        step_callbacks=[_trim_agent_memory],
     )
 
     # Welcome

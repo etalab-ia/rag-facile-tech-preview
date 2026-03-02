@@ -1,4 +1,4 @@
-"""Session lifecycle hooks — checkpointing, finalisation, git commit.
+"""Session lifecycle hooks — checkpointing, finalisation, compaction, git commit.
 
 Coordinates the memory stores during and after a chat session:
 
@@ -6,6 +6,7 @@ Coordinates the memory stores during and after a chat session:
   out of the agent's context window.
 * **Finalisation** — end-of-session: save snapshot, update semantic store,
   increment session count, git commit.
+* **Compaction** — prune old episodic logs, keeping only checkpoint entries.
 * **Git commit** — best-effort commit of ``.agent/`` changes.
 """
 
@@ -14,10 +15,10 @@ from __future__ import annotations
 import logging
 import re
 import subprocess
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from rag_facile.memory._paths import PROFILE_FILE
+from rag_facile.memory._paths import LOGS_DIR, PROFILE_FILE
 from rag_facile.memory.stores import EpisodicLog, SemanticStore, SessionSnapshot
 
 logger = logging.getLogger(__name__)
@@ -134,7 +135,10 @@ def finalize_session(
     # 3. Session count
     increment_session_count(workspace)
 
-    # 4. Git commit
+    # 4. Compact semantic store (prune oldest entries if sections overflow)
+    SemanticStore.compact(workspace)
+
+    # 5. Git commit
     git_commit_session(workspace)
 
 
@@ -218,6 +222,77 @@ def git_commit_session(workspace: Path) -> None:
         logger.debug(
             "git commit failed: %s", exc.stderr.decode() if exc.stderr else exc
         )
+
+
+# ── Episodic log compaction ────────────────────────────────────────────────────
+
+# Regex matching checkpoint headers: "## HH:MM — Checkpoint"
+_CHECKPOINT_HEADER = re.compile(r"^## \d{2}:\d{2} — Checkpoint$", re.MULTILINE)
+
+
+def compact_episodic_logs(workspace: Path, *, keep_days: int = 2) -> int:
+    """Compact old episodic log files, keeping only checkpoint entries.
+
+    Log files older than *keep_days* are rewritten to contain only their
+    ``## HH:MM — Checkpoint`` sections (summary, decisions, facts).  If a
+    file has no checkpoints it is deleted entirely.
+
+    Returns the number of files compacted or removed.
+    """
+    logs_dir = workspace / LOGS_DIR
+    if not logs_dir.exists():
+        return 0
+
+    cutoff = date.today() - timedelta(days=keep_days)
+    compacted = 0
+
+    for log_file in sorted(logs_dir.glob("*.md")):
+        # Parse date from filename (YYYY-MM-DD.md)
+        try:
+            file_date = date.fromisoformat(log_file.stem)
+        except ValueError:
+            continue  # skip non-date files
+        if file_date >= cutoff:
+            continue  # recent — keep as-is
+
+        content = log_file.read_text(encoding="utf-8")
+        checkpoint_sections = _extract_checkpoint_sections(content)
+
+        if not checkpoint_sections:
+            log_file.unlink()
+            logger.debug("Deleted empty log: %s", log_file.name)
+        else:
+            header = f"# {file_date.isoformat()} (compacted)\n"
+            log_file.write_text(
+                header + "\n".join(checkpoint_sections) + "\n",
+                encoding="utf-8",
+            )
+            logger.debug("Compacted log: %s", log_file.name)
+        compacted += 1
+
+    return compacted
+
+
+def _extract_checkpoint_sections(content: str) -> list[str]:
+    """Extract checkpoint sections from a log file's content.
+
+    Each checkpoint section starts with ``## HH:MM — Checkpoint`` and
+    extends to the next ``## `` header or end of file.
+    """
+    sections: list[str] = []
+    lines = content.splitlines()
+    i = 0
+    while i < len(lines):
+        if _CHECKPOINT_HEADER.match(lines[i]):
+            block = [lines[i]]
+            i += 1
+            while i < len(lines) and not lines[i].startswith("## "):
+                block.append(lines[i])
+                i += 1
+            sections.append("\n".join(block).rstrip())
+        else:
+            i += 1
+    return sections
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
