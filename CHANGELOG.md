@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.3](https://github.com/etalab-ia/rag-facile/compare/v0.18.2...v0.18.3) (2026-03-02)
+
+
+### Bug Fixes
+
+* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([d129693](https://github.com/etalab-ia/rag-facile/commit/d129693a0c833c526dcd8cf7213d20d7ff2b6e0b))
+* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([6e017bd](https://github.com/etalab-ia/rag-facile/commit/6e017bdc76c21fa5c13f71cfae8a790294aef07f))
+* **ci:** use branch HEAD SHA in release asset to avoid PR merge commit ([039320d](https://github.com/etalab-ia/rag-facile/commit/039320d28dabf7a86b505893229406aef27213cb))
+
 ## [0.18.2](https://github.com/etalab-ia/rag-facile/compare/v0.18.1...v0.18.2) (2026-03-01)
 
 
