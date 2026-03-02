@@ -260,10 +260,10 @@ def _trim_agent_memory(step: ActionStep, *, agent: ToolCallingAgent) -> None:
         return
 
     # Steps to prune: oldest action steps beyond the limit
-    to_prune = set(id(s) for s in action_steps[:-_MAX_AGENT_STEPS])
-    for s in agent.memory.steps:
-        if id(s) in to_prune:
-            s.model_input_messages = None  # free largest object first
+    steps_to_prune = action_steps[:-_MAX_AGENT_STEPS]
+    to_prune = {id(s) for s in steps_to_prune}
+    for s in steps_to_prune:
+        s.model_input_messages = None  # free largest object first
 
     agent.memory.steps = [
         s

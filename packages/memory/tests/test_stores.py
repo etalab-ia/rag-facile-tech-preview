@@ -380,3 +380,19 @@ class TestSemanticStoreCompact:
 
         prefs = SemanticStore.read_section(workspace, "Preferences")
         assert len(prefs) == 5  # Preferences untouched
+
+    def test_caps_undated_entries_when_exceeding_limit(self, workspace):
+        """Regression: undated entries alone > limit must be truncated."""
+        SemanticStore.create(workspace)
+        path = workspace / ".agent" / "MEMORY.md"
+        content = path.read_text(encoding="utf-8")
+        # Insert 25 undated entries directly (no date prefix)
+        insert = "".join(f"- Undated fact {i}\n" for i in range(25))
+        content = content.replace("## Key Facts\n", f"## Key Facts\n{insert}")
+        path.write_text(content, encoding="utf-8")
+
+        removed = SemanticStore.compact(workspace, max_entries_per_section=20)
+        assert removed == 5
+
+        entries = SemanticStore.read_section(workspace, "Key Facts")
+        assert len(entries) == 20

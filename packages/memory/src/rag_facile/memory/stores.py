@@ -220,9 +220,13 @@ class SemanticStore:
                 if not re.match(r"^- \[\d{4}-\d{2}-\d{2}\]", e.strip())
             ]
 
-            # Keep newest dated entries (they sort lexically by date)
+            # Keep newest dated entries (they sort lexically by date).
+            # If undated entries alone exceed the limit, truncate them too.
             dated.sort(reverse=True)
-            kept = undated + dated[: max(0, max_entries_per_section - len(undated))]
+            kept = (
+                undated[:max_entries_per_section]
+                + dated[: max(0, max_entries_per_section - len(undated))]
+            )
             removed = len(entries) - len(kept)
             total_removed += removed
 

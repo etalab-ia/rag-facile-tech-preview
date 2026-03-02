@@ -76,8 +76,9 @@ def bootstrap_context(
             if len(section) > remaining:
                 # Truncate logs to fit, keeping the beginning (newest entries)
                 header = "[Memory — Recent Conversations]\n"
-                available = remaining - len(header) - 20  # leave room for "…"
-                section = header + logs[:available] + "\n…(truncated)"
+                truncation_marker = "\n…(truncated)"
+                available = remaining - len(header) - len(truncation_marker)
+                section = header + logs[:available] + truncation_marker
             sections.append(section)
 
     if not sections:
