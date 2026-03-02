@@ -5,6 +5,7 @@ Entry point: start_chat() — called when the user runs `rag-facile learn`.
 
 import os
 import time
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -361,7 +362,7 @@ def _finalize(
         logging.warning("Session finalization failed: %s", exc)
 
 
-def _build_extract_fn() -> object | None:
+def _build_extract_fn() -> Callable[[str], list[tuple[str, str]]] | None:
     """Return an ``extract_facts_fn`` closure, or None if credentials are missing."""
     api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("ALBERT_API_KEY", "")
     api_base = os.environ.get("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1")
