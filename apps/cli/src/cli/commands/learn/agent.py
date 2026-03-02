@@ -103,6 +103,9 @@ MEMORY PROTOCOL:
 ASSUME INTERRUPTION: Your context window might be reset at any moment. \
 Record progress to memory so future sessions can pick up where you left off.
 
+Users can type /new to start a fresh session. Your memory will be saved automatically \
+before the reset — any facts you wrote to MEMORY.md will be available in the next session.
+
 Keep memory organized: use memory_edit() to update existing facts. \
 Use memory_write() to create or overwrite entire files. \
 Available memory sections in MEMORY.md: \
@@ -152,7 +155,8 @@ _UI: dict[str, dict[str, str]] = {
         "subtitle": (
             "Posez-moi vos questions sur RAG, votre configuration "
             "ou comment améliorer vos résultats.\n"
-            "Tapez [bold]q[/bold] ou Ctrl+C pour quitter."
+            "Tapez [bold]/new[/bold] pour une nouvelle session, "
+            "[bold]q[/bold] ou Ctrl+C pour quitter."
         ),
         "no_workspace_hint": (
             "\n[dim]💡 Aucun ragfacile.toml trouvé — lancez "
@@ -168,6 +172,7 @@ _UI: dict[str, dict[str, str]] = {
             "Pouvez-vous reformuler ou poser une question plus simple\u00a0?"
         ),
         "rate_limited": "Limite de requêtes atteinte — nouvelle tentative dans {n}s (Ctrl+C pour annuler)\u00a0...",
+        "session_reset": "🔄 Nouvelle session — mémoire sauvegardée.",
         "skill_loaded": "📚 Compétence '{name}' activée.",
         "skill_cleared": "📚 Compétence désactivée.",
         "skill_not_found": "Compétence '{name}' introuvable. Tapez /skills pour voir la liste.",
@@ -177,7 +182,8 @@ _UI: dict[str, dict[str, str]] = {
         "greeting": "Bonjour! I'm your RAG assistant.",
         "subtitle": (
             "Ask me anything about RAG, your pipeline config, or how to improve your results.\n"
-            "Type [bold]q[/bold] or press Ctrl+C to quit."
+            "Type [bold]/new[/bold] for a new session, "
+            "[bold]q[/bold] or Ctrl+C to quit."
         ),
         "no_workspace_hint": (
             "\n[dim]💡 No ragfacile.toml found — run "
@@ -193,6 +199,7 @@ _UI: dict[str, dict[str, str]] = {
             "Could you rephrase or break it into smaller questions?"
         ),
         "rate_limited": "Rate limit reached — retrying in {n}s (Ctrl+C to cancel)...",
+        "session_reset": "🔄 New session — memory saved.",
         "skill_loaded": "📚 Skill '{name}' activated.",
         "skill_cleared": "📚 Skill deactivated.",
         "skill_not_found": "Skill '{name}' not found. Type /skills to see the list.",
@@ -410,6 +417,32 @@ def start_chat(debug: bool = False) -> None:
             console.print(f"[dim]{ui['goodbye']}[/dim]")
             _finalize(workspace, session_turns, session_start)
             break
+
+        # ── /new — reset session ──────────────────────────────────────────────
+        if user_input.strip().lower() == "/new":
+            _finalize(workspace, session_turns, session_start)
+
+            # Reset session state
+            session_turns = []
+            turn_count = 0
+            session_start = datetime.now()  # noqa: DTZ005
+            _first_turn = True  # re-inject profile on next turn
+
+            # Clear active skill
+            active_skill = None
+            active_skill_content = None
+            skill_injected = False
+
+            # Reset agent conversation history
+            if hasattr(agent, "memory") and agent.memory is not None:
+                agent.memory.reset()
+
+            # Reload profile context for the new session
+            profile_context = bootstrap_context(workspace) if workspace else ""
+
+            console.print(f"[dim]{ui['session_reset']}[/dim]")
+            console.print()
+            continue
 
         # ── /skills slash commands ────────────────────────────────────────────
         _skill_bootstrap = (
