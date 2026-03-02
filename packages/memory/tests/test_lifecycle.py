@@ -11,7 +11,9 @@ from rag_facile.memory.lifecycle import (
     _extract_checkpoint_summary,
     _extract_topics,
     _format_transcript,
+    _parse_extraction_response,
     compact_episodic_logs,
+    extract_facts_with_llm,
     finalize_session,
     git_commit_session,
     increment_session_count,
@@ -474,3 +476,195 @@ class TestCompactEpisodicLogs:
         assert compact_episodic_logs(workspace, keep_days=2) == 1
         assert not old_file.exists()  # deleted (no checkpoints)
         assert recent_file.exists()  # within keep_days
+
+
+# ── LLM fact extraction ──────────────────────────────────────────────────────
+
+
+class TestParseExtractionResponse:
+    def test_parses_valid_lines(self):
+        text = (
+            "[User Identity] Name is Luis\n"
+            "[Preferences] Prefers French language\n"
+            "[Key Facts] Uses Albert API\n"
+        )
+        result = _parse_extraction_response(text)
+        assert result == [
+            ("User Identity", "Name is Luis"),
+            ("Preferences", "Prefers French language"),
+            ("Key Facts", "Uses Albert API"),
+        ]
+
+    def test_skips_malformed_lines(self):
+        text = (
+            "Some random intro line\n"
+            "[Key Facts] Valid fact here\n"
+            "Another invalid line\n"
+            "[Preferences] Also valid\n"
+        )
+        result = _parse_extraction_response(text)
+        assert len(result) == 2
+        assert result[0] == ("Key Facts", "Valid fact here")
+
+    def test_handles_bullet_prefix(self):
+        text = "- [Key Facts] Has bullet prefix"
+        result = _parse_extraction_response(text)
+        assert result == [("Key Facts", "Has bullet prefix")]
+
+    def test_handles_empty_response(self):
+        assert _parse_extraction_response("") == []
+        assert _parse_extraction_response("\n\n") == []
+
+    def test_strips_whitespace(self):
+        text = "  [User Identity]   Name is Luis  "
+        result = _parse_extraction_response(text)
+        assert result == [("User Identity", "Name is Luis")]
+
+
+class TestExtractFactsWithLLM:
+    def test_calls_openai_and_parses_response(self):
+        mock_message = MagicMock()
+        mock_message.content = (
+            "[Key Facts] User prefers balanced preset\n[User Identity] Works at DINUM\n"
+        )
+        mock_choice = MagicMock()
+        mock_choice.message = mock_message
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+
+        with patch("openai.OpenAI", return_value=mock_client) as mock_ctor:
+            result = extract_facts_with_llm(
+                "User: Bonjour\nAssistant: Bonjour!",
+                api_key="test-key",
+                api_base="http://localhost:8000/v1",
+                model="test-model",
+            )
+
+        assert len(result) == 2
+        assert result[0] == ("Key Facts", "User prefers balanced preset")
+        assert result[1] == ("User Identity", "Works at DINUM")
+
+        # Verify the API was called correctly
+        mock_ctor.assert_called_once_with(
+            api_key="test-key", base_url="http://localhost:8000/v1"
+        )
+        call_kwargs = mock_client.chat.completions.create.call_args.kwargs
+        assert call_kwargs["model"] == "test-model"
+        assert call_kwargs["temperature"] == 0.1
+
+    def test_returns_empty_on_api_error(self):
+        import openai
+
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.side_effect = openai.APIError(
+            message="Service unavailable",
+            request=MagicMock(),
+            body=None,
+        )
+
+        with patch("openai.OpenAI", return_value=mock_client):
+            result = extract_facts_with_llm(
+                "transcript",
+                api_key="k",
+                api_base="http://localhost/v1",
+                model="m",
+            )
+
+        assert result == []
+
+    def test_truncates_long_transcripts(self):
+        long_transcript = "x" * 10000
+
+        mock_message = MagicMock()
+        mock_message.content = "[Key Facts] Something"
+        mock_choice = MagicMock()
+        mock_choice.message = mock_message
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+
+        with patch("openai.OpenAI", return_value=mock_client):
+            extract_facts_with_llm(
+                long_transcript,
+                api_key="k",
+                api_base="http://localhost/v1",
+                model="m",
+            )
+
+        # Check that the transcript in the prompt was truncated
+        prompt_content = mock_client.chat.completions.create.call_args.kwargs[
+            "messages"
+        ][0]["content"]
+        assert "…(truncated)" in prompt_content
+
+
+class TestFinalizeSessionWithSectionAwareFacts:
+    def test_routes_facts_to_correct_sections(self, workspace):
+        SemanticStore.create(workspace)
+        turns = [
+            {"role": "user", "content": "My name is Luis"},
+            {"role": "assistant", "content": "Nice to meet you!"},
+        ]
+
+        def fake_extract(_transcript: str) -> list[tuple[str, str]]:
+            return [
+                ("User Identity", "Name is Luis"),
+                ("Preferences", "Prefers French"),
+            ]
+
+        finalize_session(
+            workspace,
+            turns,
+            datetime(2026, 3, 1, 10, 0),
+            extract_facts_fn=fake_extract,
+        )
+
+        identity = SemanticStore.read_section(workspace, "User Identity")
+        prefs = SemanticStore.read_section(workspace, "Preferences")
+        assert any("Luis" in e for e in identity)
+        assert any("French" in e for e in prefs)
+
+    def test_falls_back_to_key_facts_for_unknown_section(self, workspace):
+        SemanticStore.create(workspace)
+        turns = [
+            {"role": "user", "content": "Test"},
+            {"role": "assistant", "content": "Response"},
+        ]
+
+        def fake_extract(_transcript: str) -> list[tuple[str, str]]:
+            return [("Unknown Section", "Some fact")]
+
+        finalize_session(
+            workspace,
+            turns,
+            datetime(2026, 3, 1, 10, 0),
+            extract_facts_fn=fake_extract,
+        )
+
+        facts = SemanticStore.read_section(workspace, "Key Facts")
+        assert any("Some fact" in e for e in facts)
+
+    def test_backward_compatible_with_plain_strings(self, workspace):
+        SemanticStore.create(workspace)
+        turns = [
+            {"role": "user", "content": "Test"},
+            {"role": "assistant", "content": "Response"},
+        ]
+
+        def fake_extract(_transcript: str) -> list[str]:
+            return ["Plain string fact"]
+
+        finalize_session(
+            workspace,
+            turns,
+            datetime(2026, 3, 1, 10, 0),
+            extract_facts_fn=fake_extract,
+        )
+
+        facts = SemanticStore.read_section(workspace, "Key Facts")
+        assert any("Plain string fact" in e for e in facts)

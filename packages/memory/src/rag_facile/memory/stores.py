@@ -119,10 +119,16 @@ class SemanticStore:
 
     @staticmethod
     def add_entry(workspace: Path, section: str, entry: str) -> None:
-        """Append a date-stamped entry to *section* in ``MEMORY.md``.
+        """Add a date-stamped entry to *section* in ``MEMORY.md``.
+
+        Uses :func:`consolidation.consolidate_entry` to detect and replace
+        an existing entry that the new one supersedes (e.g. a changed
+        preference).  If no conflict is found the entry is appended.
 
         Creates the file from the template if it does not exist yet.
         """
+        from rag_facile.memory.consolidation import consolidate_entry
+
         path = workspace / MEMORY_FILE
         if not path.exists():
             SemanticStore.create(workspace)
@@ -137,8 +143,26 @@ class SemanticStore:
             # Section missing — append at end
             content = content.rstrip() + f"\n\n## {section}\n{stamped}\n"
         else:
-            insert_pos = match.end()
-            content = content[:insert_pos] + stamped + "\n" + content[insert_pos:]
+            # Read existing entries, consolidate, and rebuild the section
+            existing = SemanticStore.read_section(workspace, section)
+            consolidated = consolidate_entry(existing, stamped)
+
+            # Find section boundaries
+            start = match.end()
+            rest = content[start:]
+            next_section = re.search(r"^## ", rest, re.MULTILINE)
+            end = start + next_section.start() if next_section else len(content)
+
+            # Preserve non-entry lines (blank lines, table headers, etc.)
+            section_text = content[start:end]
+            non_entries = [
+                line
+                for line in section_text.splitlines()
+                if not line.strip().startswith("- ")
+            ]
+
+            new_section = "\n".join(non_entries + consolidated) + "\n"
+            content = content[:start] + new_section + content[end:]
 
         # Update frontmatter date
         content = re.sub(

@@ -19,9 +19,17 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from rag_facile.memory._paths import LOGS_DIR, PROFILE_FILE
-from rag_facile.memory.stores import EpisodicLog, SemanticStore, SessionSnapshot
+from rag_facile.memory.stores import (
+    SEMANTIC_SECTIONS,
+    EpisodicLog,
+    SemanticStore,
+    SessionSnapshot,
+)
 
 logger = logging.getLogger(__name__)
+
+# Sections that the LLM extractor is allowed to write to.
+_ALLOWED_SECTIONS = frozenset(SEMANTIC_SECTIONS)
 
 
 # ── Checkpointing ─────────────────────────────────────────────────────────────
@@ -125,10 +133,17 @@ def finalize_session(
     # 2. Semantic store updates (if we have an LLM-backed extractor)
     if extract_facts_fn is not None:
         try:
-            facts = extract_facts_fn(transcript)
-            for fact in facts:
+            raw_facts = extract_facts_fn(transcript)
+            for item in raw_facts:
+                if isinstance(item, tuple) and len(item) == 2:
+                    section, fact = item
+                    # Only accept known sections; default to Key Facts
+                    if section not in _ALLOWED_SECTIONS:
+                        section = "Key Facts"
+                else:
+                    section, fact = "Key Facts", str(item)
                 if fact and fact.strip():
-                    SemanticStore.add_entry(workspace, "Key Facts", fact.strip())
+                    SemanticStore.add_entry(workspace, section, fact.strip())
         except (OSError, ValueError):
             logger.warning("Failed to extract facts — skipping semantic update")
 
@@ -293,6 +308,92 @@ def _extract_checkpoint_sections(content: str) -> list[str]:
         else:
             i += 1
     return sections
+
+
+# ── LLM fact extraction ───────────────────────────────────────────────────
+
+_EXTRACTION_PROMPT = """\
+You are a memory management assistant. From this conversation transcript, \
+extract key facts the assistant should remember for future sessions.
+
+Rules:
+- Only include genuinely NEW, important facts (preferences, decisions, identity, project state).
+- Be concise — one short sentence per fact.
+- Output 5 items maximum.
+- Prefix each line with exactly one category in brackets:
+  [User Identity], [Preferences], [Key Facts], or [Project State].
+
+Example output:
+[User Identity] Name is Luis, works at DINUM
+[Preferences] Prefers French language for UI
+[Key Facts] Preset changed from balanced to accurate
+[Project State] Using Albert API v0.4.1
+
+Transcript:
+{transcript}
+"""
+
+
+def extract_facts_with_llm(
+    transcript: str,
+    *,
+    api_key: str,
+    api_base: str,
+    model: str,
+) -> list[tuple[str, str]]:
+    """Call an OpenAI-compatible API to extract structured facts.
+
+    Returns a list of ``(section, fact)`` pairs suitable for
+    :func:`finalize_session`'s ``extract_facts_fn`` parameter.
+
+    Uses the ``openai`` library (transitive dependency of smolagents).
+    """
+    import openai
+
+    client = openai.OpenAI(api_key=api_key, base_url=api_base)
+
+    # Truncate very long transcripts to stay within context limits
+    max_chars = 6000
+    truncated = transcript[:max_chars]
+    if len(transcript) > max_chars:
+        truncated += "\n…(truncated)"
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": _EXTRACTION_PROMPT.format(transcript=truncated),
+                },
+            ],
+            temperature=0.1,
+            max_tokens=500,
+        )
+    except openai.APIError as exc:
+        logger.warning("LLM fact extraction failed: %s", exc)
+        return []
+
+    text = (response.choices[0].message.content or "").strip()
+    return _parse_extraction_response(text)
+
+
+def _parse_extraction_response(text: str) -> list[tuple[str, str]]:
+    """Parse the LLM response into ``(section, fact)`` pairs.
+
+    Expected format: ``[Section Name] fact text``
+    Lines not matching this pattern are skipped.
+    """
+    results: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        line = line.strip().lstrip("- ")
+        match = re.match(r"^\[([^\]]+)\]\s*(.+)$", line)
+        if match:
+            section = match.group(1).strip()
+            fact = match.group(2).strip()
+            if fact:
+                results.append((section, fact))
+    return results
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────

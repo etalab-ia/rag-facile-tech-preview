@@ -12,6 +12,41 @@ from rag_facile.memory.stores import (
 )
 
 
+# Pool of distinct topics that won't trigger consolidation (no 2+ shared words).
+_DISTINCT_TOPICS = [
+    "Albert provider configured",
+    "Chunking strategy updated",
+    "Database migration complete",
+    "Embedding model selected",
+    "Frontend framework chosen",
+    "Generation temperature adjusted",
+    "Hybrid retrieval enabled",
+    "Ingestion pipeline running",
+    "Jupyter notebooks archived",
+    "Kubernetes deployment ready",
+    "Language preference French",
+    "Monitoring dashboard active",
+    "Namespace refactoring done",
+    "OpenAPI specification published",
+    "Preset configuration balanced",
+    "Query expansion activated",
+    "Reranking threshold tuned",
+    "Storage backend migrated",
+    "Tracing system operational",
+    "Upload endpoint secured",
+    "Validation rules enforced",
+    "Workspace structure finalized",
+    "Xavier joined the team",
+    "YAML configuration loaded",
+    "Zero-shot evaluation passed",
+    "Authentication tokens refreshed",
+    "Billing module integrated",
+    "Caching layer optimized",
+    "Docker containers orchestrated",
+    "Encryption protocol upgraded",
+]
+
+
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 
@@ -118,6 +153,52 @@ class TestSemanticStoreAddEntry:
         content = (workspace_with_memory / ".agent" / "MEMORY.md").read_text()
         # Date should be today's date
         assert f"updated: {date.today().isoformat()}" in content
+
+
+class TestSemanticStoreConsolidation:
+    """Integration tests: add_entry deduplicates via consolidation."""
+
+    def test_replaces_conflicting_entry(self, workspace_with_memory):
+        SemanticStore.add_entry(
+            workspace_with_memory,
+            "Key Facts",
+            "Preset configuration uses balanced mode",
+        )
+        SemanticStore.add_entry(
+            workspace_with_memory,
+            "Key Facts",
+            "Preset configuration uses accurate mode",
+        )
+        entries = SemanticStore.read_section(workspace_with_memory, "Key Facts")
+        # Should have replaced, not appended — only one preset entry
+        preset_entries = [e for e in entries if "Preset configuration" in e]
+        assert len(preset_entries) == 1
+        assert "accurate" in preset_entries[0]
+
+    def test_appends_unrelated_entry(self, workspace_with_memory):
+        SemanticStore.add_entry(workspace_with_memory, "Key Facts", "Uses Albert API")
+        SemanticStore.add_entry(
+            workspace_with_memory, "Key Facts", "Chunking set to 1024"
+        )
+        entries = SemanticStore.read_section(workspace_with_memory, "Key Facts")
+        assert any("Albert" in e for e in entries)
+        assert any("Chunking" in e for e in entries)
+
+    def test_consolidation_preserves_other_entries(self, workspace_with_memory):
+        SemanticStore.add_entry(
+            workspace_with_memory, "Key Facts", "Language preference French"
+        )
+        SemanticStore.add_entry(
+            workspace_with_memory, "Key Facts", "Model configuration is large"
+        )
+        SemanticStore.add_entry(
+            workspace_with_memory, "Key Facts", "Model configuration is medium"
+        )
+        entries = SemanticStore.read_section(workspace_with_memory, "Key Facts")
+        assert any("French" in e for e in entries)
+        model_entries = [e for e in entries if "Model configuration" in e]
+        assert len(model_entries) == 1
+        assert "medium" in model_entries[0]
 
 
 class TestSemanticStoreUpdateFrontmatter:
@@ -317,15 +398,15 @@ class TestSemanticStoreCompact:
 
     def test_noop_when_under_limit(self, workspace):
         SemanticStore.create(workspace)
-        for i in range(5):
-            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+        for topic in _DISTINCT_TOPICS[:5]:
+            SemanticStore.add_entry(workspace, "Key Facts", topic)
         assert SemanticStore.compact(workspace) == 0
 
     def test_prunes_oldest_dated_entries(self, workspace):
         SemanticStore.create(workspace)
-        # Add 25 entries — each gets today's date
-        for i in range(25):
-            SemanticStore.add_entry(workspace, "Key Facts", f"Fact number {i}")
+        # Add 25 entries with distinct topics so consolidation doesn't merge them
+        for topic in _DISTINCT_TOPICS[:25]:
+            SemanticStore.add_entry(workspace, "Key Facts", topic)
 
         removed = SemanticStore.compact(workspace, max_entries_per_section=20)
         assert removed == 5
@@ -344,9 +425,9 @@ class TestSemanticStoreCompact:
         content = content.replace("## Key Facts\n", f"## Key Facts\n{insert}")
         path.write_text(content, encoding="utf-8")
 
-        # Add 20 dated entries on top
-        for i in range(20):
-            SemanticStore.add_entry(workspace, "Key Facts", f"Dated {i}")
+        # Add 20 dated entries with distinct topics
+        for topic in _DISTINCT_TOPICS[:20]:
+            SemanticStore.add_entry(workspace, "Key Facts", topic)
 
         removed = SemanticStore.compact(workspace, max_entries_per_section=20)
         assert removed == 3  # 23 total, 3 removed
@@ -358,8 +439,8 @@ class TestSemanticStoreCompact:
 
     def test_updates_frontmatter_date(self, workspace):
         SemanticStore.create(workspace)
-        for i in range(25):
-            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+        for topic in _DISTINCT_TOPICS[:25]:
+            SemanticStore.add_entry(workspace, "Key Facts", topic)
 
         SemanticStore.compact(workspace, max_entries_per_section=20)
 
@@ -369,11 +450,18 @@ class TestSemanticStoreCompact:
 
     def test_only_touches_overflowing_sections(self, workspace):
         SemanticStore.create(workspace)
-        # Add 5 entries to Preferences (under limit) and 25 to Key Facts
-        for i in range(5):
-            SemanticStore.add_entry(workspace, "Preferences", f"Pref {i}")
-        for i in range(25):
-            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+        # Add 5 entries to Preferences (distinct) and 25 to Key Facts (distinct)
+        pref_topics = [
+            "Prefers dark theme interface",
+            "Wants verbose logging output",
+            "Uses French locale always",
+            "Favors minimal dependencies",
+            "Likes alphabetical ordering",
+        ]
+        for topic in pref_topics:
+            SemanticStore.add_entry(workspace, "Preferences", topic)
+        for topic in _DISTINCT_TOPICS[:25]:
+            SemanticStore.add_entry(workspace, "Key Facts", topic)
 
         removed = SemanticStore.compact(workspace, max_entries_per_section=20)
         assert removed == 5  # only Key Facts pruned

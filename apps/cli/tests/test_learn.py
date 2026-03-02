@@ -137,6 +137,55 @@ class TestNewCommand:
         assert mock_finalize.call_count == 2
 
 
+# ── _build_extract_fn ─────────────────────────────────────────────────────────
+
+
+class TestBuildExtractFn:
+    """Unit tests for the fact-extraction closure builder."""
+
+    def test_returns_none_without_api_key(self, monkeypatch):
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        monkeypatch.delenv("ALBERT_API_KEY", raising=False)
+        from cli.commands.learn.agent import _build_extract_fn
+
+        assert _build_extract_fn() is None
+
+    def test_returns_callable_with_api_key(self, monkeypatch):
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+        from cli.commands.learn.agent import _build_extract_fn
+
+        fn = _build_extract_fn()
+        assert callable(fn)
+
+    def test_closure_calls_extract_facts_with_llm(self, monkeypatch):
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("OPENAI_BASE_URL", "http://localhost/v1")
+        monkeypatch.setenv("RAG_ASSISTANT_MODEL", "test-model")
+        from unittest.mock import MagicMock, patch as _patch
+
+        from cli.commands.learn.agent import _build_extract_fn
+
+        fn = _build_extract_fn()
+
+        # Mock the OpenAI client that extract_facts_with_llm creates internally
+        mock_message = MagicMock()
+        mock_message.content = "[Key Facts] test fact"
+        mock_choice = MagicMock()
+        mock_choice.message = mock_message
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+
+        with _patch("openai.OpenAI", return_value=mock_client):
+            result = fn("transcript text")
+
+        assert result == [("Key Facts", "test fact")]
+        # Verify the client was configured with our env vars
+        mock_client.chat.completions.create.assert_called_once()
+
+
 # ── _trim_agent_memory ────────────────────────────────────────────────────────
 
 

@@ -349,11 +349,35 @@ def _finalize(
     try:
         from rag_facile.memory.lifecycle import finalize_session
 
-        finalize_session(workspace, session_turns, session_start)
+        # Build an LLM-backed fact extractor if API credentials are available.
+        extract_fn = _build_extract_fn()
+
+        finalize_session(
+            workspace, session_turns, session_start, extract_facts_fn=extract_fn
+        )
     except Exception as exc:  # noqa: BLE001 — session finalization must never crash the CLI
         import logging
 
         logging.warning("Session finalization failed: %s", exc)
+
+
+def _build_extract_fn() -> object | None:
+    """Return an ``extract_facts_fn`` closure, or None if credentials are missing."""
+    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("ALBERT_API_KEY", "")
+    api_base = os.environ.get("OPENAI_BASE_URL", "https://albert.api.etalab.gouv.fr/v1")
+    model = os.environ.get("RAG_ASSISTANT_MODEL", "openweight-large")
+
+    if not api_key:
+        return None
+
+    from rag_facile.memory.lifecycle import extract_facts_with_llm
+
+    def _extract(transcript: str) -> list[tuple[str, str]]:
+        return extract_facts_with_llm(
+            transcript, api_key=api_key, api_base=api_base, model=model
+        )
+
+    return _extract
 
 
 def start_chat(debug: bool = False) -> None:
