@@ -150,6 +150,31 @@ try {
     Pop-Location
 }
 
+# -- 5.5. Configure API key ----------------------------------------------------
+
+$EnvWritten = $false
+$EnvPath = "$WorkspaceDir\.env"
+
+if (Test-Path $EnvPath) {
+    Write-Host "OK Fichier .env deja present - cle API conservee" -ForegroundColor Green
+} elseif (-not [Console]::IsInputRedirected) {
+    Write-Host ""
+    Write-Host "==> Configuration de la cle API Albert" -ForegroundColor Yellow
+    Write-Host "   Obtenez votre cle sur : https://albert.api.etalab.gouv.fr/"
+    Write-Host ""
+    $SecureKey = Read-Host -Prompt "   Entrez votre cle API (ou appuyez sur Entree pour ignorer)" -AsSecureString
+    $AlbertKey = [System.Net.NetworkCredential]::new('', $SecureKey).Password
+    if (-not [string]::IsNullOrEmpty($AlbertKey)) {
+        (Get-Content "$WorkspaceDir\.env.example") `
+            -replace 'OPENAI_API_KEY=.*', "OPENAI_API_KEY=$AlbertKey" |
+            Set-Content $EnvPath -Encoding UTF8
+        Write-Host "OK Fichier .env cree avec votre cle API" -ForegroundColor Green
+        $EnvWritten = $true
+    } else {
+        Write-Host "   (ignore - vous pourrez configurer la cle plus tard)"
+    }
+}
+
 # -- 6. Done -------------------------------------------------------------------
 
 Write-Host ""
@@ -157,18 +182,27 @@ Write-Host "Done: RAG Facile is ready!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  1. Add your Albert API key:"
-Write-Host "       cd $WorkspaceDir"
-Write-Host "       copy .env.template .env"
-Write-Host "       # Edit .env and set OPENAI_API_KEY=<your-key>"
-Write-Host "       # Get a key at: https://albert.sites.beta.gouv.fr/"
-Write-Host ""
-Write-Host "  2. Start your app:"
-Write-Host "       cd $WorkspaceDir; just run"
-Write-Host ""
-Write-Host "  3. Chat with the RAG assistant:"
-Write-Host "       cd $WorkspaceDir; just learn"
-Write-Host ""
+if ($EnvWritten) {
+    Write-Host "  1. Start your app:"
+    Write-Host "       cd $WorkspaceDir; just run"
+    Write-Host ""
+    Write-Host "  2. Chat with the RAG assistant:"
+    Write-Host "       cd $WorkspaceDir; just learn"
+    Write-Host ""
+} else {
+    Write-Host "  1. Add your Albert API key:"
+    Write-Host "       cd $WorkspaceDir"
+    Write-Host "       copy .env.example .env"
+    Write-Host "       # Edit .env and set OPENAI_API_KEY=<your-key>"
+    Write-Host "       # Get a key at: https://albert.api.etalab.gouv.fr/"
+    Write-Host ""
+    Write-Host "  2. Start your app:"
+    Write-Host "       cd $WorkspaceDir; just run"
+    Write-Host ""
+    Write-Host "  3. Chat with the RAG assistant:"
+    Write-Host "       cd $WorkspaceDir; just learn"
+    Write-Host ""
+}
 
 # Add LocalBin to permanent User PATH if not already there
 $UserPath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
