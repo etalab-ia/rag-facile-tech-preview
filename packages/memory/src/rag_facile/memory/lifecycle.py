@@ -249,6 +249,32 @@ _FACT_PATTERNS: list[re.Pattern[str]] = [
 ]
 
 
+def _match_lines(
+    turns: list[dict[str, str]],
+    *,
+    role: str,
+    patterns: list[re.Pattern[str]],
+) -> list[str]:
+    """Scan turns of a given *role* for the first line matching any pattern.
+
+    Returns at most one match per turn (the first matching line, truncated
+    to 150 chars).
+    """
+    matched: list[str] = []
+    for turn in turns:
+        if turn.get("role") != role:
+            continue
+        content = turn.get("content", "")
+        for pattern in patterns:
+            if pattern.search(content):
+                for line in content.splitlines():
+                    if pattern.search(line):
+                        matched.append(line.strip()[:150])
+                        break
+                break  # one match per turn is enough
+    return matched
+
+
 def _extract_checkpoint_summary(
     turns: list[dict[str, str]],
 ) -> tuple[str, str, str]:
@@ -265,35 +291,8 @@ def _extract_checkpoint_summary(
         (assistant_msgs[-1][:200] + "…") if assistant_msgs else "Session checkpoint"
     )
 
-    # Decisions: scan assistant turns for config-change-like phrases
-    decision_lines: list[str] = []
-    for turn in turns:
-        if turn.get("role") != "assistant":
-            continue
-        content = turn.get("content", "")
-        for pattern in _DECISION_PATTERNS:
-            if pattern.search(content):
-                # Take the first line that matches for conciseness
-                for line in content.splitlines():
-                    if pattern.search(line):
-                        decision_lines.append(line.strip()[:150])
-                        break
-                break  # one match per turn is enough
-
-    # Facts: scan user turns for preference / identity statements
-    fact_lines: list[str] = []
-    for turn in turns:
-        if turn.get("role") != "user":
-            continue
-        content = turn.get("content", "")
-        for pattern in _FACT_PATTERNS:
-            if pattern.search(content):
-                # Take the matching line
-                for line in content.splitlines():
-                    if pattern.search(line):
-                        fact_lines.append(line.strip()[:150])
-                        break
-                break
+    decision_lines = _match_lines(turns, role="assistant", patterns=_DECISION_PATTERNS)
+    fact_lines = _match_lines(turns, role="user", patterns=_FACT_PATTERNS)
 
     decisions = "; ".join(decision_lines[:3])  # cap at 3 decisions
     facts = "; ".join(fact_lines[:3])  # cap at 3 facts

@@ -368,4 +368,4 @@ class TestExtractCheckpointSummary:
 
         content = EpisodicLog.today_path(workspace).read_text()
         assert "Checkpoint" in content
-        assert "Decisions" in content or "changé" in content
+        assert "**Decisions**" in content and "**New facts**" in content
