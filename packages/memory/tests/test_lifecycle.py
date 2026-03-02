@@ -7,9 +7,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from rag_facile.memory.lifecycle import (
+    _extract_checkpoint_sections,
     _extract_checkpoint_summary,
     _extract_topics,
     _format_transcript,
+    compact_episodic_logs,
     finalize_session,
     git_commit_session,
     increment_session_count,
@@ -369,3 +371,106 @@ class TestExtractCheckpointSummary:
         content = EpisodicLog.today_path(workspace).read_text()
         assert "Checkpoint" in content
         assert "**Decisions**" in content and "**New facts**" in content
+
+
+# ── _extract_checkpoint_sections ──────────────────────────────────────────────
+
+
+class TestExtractCheckpointSections:
+    def test_extracts_checkpoint_block(self):
+        content = (
+            "# 2026-03-01\n\n"
+            "## 10:00 — Vous\nBonjour\n\n"
+            "## 10:01 — Assistant\nBienvenue !\n\n"
+            "## 10:05 — Checkpoint\n**Summary**: Discussed setup\n"
+            "**Decisions**: Changed top_k\n\n"
+            "## 10:10 — Vous\nMerci\n"
+        )
+        sections = _extract_checkpoint_sections(content)
+        assert len(sections) == 1
+        assert "Discussed setup" in sections[0]
+        assert "Changed top_k" in sections[0]
+
+    def test_returns_empty_for_no_checkpoints(self):
+        content = "# 2026-03-01\n\n## 10:00 — Vous\nHello\n"
+        assert _extract_checkpoint_sections(content) == []
+
+    def test_extracts_multiple_checkpoints(self):
+        content = (
+            "## 10:05 — Checkpoint\n**Summary**: First\n\n"
+            "## 10:10 — Vous\nMiddle turn\n\n"
+            "## 10:15 — Checkpoint\n**Summary**: Second\n"
+        )
+        sections = _extract_checkpoint_sections(content)
+        assert len(sections) == 2
+        assert "First" in sections[0]
+        assert "Second" in sections[1]
+
+
+# ── compact_episodic_logs ─────────────────────────────────────────────────────
+
+
+class TestCompactEpisodicLogs:
+    def test_noop_when_no_logs(self, workspace):
+        assert compact_episodic_logs(workspace) == 0
+
+    def test_leaves_recent_logs_untouched(self, workspace):
+        from rag_facile.memory.stores import EpisodicLog
+
+        EpisodicLog.append_turn(workspace, "user", "Recent message")
+        original = EpisodicLog.today_path(workspace).read_text()
+        assert compact_episodic_logs(workspace) == 0
+        assert EpisodicLog.today_path(workspace).read_text() == original
+
+    def test_deletes_old_log_without_checkpoints(self, workspace):
+        logs_dir = workspace / ".agent" / "logs"
+        logs_dir.mkdir(parents=True)
+        old_file = logs_dir / "2020-01-01.md"
+        old_file.write_text(
+            "# 2020-01-01\n\n## 10:00 — Vous\nOld message\n\n"
+            "## 10:01 — Assistant\nOld reply\n",
+            encoding="utf-8",
+        )
+        assert compact_episodic_logs(workspace) == 1
+        assert not old_file.exists()
+
+    def test_compacts_old_log_with_checkpoints(self, workspace):
+        logs_dir = workspace / ".agent" / "logs"
+        logs_dir.mkdir(parents=True)
+        old_file = logs_dir / "2020-01-01.md"
+        old_file.write_text(
+            "# 2020-01-01\n\n"
+            "## 10:00 — Vous\nBonjour\n\n"
+            "## 10:01 — Assistant\nBienvenue\n\n"
+            "## 10:05 — Checkpoint\n**Summary**: Discussed setup\n"
+            "**Decisions**: Changed top_k\n\n"
+            "## 10:10 — Vous\nMerci\n",
+            encoding="utf-8",
+        )
+        assert compact_episodic_logs(workspace) == 1
+        assert old_file.exists()
+        content = old_file.read_text()
+        assert "compacted" in content
+        assert "Checkpoint" in content
+        assert "Discussed setup" in content
+        # Raw turns should be gone
+        assert "Bonjour" not in content
+        assert "Merci" not in content
+
+    def test_respects_keep_days(self, workspace):
+        from datetime import date, timedelta
+
+        logs_dir = workspace / ".agent" / "logs"
+        logs_dir.mkdir(parents=True)
+        # File from 3 days ago
+        old_date = date.today() - timedelta(days=3)
+        old_file = logs_dir / f"{old_date.isoformat()}.md"
+        old_file.write_text("# Old\n## 10:00 — Vous\nTest\n", encoding="utf-8")
+        # File from 1 day ago (within keep_days=2)
+        recent_date = date.today() - timedelta(days=1)
+        recent_file = logs_dir / f"{recent_date.isoformat()}.md"
+        recent_file.write_text("# Recent\n## 10:00 — Vous\nKeep\n", encoding="utf-8")
+
+        assert compact_episodic_logs(workspace, keep_days=2) == 1
+        assert not old_file.exists()  # deleted (no checkpoints)
+        assert recent_file.exists()  # within keep_days

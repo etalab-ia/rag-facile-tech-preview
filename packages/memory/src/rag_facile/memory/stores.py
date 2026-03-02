@@ -168,6 +168,82 @@ class SemanticStore:
                 content = content.replace("---\n", f"---\n{key}: {value}\n", 1)
         path.write_text(content, encoding="utf-8")
 
+    @staticmethod
+    def compact(workspace: Path, *, max_entries_per_section: int = 20) -> int:
+        """Prune each section in ``MEMORY.md`` to at most *max_entries_per_section*.
+
+        Entries are lines starting with ``- ``.  Date-stamped entries
+        (``- [YYYY-MM-DD] ...``) are kept newest-first; undated entries are
+        kept in their original order and count toward the limit.
+
+        Returns the total number of entries removed across all sections.
+        """
+        path = workspace / MEMORY_FILE
+        if not path.exists():
+            return 0
+
+        content = path.read_text(encoding="utf-8")
+        total_removed = 0
+
+        for section in SEMANTIC_SECTIONS:
+            header_pattern = rf"^(## {re.escape(section)}\s*\n)"
+            match = re.search(header_pattern, content, re.MULTILINE)
+            if not match:
+                continue
+
+            # Find section boundaries
+            start = match.end()
+            rest = content[start:]
+            next_section = re.search(r"^## ", rest, re.MULTILINE)
+            end = start + next_section.start() if next_section else len(content)
+            section_text = content[start:end]
+
+            # Split into entry lines and non-entry lines
+            entries: list[str] = []
+            non_entries: list[str] = []
+            for line in section_text.splitlines():
+                if line.strip().startswith("- "):
+                    entries.append(line)
+                else:
+                    non_entries.append(line)
+
+            if len(entries) <= max_entries_per_section:
+                continue
+
+            # Sort dated entries newest-first, keep undated in original order
+            dated = [
+                e for e in entries if re.match(r"^- \[\d{4}-\d{2}-\d{2}\]", e.strip())
+            ]
+            undated = [
+                e
+                for e in entries
+                if not re.match(r"^- \[\d{4}-\d{2}-\d{2}\]", e.strip())
+            ]
+
+            # Keep newest dated entries (they sort lexically by date)
+            dated.sort(reverse=True)
+            kept = undated + dated[: max(0, max_entries_per_section - len(undated))]
+            removed = len(entries) - len(kept)
+            total_removed += removed
+
+            # Rebuild section: non-entries (blank lines, table headers) + kept entries
+            new_section = "\n".join(non_entries + kept) + "\n"
+            content = content[:start] + new_section + content[end:]
+
+        if total_removed > 0:
+            # Update frontmatter date
+            today = date.today().isoformat()
+            content = re.sub(
+                r"^(updated:\s*).+$",
+                rf"\g<1>{today}",
+                content,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            path.write_text(content, encoding="utf-8")
+
+        return total_removed
+
 
 # ── Episodic Log ──────────────────────────────────────────────────────────────
 

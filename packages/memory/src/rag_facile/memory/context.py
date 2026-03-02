@@ -18,8 +18,21 @@ from rag_facile.memory._paths import PROFILE_FILE
 from rag_facile.memory.stores import EpisodicLog, SemanticStore
 
 
-def bootstrap_context(workspace: Path, *, log_days: int = 2) -> str:
+# Default character budget for the injected context (~2000 tokens).
+MAX_CONTEXT_CHARS = 8000
+
+# Separator used between sections.
+_SEP = "\n\n---\n\n"
+
+
+def bootstrap_context(
+    workspace: Path, *, log_days: int = 2, max_chars: int = MAX_CONTEXT_CHARS
+) -> str:
     """Return the combined memory context for the start of a session.
+
+    Sections are added in priority order (semantic store > profile >
+    episodic logs).  If the total exceeds *max_chars*, lower-priority
+    sections are truncated or dropped to fit.
 
     Parameters
     ----------
@@ -27,6 +40,8 @@ def bootstrap_context(workspace: Path, *, log_days: int = 2) -> str:
         Root directory containing ``.agent/``.
     log_days:
         Number of past days of episodic logs to include (default 2).
+    max_chars:
+        Maximum total characters for the combined context.
 
     Returns
     -------
@@ -34,25 +49,38 @@ def bootstrap_context(workspace: Path, *, log_days: int = 2) -> str:
         Formatted context string (may be empty if no memory files exist).
     """
     sections: list[str] = []
+    remaining = max_chars
 
-    # 1. Semantic store (curated facts, capped at 200 lines)
+    # 1. Semantic store (highest priority — curated facts, capped at 200 lines)
     semantic = SemanticStore.load(workspace)
     if semantic:
-        sections.append(f"[Memory — Semantic Store]\n{semantic}")
+        section = f"[Memory — Semantic Store]\n{semantic}"
+        sections.append(section)
+        remaining -= len(section) + len(_SEP)
 
-    # 2. Profile
+    # 2. Profile (small, almost always fits)
     profile_path = workspace / PROFILE_FILE
     if profile_path.exists():
         profile = profile_path.read_text(encoding="utf-8").strip()
         if profile:
-            sections.append(f"[Memory — Profile]\n{profile}")
+            section = f"[Memory — Profile]\n{profile}"
+            if len(section) <= remaining:
+                sections.append(section)
+                remaining -= len(section) + len(_SEP)
 
-    # 3. Recent episodic logs
-    logs = EpisodicLog.read_recent(workspace, days=log_days)
-    if logs:
-        sections.append(f"[Memory — Recent Conversations]\n{logs}")
+    # 3. Recent episodic logs (lowest priority — truncated to fit budget)
+    if remaining > 100:  # don't bother if barely any room
+        logs = EpisodicLog.read_recent(workspace, days=log_days)
+        if logs:
+            section = f"[Memory — Recent Conversations]\n{logs}"
+            if len(section) > remaining:
+                # Truncate logs to fit, keeping the beginning (newest entries)
+                header = "[Memory — Recent Conversations]\n"
+                available = remaining - len(header) - 20  # leave room for "…"
+                section = header + logs[:available] + "\n…(truncated)"
+            sections.append(section)
 
     if not sections:
         return ""
 
-    return "\n\n---\n\n".join(sections)
+    return _SEP.join(sections)

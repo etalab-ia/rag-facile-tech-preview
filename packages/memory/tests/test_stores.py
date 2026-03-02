@@ -306,3 +306,77 @@ class TestSessionSnapshotListRecent:
                 start_time=datetime(2026, 3, 1, 21, i),
             )
         assert len(SessionSnapshot.list_recent(workspace, n=3)) == 3
+
+
+# ── SemanticStore.compact ─────────────────────────────────────────────────────
+
+
+class TestSemanticStoreCompact:
+    def test_noop_when_no_file(self, workspace):
+        assert SemanticStore.compact(workspace) == 0
+
+    def test_noop_when_under_limit(self, workspace):
+        SemanticStore.create(workspace)
+        for i in range(5):
+            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+        assert SemanticStore.compact(workspace) == 0
+
+    def test_prunes_oldest_dated_entries(self, workspace):
+        SemanticStore.create(workspace)
+        # Add 25 entries — each gets today's date
+        for i in range(25):
+            SemanticStore.add_entry(workspace, "Key Facts", f"Fact number {i}")
+
+        removed = SemanticStore.compact(workspace, max_entries_per_section=20)
+        assert removed == 5
+
+        # Verify remaining entries
+        entries = SemanticStore.read_section(workspace, "Key Facts")
+        assert len(entries) == 20
+
+    def test_preserves_undated_entries(self, workspace):
+        SemanticStore.create(workspace)
+        # Write undated entries directly
+        path = workspace / ".agent" / "MEMORY.md"
+        content = path.read_text(encoding="utf-8")
+        # Insert 3 undated lines after ## Key Facts
+        insert = "- Undated fact A\n- Undated fact B\n- Undated fact C\n"
+        content = content.replace("## Key Facts\n", f"## Key Facts\n{insert}")
+        path.write_text(content, encoding="utf-8")
+
+        # Add 20 dated entries on top
+        for i in range(20):
+            SemanticStore.add_entry(workspace, "Key Facts", f"Dated {i}")
+
+        removed = SemanticStore.compact(workspace, max_entries_per_section=20)
+        assert removed == 3  # 23 total, 3 removed
+
+        entries = SemanticStore.read_section(workspace, "Key Facts")
+        assert len(entries) == 20
+        # Undated entries should be preserved (they're kept first)
+        assert any("Undated fact A" in e for e in entries)
+
+    def test_updates_frontmatter_date(self, workspace):
+        SemanticStore.create(workspace)
+        for i in range(25):
+            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+
+        SemanticStore.compact(workspace, max_entries_per_section=20)
+
+        path = workspace / ".agent" / "MEMORY.md"
+        content = path.read_text(encoding="utf-8")
+        assert f"updated: {date.today().isoformat()}" in content
+
+    def test_only_touches_overflowing_sections(self, workspace):
+        SemanticStore.create(workspace)
+        # Add 5 entries to Preferences (under limit) and 25 to Key Facts
+        for i in range(5):
+            SemanticStore.add_entry(workspace, "Preferences", f"Pref {i}")
+        for i in range(25):
+            SemanticStore.add_entry(workspace, "Key Facts", f"Fact {i}")
+
+        removed = SemanticStore.compact(workspace, max_entries_per_section=20)
+        assert removed == 5  # only Key Facts pruned
+
+        prefs = SemanticStore.read_section(workspace, "Preferences")
+        assert len(prefs) == 5  # Preferences untouched
