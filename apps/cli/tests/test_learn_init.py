@@ -64,6 +64,10 @@ def _exp_intermediate():
     return [type("Q", (), {"ask": lambda self: "intermediate"})()]
 
 
+def _exp_expert():
+    return [type("Q", (), {"ask": lambda self: "expert"})()]
+
+
 class TestRunInitWizard:
     def test_creates_profile_file(self, tmp_path):
         """Wizard creates profile.md in the workspace."""
@@ -106,7 +110,7 @@ class TestRunInitWizard:
         with (
             patch(
                 "cli.commands.learn.init.questionary.select",
-                side_effect=[type("Q", (), {"ask": lambda self: "expert"})()],
+                side_effect=_exp_expert(),
             ),
             patch("cli.commands.learn.init._git_add"),
         ):
