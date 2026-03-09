@@ -37,9 +37,9 @@ _STYLE = questionary.Style(
 )
 
 _EXPERIENCE_CHOICES = [
-    questionary.Choice("New to RAG — explain everything step by step", value="new"),
-    questionary.Choice("Some experience — skip the basics", value="intermediate"),
-    questionary.Choice("Expert — minimal guidance", value="expert"),
+    questionary.Choice("Nouveau — expliquer pas à pas", value="new"),
+    questionary.Choice("Quelques notions — passer les bases", value="intermediate"),
+    questionary.Choice("Expert — guidance minimale", value="expert"),
 ]
 
 
@@ -138,9 +138,9 @@ def run_init_wizard(workspace: Path) -> str:
     """
     console.print(
         Panel(
-            "[bold]Welcome to rag-facile![/bold]\n"
-            "[dim]Let me set up your AI assistant. This takes about 30 seconds "
-            "and only happens once.[/dim]",
+            "[bold]Bienvenue dans rag-facile\u00a0![/bold]\n"
+            "[dim]Configurons votre assistant IA. Cela prend environ 30 secondes "
+            "et ne se fait qu'une seule fois.[/dim]",
             border_style="magenta",
             padding=(0, 1),
         )
@@ -155,7 +155,7 @@ def run_init_wizard(workspace: Path) -> str:
     experience = "new"
     try:
         result = questionary.select(
-            "Your experience with RAG?",
+            "Votre expérience avec RAG\u00a0?",
             choices=_EXPERIENCE_CHOICES,
             style=_STYLE,
         ).ask()
@@ -179,7 +179,7 @@ def run_init_wizard(workspace: Path) -> str:
 
     # ── Confirmation ──────────────────────────────────────────────────────────
     console.print()
-    console.print("[green]✓[/green] Assistant ready")
+    console.print("[green]✓[/green] Assistant prêt")
     console.print(f"[dim]  Profile: {workspace / _PROFILE_FILE}[/dim]")
     console.print()
 
