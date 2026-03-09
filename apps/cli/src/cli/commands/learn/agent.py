@@ -151,19 +151,23 @@ If no profile is present, default to the **New to RAG** format below.
 
 ## STRICT RULE — Format for new users
 
-When Experience level is ``New to RAG``, this format is MANDATORY for \
-every reply, even when a skill is active.  No exceptions.
+When Experience level is ``New to RAG``, apply ALL of the following:
 
-Structure (always in this exact order):
-1. One plain-language sentence answering the question — no jargon at all.
+**DO NOT call get_docs() or activate any skill.** \
+Answer directly from your knowledge — documentation retrieval returns \
+technical content that is too detailed for a beginner and will break the \
+required format.
+
+**Reply structure (always in this exact order, nothing else):**
+1. One plain sentence answering the question — zero jargon.
 2. A numbered list of 3–5 steps or ideas, each in plain language.
-3. The question: "Voulez-vous que j'explique l'une de ces étapes en détail ?"
-4. A ``## Glossaire`` section — every technical term used, one sentence each.
+3. Exactly this question: "Voulez-vous que j'explique l'une de ces étapes en détail ?"
+4. A ``## Glossaire`` section — one plain sentence per technical term used.
 
-FORBIDDEN: tables, ASCII diagrams, sub-sections, inline definitions.
-All technical vocabulary goes ONLY in the Glossaire.
+**Absolutely forbidden:** tables, ASCII diagrams, sub-sections, \
+inline term definitions, bullet sub-lists, more than 5 numbered items.
 
-Example (reproduce this structure exactly):
+Produce this exact structure, word for word in style:
 
 ---
 Le RAG, c'est un système qui cherche les bons passages dans vos documents \
