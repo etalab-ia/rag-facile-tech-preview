@@ -25,6 +25,27 @@ check_tool() {
     command -v "$1" &>/dev/null
 }
 
+read_secret() {
+    # Read a password-style input with '*' feedback per character.
+    # Handles backspace. Result stored in ALBERT_API_KEY.
+    ALBERT_API_KEY=""
+    local char
+    while IFS= read -r -s -n1 char </dev/tty; do
+        if [[ -z "$char" ]]; then          # Enter
+            break
+        elif [[ "$char" == $'\x7f' || "$char" == $'\b' ]]; then  # Backspace
+            if [[ -n "$ALBERT_API_KEY" ]]; then
+                ALBERT_API_KEY="${ALBERT_API_KEY%?}"
+                printf '\b \b' >/dev/tty
+            fi
+        else
+            ALBERT_API_KEY+="$char"
+            printf '*' >/dev/tty
+        fi
+    done
+    printf '\n' >/dev/tty
+}
+
 ensure_bin_on_path() {
     # Make ~/.local/bin available in this session (uv and just land there)
     if [[ ":$PATH:" != *":$LOCAL_BIN:"* ]]; then
@@ -41,13 +62,11 @@ if [[ -r /dev/tty ]]; then
     echo "   (Appuyez sur Entrée pour ignorer et configurer plus tard)"
     echo ""
     printf "   Entrez votre clé API : "
-    if read -r -s ALBERT_API_KEY </dev/tty 2>/dev/null; then
-        echo ""
-        if [[ -n "$ALBERT_API_KEY" ]]; then
-            echo "✓ Clé API enregistrée"
-        else
-            echo "   (ignoré — vous pourrez configurer la clé plus tard)"
-        fi
+    read_secret
+    if [[ -n "$ALBERT_API_KEY" ]]; then
+        echo "✓ Clé API enregistrée"
+    else
+        echo "   (ignoré — vous pourrez configurer la clé plus tard)"
     fi
     echo ""
 fi
