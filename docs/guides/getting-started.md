@@ -42,7 +42,7 @@ rag-facile setup mon-projet
 cd mon-projet && just run
 ```
 
-Your app opens at **http://localhost:8000** — upload documents and ask questions.
+Your app opens at **http://localhost:8000** — ask questions about your ingested documents.
 
 ## Available commands
 

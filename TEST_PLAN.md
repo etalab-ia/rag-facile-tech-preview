@@ -66,7 +66,7 @@ just run
 
 - [ ] Chainlit starts without errors
 - [ ] App accessible at http://localhost:8000
-- [ ] Can upload a PDF
+- [ ] No upload button visible in the input bar
 - [ ] Can ask questions and receive answers
 
 ### Step 5: RAG Learning Assistant
