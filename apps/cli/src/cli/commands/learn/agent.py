@@ -147,22 +147,12 @@ Step 3 — Only if the user replies with a clear yes ("oui", "yes", "ok", "vas-y
 
 If the user's original message already sounds like a confirmation ("mets top_k à 15"), \
 treat it as a REQUEST, not a confirmation — still ask the explicit question in Step 1.
+
+## Language
+
+Respond in **French** by default. If the user writes in a different language, \
+adapt and respond in their language for the rest of the conversation.
 """
-
-# ── Per-language response instruction ────────────────────────────────────────
-# Appended to _SYSTEM_PROMPT so the LLM actually responds in the chosen language.
-# The UI strings above control shell output; this controls agent output.
-
-_LANGUAGE_INSTRUCTIONS: dict[str, str] = {
-    "fr": (
-        "\n\n## Langue de réponse\n\n"
-        "L'utilisateur a choisi **le français** comme langue préférée. "
-        "Réponds **toujours en français**, même si l'utilisateur écrit en anglais. "
-        "N'utilise l'anglais que pour les termes techniques incontournables "
-        "(ex\u00a0: RAG, top_k, chunk_size, embeddings)."
-    ),
-    "en": "",  # English is the default — no extra instruction needed
-}
 
 # ── Per-language UI strings ───────────────────────────────────────────────────
 
@@ -480,7 +470,7 @@ def start_chat(debug: bool = False) -> None:
     agent = ToolCallingAgent(
         tools=tools,
         model=model,
-        instructions=_SYSTEM_PROMPT + _LANGUAGE_INSTRUCTIONS.get(language, ""),
+        instructions=_SYSTEM_PROMPT,
         verbosity_level=LogLevel.INFO if debug else LogLevel.OFF,
         max_steps=5,
         step_callbacks=[_trim_agent_memory],
