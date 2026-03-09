@@ -68,11 +68,25 @@ fi
 if outil_disponible just; then
     echo "✓ just déjà installé"
 else
-    echo "==> Installation de just..."
-    uv tool install rust-just
+    UV_LOG=$(mktemp)
+    printf "==> Installation de just "
+    spinner_start
+
+    uv tool install rust-just >"$UV_LOG" 2>&1 \
+        || { UV_FAILED=true; }
+
+    spinner_stop
+
+    if [[ "${UV_FAILED:-}" == "true" ]]; then
+        cat "$UV_LOG"
+        rm -f "$UV_LOG"
+        echo "ERREUR : l'installation de just a échoué"
+        exit 1
+    fi
+    rm -f "$UV_LOG"
     ajouter_au_path
     if ! outil_disponible just; then
-        echo "ERREUR : l'installation de just a échoué"
+        echo "ERREUR : la commande just n'est pas disponible après installation"
         exit 1
     fi
     echo "✓ just installé"
