@@ -57,6 +57,59 @@ class TestGetTracer:
         tracer = get_tracer(mock_config)
         assert isinstance(tracer, NoopProvider)
 
+    def test_returns_postgres_provider(self, monkeypatch):
+        """When tracing.provider=postgres with connection_string, returns PostgresProvider."""
+        from unittest.mock import patch
+
+        mock_config = MagicMock()
+        mock_config.tracing.enabled = True
+        mock_config.tracing.provider = "postgres"
+        mock_config.tracing.connection_string = "postgresql://user:pass@host:5432/db"
+
+        # Mock psycopg.connect so we don't need a real Postgres
+        with patch("psycopg.connect") as mock_connect:
+            mock_conn = MagicMock()
+            mock_connect.return_value.__enter__ = MagicMock(return_value=mock_conn)
+            mock_connect.return_value.__exit__ = MagicMock(return_value=False)
+
+            from rag_facile.tracing.postgres import PostgresProvider
+
+            tracer = get_tracer(mock_config)
+            assert isinstance(tracer, PostgresProvider)
+
+    def test_postgres_falls_back_to_env_var(self, monkeypatch):
+        """When connection_string is empty, reads DATABASE_URL env var."""
+        from unittest.mock import patch
+
+        mock_config = MagicMock()
+        mock_config.tracing.enabled = True
+        mock_config.tracing.provider = "postgres"
+        mock_config.tracing.connection_string = ""
+
+        monkeypatch.setenv("DATABASE_URL", "postgresql://env:pass@host:5432/db")
+
+        with patch("psycopg.connect") as mock_connect:
+            mock_conn = MagicMock()
+            mock_connect.return_value.__enter__ = MagicMock(return_value=mock_conn)
+            mock_connect.return_value.__exit__ = MagicMock(return_value=False)
+
+            from rag_facile.tracing.postgres import PostgresProvider
+
+            tracer = get_tracer(mock_config)
+            assert isinstance(tracer, PostgresProvider)
+
+    def test_postgres_raises_without_connection_string(self, monkeypatch):
+        """Postgres provider without connection string should raise ValueError."""
+        mock_config = MagicMock()
+        mock_config.tracing.enabled = True
+        mock_config.tracing.provider = "postgres"
+        mock_config.tracing.connection_string = ""
+
+        monkeypatch.delenv("DATABASE_URL", raising=False)
+
+        with pytest.raises(ValueError, match="connection string"):
+            get_tracer(mock_config)
+
     def test_raises_for_unknown_provider(self):
         """Unknown provider should raise ValueError."""
         mock_config = MagicMock()

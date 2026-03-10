@@ -1,0 +1,43 @@
+# Supabase local development configuration for rag-facile.
+#
+# Start the local stack:  supabase start
+# Apply migrations:       supabase db push --db-url "$DATABASE_URL"
+# Create a migration:     supabase migration new <name>
+#
+# For self-hosted production, point `supabase db push --db-url` at
+# your remote Postgres instance — no Supabase Cloud required.
+
+project_id = "rag-facile"
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = true
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+
+[auth]
+enabled = true
+site_url = "http://localhost:8000"
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[studio]
+enabled = true
+port = 54323

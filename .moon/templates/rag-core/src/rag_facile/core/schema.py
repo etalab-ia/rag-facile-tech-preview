@@ -531,13 +531,18 @@ class TracingConfig(BaseModel):
         default=True,
         description="Enable trace logging for RAG queries",
     )
-    provider: Literal["sqlite", "none"] = Field(
+    provider: Literal["sqlite", "postgres", "none"] = Field(
         default="sqlite",
-        description='Trace storage backend ("sqlite" built-in, "none" disabled)',
+        description='Trace storage backend ("sqlite" built-in, "postgres" for Supabase/PostgreSQL, "none" disabled)',
     )
     database: str = Field(
         default=".rag-facile/traces.db",
         description="SQLite database path (relative to workspace root)",
+    )
+    connection_string: str = Field(
+        default="",
+        description="PostgreSQL connection string (used when provider is 'postgres'). "
+        "Typically set via DATABASE_URL environment variable.",
     )
 
 

@@ -229,3 +229,7 @@ private/
 
 # npx skills — installed per-workspace by users, not tracked in source repo
 .agents/
+
+# Supabase local development (Docker volumes, generated files)
+supabase/.branches/
+supabase/.temp/

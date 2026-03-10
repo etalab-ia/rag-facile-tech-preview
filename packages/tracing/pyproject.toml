@@ -8,6 +8,11 @@ dependencies = [
     "rag-core",
 ]
 
+[project.optional-dependencies]
+postgres = [
+    "psycopg[binary]>=3.1",
+]
+
 [tool.uv.sources]
 rag-core = { workspace = true }
 
