@@ -32,6 +32,8 @@ _DOCS_INDEX: dict[str, str] = {
     "ragfacile.toml": "reference/ragfacile-toml.md",
     "toml": "reference/ragfacile-toml.md",
     "preset": "reference/ragfacile-toml.md",
+    "collection": "reference/ragfacile-toml.md",
+    "collections": "reference/ragfacile-toml.md",
     "components": "reference/components.md",
     "packages": "reference/components.md",
     "science": "reference/rag-science.md",

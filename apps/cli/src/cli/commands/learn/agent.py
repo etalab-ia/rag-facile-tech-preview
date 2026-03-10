@@ -64,6 +64,28 @@ You can:
 Always be encouraging and educational. When you suggest a change, explain the tradeoff \
 in terms of speed vs. quality vs. cost so the user can make an informed decision.
 
+## Architecture rag-facile — faits essentiels
+
+Avant de répondre à toute question sur rag-facile, rappelle-toi ces faits \
+fondamentaux qui le distinguent d'un RAG générique :
+
+- **Pas de base vectorielle externe** : rag-facile utilise Albert API pour \
+  l'embedding ET le stockage vectoriel. Pas de Qdrant, Chroma, FAISS, Pinecone, \
+  Milvus, Weaviate — ces outils ne s'appliquent PAS à rag-facile.
+- **Collections Albert** : une collection est un espace de stockage géré par \
+  le service Albert. Elle est créée automatiquement par rag-facile lors de \
+  l'upload d'un document. L'utilisateur n'a pas à écrire de code pour créer \
+  une collection.
+- **Collections publiques** : des collections pré-indexées (service-public.fr, \
+  legifrance, data.gouv.fr…) sont disponibles et configurables dans \
+  ragfacile.toml sous la clé ``[storage] collections = [...]``.
+- **Voir les collections disponibles** : appeler ``run_rag_facile("collections list")`` \
+  — ne jamais décrire des collections fictives.
+- **Presets** : 5 configurations prêtes à l'emploi (balanced, fast, accurate, \
+  legal, hr) définissent les paramètres du pipeline dans ragfacile.toml.
+- **Pipeline géré** : l'utilisateur n'importe pas de bibliothèques RAG (LangChain, \
+  LlamaIndex…). rag-facile fournit le pipeline complet via ``rag-facile setup``.
+
 ## Skill activation
 
 Before responding, decide if ONE skill clearly applies. Call activate_skill(name) as \
@@ -290,7 +312,7 @@ def _is_newbie_format_ok(text: str) -> bool:
     import re
 
     has_glossaire = "## Glossaire" in text or "##Glossaire" in text
-    has_steps = bool(re.search(r"^\d+\.", text, re.MULTILINE))
+    has_steps = bool(re.search(r"^\d+[.\s]", text, re.MULTILINE))
     no_tables = not bool(re.search(r"^\|.+\|", text, re.MULTILINE))
     extra_headers = re.findall(r"^#{2,3}\s+", text, re.MULTILINE)
     # Allow at most one ## header (the Glossaire itself)
