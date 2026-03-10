@@ -2,14 +2,17 @@ import ast
 import json
 import os
 import time
+from typing import Optional
 
 import chainlit as cl
 import engineio
 import engineio.payload
 from chainlit.input_widget import Switch
+from dotenv import load_dotenv
 from rag_facile.pipelines import process_query
 from rag_facile.tracing import update_trace_with_response
-from dotenv import load_dotenv
+from supabase import create_client
+from supabase_auth.errors import AuthApiError
 
 from albert import AsyncAlbertClient
 from rag_facile.core import get_config
@@ -33,6 +36,63 @@ base_url = os.getenv("OPENAI_BASE_URL")
 model = os.getenv("OPENAI_MODEL") or rag_config.generation.model
 
 client = AsyncAlbertClient(api_key=api_key, base_url=base_url)
+
+# Supabase Auth configuration (optional)
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+
+# Note: Chainlit auto-detects DATABASE_URL and uses ChainlitDataLayer (asyncpg)
+# for persistence. No decorator needed - just set DATABASE_URL in .env.
+
+
+@cl.password_auth_callback
+async def auth_callback(username: str, password: str) -> Optional[cl.User]:
+    """Authenticate against Supabase Auth (GoTrue)."""
+    if not SUPABASE_URL or not SUPABASE_ANON_KEY:
+        return None  # Auth disabled when Supabase not configured
+    sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    try:
+        response = sb.auth.sign_in_with_password(
+            {"email": username, "password": password}
+        )
+    except AuthApiError:
+        return None  # Invalid credentials or Supabase unreachable
+    user = response.user
+    if not user:
+        return None
+    return cl.User(
+        identifier=user.email or username,
+        metadata={"role": "user", "provider": "supabase", "sub": str(user.id)},
+    )
+
+
+@cl.on_chat_resume
+async def on_chat_resume(thread: cl.ThreadDict) -> None:
+    """Restore conversation history when resuming a thread."""
+    # Rebuild message history from the persisted thread
+    message_history = [
+        {"role": "system", "content": rag_config.generation.system_prompt}
+    ]
+    for step in thread.get("steps", []):
+        if step.get("type") == "user_message":
+            message_history.append({"role": "user", "content": step.get("content", "")})
+        elif step.get("type") == "assistant_message":
+            message_history.append(
+                {"role": "assistant", "content": step.get("content", "")}
+            )
+    cl.user_session.set("message_history", message_history)
+
+    # Restore active collections from config (no persistence for toggles yet)
+    active_collections = list(rag_config.storage.collections)
+    cl.user_session.set("active_collections", active_collections)
+
+    # Show collection toggles
+    widgets = []
+    for col_id in rag_config.storage.collections:
+        name = get_collection_name(col_id) or f"Collection {col_id}"
+        widgets.append(Switch(id=f"col_{col_id}", label=f"📚 {name}", initial=True))
+    if widgets:
+        await cl.ChatSettings(widgets).send()
 
 
 # Example dummy function
