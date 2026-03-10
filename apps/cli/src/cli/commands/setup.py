@@ -736,7 +736,7 @@ def run(
         )
         console.print()
 
-        env_config["openai_api_key"] = questionary.text(
+        env_config["openai_api_key"] = questionary.password(
             "OpenAI/Albert API Key:",
             default=os.getenv("OPENAI_API_KEY", ""),
         ).ask()
@@ -760,7 +760,7 @@ def run(
 
     # Confirm (skip with --yes)
     if not yes:
-        if not questionary.confirm("Proceed with generation?", default=True).ask():
+        if not questionary.confirm("Proceed with setup?", default=True).ask():
             console.print("[yellow]Aborted.[/yellow]")
             raise typer.Exit(0)
 
