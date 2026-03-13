@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS "Thread" (
     "userId"         UUID REFERENCES "User"("id") ON DELETE SET NULL,
     "userIdentifier" TEXT,
     "tags"           TEXT[],
-    "metadata"       JSONB,
+    "metadata"       JSONB NOT NULL DEFAULT '{}'::jsonb,
     "createdAt"      TIMESTAMPTZ DEFAULT now(),
     "updatedAt"      TIMESTAMPTZ DEFAULT now(),
     "deletedAt"      TIMESTAMPTZ
@@ -40,7 +40,7 @@ CREATE INDEX IF NOT EXISTS idx_thread_updated ON "Thread" ("updatedAt" DESC);
 
 CREATE TABLE IF NOT EXISTS "Step" (
     "id"            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "threadId"      UUID NOT NULL REFERENCES "Thread"("id") ON DELETE CASCADE,
+    "threadId"      UUID REFERENCES "Thread"("id") ON DELETE CASCADE,
     "parentId"      UUID,
     "name"          TEXT NOT NULL,
     "type"          TEXT NOT NULL,
