@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.0](https://github.com/etalab-ia/rag-facile/compare/v0.20.0...v0.21.0) (2026-03-16)
+
+
+### Features
+
+* add rag-facile traces CLI subcommands ([4171b0b](https://github.com/etalab-ia/rag-facile/commit/4171b0bcfd045db1c900f28cba17a530cc7e4a61))
+* add Supabase infrastructure and SQL migrations with RLS ([f5ef1d9](https://github.com/etalab-ia/rag-facile/commit/f5ef1d98cb1fae7a87a2da25a77591b3ece502d5))
+* **chainlit:** add Supabase auth and conversation persistence ([771d485](https://github.com/etalab-ia/rag-facile/commit/771d48582a0f2a08015a2fcaae944d51e1807b04))
+* **chainlit:** read display_name from Supabase user metadata ([15544e5](https://github.com/etalab-ia/rag-facile/commit/15544e5434d416151ce7123b5bd6dbbedc89f0c7))
+* **chainlit:** Supabase auth and conversation persistence ([9b8dc58](https://github.com/etalab-ia/rag-facile/commit/9b8dc5889786648f0dfcecb7db965d81d2e43d2f))
+* rag-facile traces CLI subcommands ([99ad50c](https://github.com/etalab-ia/rag-facile/commit/99ad50cf3488ad1a551c4c5df0b5d5c05cf43d15))
+* Supabase PostgreSQL storage for tracing ([425b5eb](https://github.com/etalab-ia/rag-facile/commit/425b5eb9d32c9647c72014bc311785fa346efb5e))
+* **tracing:** add PostgresProvider for Supabase/PostgreSQL tracing ([8ca0d08](https://github.com/etalab-ia/rag-facile/commit/8ca0d08a8bab250e415f0751d50ac7bbb771136b))
+
+
+### Bug Fixes
+
+* address PR [#195](https://github.com/etalab-ia/rag-facile/issues/195) review comments ([571272a](https://github.com/etalab-ia/rag-facile/commit/571272a08e827ffa036d151363c500a0873c3eeb))
+* **chainlit:** address review comments on auth and persistence ([e18e9f7](https://github.com/etalab-ia/rag-facile/commit/e18e9f78e8b5c5b14fa3ad11e0bbf2512bf15487))
+* **chainlit:** import ThreadDict from chainlit.types, not cl namespace ([2f27e0c](https://github.com/etalab-ia/rag-facile/commit/2f27e0cc69ec0266f8daa29624c17ce1c7e5f994))
+* **chainlit:** require CHAINLIT_AUTH_SECRET for auth login ([ca1b874](https://github.com/etalab-ia/rag-facile/commit/ca1b874dca319a27a1f095056fed4853ee8b8615))
+* **chainlit:** show email as display_name in user menu ([4292c6b](https://github.com/etalab-ia/rag-facile/commit/4292c6bf06330fc38244e343dc3255dbdd9e6f40))
+* correct upgrade-pkg recipe to use uv lock --upgrade-package ([b208b88](https://github.com/etalab-ia/rag-facile/commit/b208b8818a7bba969d937554e9078fe3372e51a1))
+* ensure initial git commit works on fresh machines without git user config ([ec30e6f](https://github.com/etalab-ia/rag-facile/commit/ec30e6fdcda9b4993bf0f02b300235f3f5eae555))
+* ensure initial git commit works on fresh machines without git user config ([6d8b684](https://github.com/etalab-ia/rag-facile/commit/6d8b684d4d1462c20e153cf732ed82b90a6bebca))
+* **migrations:** add deletedAt column to Thread table ([05a0802](https://github.com/etalab-ia/rag-facile/commit/05a080215a3fa4a8e3525814dcf620b56b15dd1b))
+* **migrations:** nullable Step.threadId, non-null Thread.metadata default ([a41facb](https://github.com/etalab-ia/rag-facile/commit/a41facb55558af8d15dc89c556fec4893e15039f))
+* **migrations:** use PascalCase table names matching ChainlitDataLayer ([1c9669a](https://github.com/etalab-ia/rag-facile/commit/1c9669a7a4027da38bdce7d799daedd0de5d7123))
+* set SECURITY INVOKER on ragas_export view ([b767e85](https://github.com/etalab-ia/rag-facile/commit/b767e85479f80e5407b6177724ea195b7a2e3ea7))
+* show actionable warning when initial git commit fails ([ac72417](https://github.com/etalab-ia/rag-facile/commit/ac724178ad3d0caca4afc18a17007e61cd037e65))
+* **traces:** escape Rich markup in hint and add [tracing] config section ([565bf7b](https://github.com/etalab-ia/rag-facile/commit/565bf7b88c3dced0a40195c87b8b22e5835c4aa3))
+* use top-level project_id in supabase config.toml ([b3bffbd](https://github.com/etalab-ia/rag-facile/commit/b3bffbdb9f723b8d9228e5a0abde0b2f0e812b76))
+
+
+### Documentation
+
+* add Colima troubleshooting to Supabase setup guide ([17f7f1b](https://github.com/etalab-ia/rag-facile/commit/17f7f1b642319a7020b76b24b01a922dd97b4fb3))
+* clarify SUPABASE_URL must be API URL, not REST URL ([8f56a3c](https://github.com/etalab-ia/rag-facile/commit/8f56a3c0c774f929dab9ee915e500335bc515ebf))
+
 ## [0.20.0](https://github.com/etalab-ia/rag-facile/compare/v0.19.1...v0.20.0) (2026-03-10)
 
 
