@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0](https://github.com/etalab-ia/rag-facile-tech-preview/compare/v0.21.0...v0.22.0) (2026-03-17)
+
+
+### Features
+
+* add persistence config to ragfacile.toml ([aa59f3b](https://github.com/etalab-ia/rag-facile-tech-preview/commit/aa59f3b2caaf5cccdb39ae0e856071725b0fdfd6))
+* add persistence config to ragfacile.toml ([89d7a14](https://github.com/etalab-ia/rag-facile-tech-preview/commit/89d7a14a1f0e2f8ebcb06a6f73e0d48dc455f5d6))
+
+
+### Bug Fixes
+
+* shorten link text for readability ([bd96093](https://github.com/etalab-ia/rag-facile-tech-preview/commit/bd9609327f235af7a77e5c45d5efa60d0b162d66))
+
+
+### Documentation
+
+* add archived tech preview notice to README ([2ecc80c](https://github.com/etalab-ia/rag-facile-tech-preview/commit/2ecc80caf27fdbc85859ce8c138529461f552f90))
+* add archived tech preview notice to README ([f606bea](https://github.com/etalab-ia/rag-facile-tech-preview/commit/f606beac8fea1fb37a0b448cc0f8f97f932c7460))
+
 ## [0.21.0](https://github.com/etalab-ia/rag-facile/compare/v0.20.0...v0.21.0) (2026-03-16)
 
 
