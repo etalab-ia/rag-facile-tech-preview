@@ -1,10 +1,7 @@
-# Ragtime — Technology Preview (Archived)
-
-> ⚠️ **This repository is archived.** It was a technology preview to validate the RAG architecture for the French government. A new repository with a more focused scope is now available at [etalab-ia/ragtime](https://github.com/etalab-ia/ragtime).
+# Ragtime — A modular RAG pipeline (alpha)
 
 [![Release](https://img.shields.io/github/v/release/etalab-ia/ragtime-tech-preview?sort=date&style=flat-square)](https://github.com/etalab-ia/ragtime-tech-preview/releases)
 [![License](https://img.shields.io/github/license/etalab-ia/ragtime-tech-preview?style=flat-square)](LICENSE)
-[![Status](https://img.shields.io/badge/status-archived-red?style=flat-square)](https://github.com/etalab-ia/ragtime)
 
 ```
  ██████╗  █████╗  ██████╗████████╗██╗███╗   ███╗███████╗
@@ -15,7 +12,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝
 ```
 
-This was a RAG application toolkit for the French government, powered by the [Albert API](https://albert.sites.beta.gouv.fr/).
+A modular RAG pipeline for the French government, powered by the [Albert API](https://albert.sites.beta.gouv.fr/).
 
 ## Prerequisites
 
@@ -23,8 +20,6 @@ This was a RAG application toolkit for the French government, powered by the [Al
 - **curl** (pre-installed on macOS / Linux / WSL / Git Bash)
 
 ## Install
-
-> ⚠️ **This repository is archived.** For the latest version, see [etalab-ia/ragtime](https://github.com/etalab-ia/ragtime).
 
 Linux / macOS / WSL / Windows (Git Bash):
 
