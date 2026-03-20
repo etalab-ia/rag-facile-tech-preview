@@ -117,6 +117,24 @@ collections_app = typer.Typer(
 collections_app.command("list", help="List accessible collections")(
     collections.list_collections
 )
+collections_app.command("create", help="Create a new RAG collection")(
+    collections.create_collection
+)
+collections_app.command("delete", help="Delete a collection")(
+    collections.delete_collection
+)
+collections_app.command("show", help="Show collection details")(
+    collections.show_collection
+)
+collections_app.command("upload", help="Upload documents to a collection")(
+    collections.upload_documents
+)
+collections_app.command("enable", help="Add collection to RAG pipeline")(
+    collections.enable_collection
+)
+collections_app.command("disable", help="Remove collection from RAG pipeline")(
+    collections.disable_collection
+)
 app.add_typer(
     collections_app, name="collections", rich_help_panel=_PANEL_ADVANCED_TOOLS
 )

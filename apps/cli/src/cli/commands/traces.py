@@ -30,7 +30,7 @@ _NO_TRACER_HINT = (
 )
 
 
-def _get_tracer():  # type: ignore[return]
+def _get_tracer():
     """Load the configured tracing provider, or exit with a helpful message."""
     try:
         from ragtime.tracing import get_tracer
@@ -378,7 +378,7 @@ def export_traces(
         err_console.print("[yellow]No traces to export.[/yellow]")
         return
 
-    def _write_jsonl(f) -> None:  # type: ignore[type-arg]
+    def _write_jsonl(f) -> None:
         for t in traces:
             f.write(json.dumps(_trace_to_dict(t), ensure_ascii=False) + "\n")
 

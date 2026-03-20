@@ -775,6 +775,7 @@ def run(
 
         # Prompt for API key without displaying it in clear text
         existing_key = os.getenv("OPENAI_API_KEY", "")
+        use_existing_key = False
         if existing_key:
             use_existing = questionary.confirm(
                 "Use existing OPENAI_API_KEY from environment?",
@@ -784,18 +785,16 @@ def run(
                 console.print("[red]Aborted.[/red]")
                 raise typer.Exit(1)
             if use_existing:
+                use_existing_key = True
                 env_config["openai_api_key"] = existing_key
-            else:
-                env_config["openai_api_key"] = questionary.password(
-                    "Enter new OpenAI/Albert API Key:",
-                ).ask()
-                if env_config["openai_api_key"] is None:
-                    console.print("[red]Aborted.[/red]")
-                    raise typer.Exit(1)
-        else:
-            env_config["openai_api_key"] = questionary.password(
-                "OpenAI/Albert API Key:",
-            ).ask()
+
+        if not use_existing_key:
+            message = (
+                "Enter new OpenAI/Albert API Key:"
+                if existing_key
+                else "OpenAI/Albert API Key:"
+            )
+            env_config["openai_api_key"] = questionary.password(message).ask()
             if env_config["openai_api_key"] is None:
                 console.print("[red]Aborted.[/red]")
                 raise typer.Exit(1)
