@@ -3,7 +3,7 @@
 import pytest
 
 from albert import AlbertClient
-from rag_facile.core.schema import ChunkingConfig, RAGConfig
+from ragtime.core.schema import ChunkingConfig, RAGConfig
 
 
 @pytest.fixture(autouse=True)
@@ -37,5 +37,5 @@ def mock_config(monkeypatch):
     config = RAGConfig(
         chunking=ChunkingConfig(chunk_size=512, chunk_overlap=50),
     )
-    monkeypatch.setattr("rag_facile.storage.albert.get_config", lambda: config)
+    monkeypatch.setattr("ragtime.storage.albert.get_config", lambda: config)
     return config

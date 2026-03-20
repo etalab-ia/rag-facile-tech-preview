@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide walks you through installing RAG Facile and running your first RAG application.
+This guide walks you through installing Ragtime and running your first RAG application.
 
 > Looking for the 5-minute quickstart? See the [main README](../../README.md).
 
@@ -9,14 +9,14 @@ This guide walks you through installing RAG Facile and running your first RAG ap
 - An **Albert API key** — [request one here](https://albert.sites.beta.gouv.fr/)
 - **curl** (pre-installed on macOS/Linux/WSL/Git Bash)
 
-The installer handles everything else: it installs [uv](https://docs.astral.sh/uv/) (Python package manager), [just](https://just.systems/) (command runner), and the `rag-facile` CLI as a global tool.
+The installer handles everything else: it installs [uv](https://docs.astral.sh/uv/) (Python package manager), [just](https://just.systems/) (command runner), and the `ragtime` CLI as a global tool.
 
 ## Install
 
 ### Linux / macOS / WSL / Windows (Git Bash)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
 Then **restart your terminal** (or run the `source` command shown by the installer).
@@ -26,9 +26,9 @@ Then **restart your terminal** (or run the `source` command shown by the install
 1. Installs **uv** (Python package manager) — if not already present
 2. Installs **just** (command runner) — if not already present
 3. Fetches the latest release tag from GitHub
-4. Installs **rag-facile** as a global tool via `uv tool install`
+4. Installs **ragtime** as a global tool via `uv tool install`
 
-Total toolchain: **curl + uv + just + rag-facile**. No proto, no moon.
+Total toolchain: **curl + uv + just + ragtime**. No proto, no moon.
 
 ## Your first app
 
@@ -36,7 +36,7 @@ After installation, create and configure your project:
 
 ```bash
 # Create your RAG project (prompts for API key and preferences)
-rag-facile setup mon-projet
+ragtime setup mon-projet
 
 # Start the Chainlit app
 cd mon-projet && just run
@@ -54,52 +54,52 @@ Run `just` inside `my-rag-app/` to see all available commands:
 | `just learn` | Open the interactive RAG learning assistant |
 | `just sync` | Install / update dependencies |
 
-## Using the RAG Facile CLI
+## Using the Ragtime CLI
 
-`rag-facile` is installed globally — run it from anywhere:
+`ragtime` is installed globally — run it from anywhere:
 
 ```bash
-rag-facile --help
+ragtime --help
 ```
 
 Common commands:
 
 ```bash
 # Create a new RAG project
-rag-facile setup mon-projet
+ragtime setup mon-projet
 
 # Open the interactive RAG learning assistant (inside your project)
-rag-facile learn
+ragtime learn
 
 # View your current RAG configuration
-rag-facile config show
+ragtime config show
 
 # Change a configuration value
-rag-facile config set retrieval.top_k 15
+ragtime config set retrieval.top_k 15
 
 # List available Albert public collections
-rag-facile collections list
+ragtime collections list
 
 # Generate a synthetic Q/A evaluation dataset
-rag-facile generate-dataset ./docs -o dataset.jsonl
+ragtime generate-dataset ./docs -o dataset.jsonl
 ```
 
 Or use the shortcut recipes in your project's `justfile`:
 
 ```bash
-just learn   # same as: rag-facile learn
+just learn   # same as: ragtime learn
 ```
 
 ## Advanced: setup options
 
-`rag-facile setup` accepts flags for non-default configurations:
+`ragtime setup` accepts flags for non-default configurations:
 
 ```bash
 # Expert mode — choose preset, frontend, and pipeline interactively
-rag-facile setup mon-projet --expert
+ragtime setup mon-projet --expert
 
 # Available presets: fast, balanced, accurate, legal, hr
-rag-facile setup mon-projet --preset legal
+ragtime setup mon-projet --preset legal
 ```
 
 ## Upgrading
@@ -107,10 +107,10 @@ rag-facile setup mon-projet --preset legal
 To get the latest version, re-run the installer:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
-This reinstalls the `rag-facile` CLI pinned to the latest release. Your existing project workspaces are not affected.
+This reinstalls the `ragtime` CLI pinned to the latest release. Your existing project workspaces are not affected.
 
 ## Troubleshooting
 
@@ -140,7 +140,7 @@ Set standard proxy environment variables before running the installer:
 ```bash
 export HTTP_PROXY=http://proxy.example.com:3128
 export HTTPS_PROXY=http://proxy.example.com:3128
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
 The installer uses `curl` and `uv` which both respect these environment variables automatically.

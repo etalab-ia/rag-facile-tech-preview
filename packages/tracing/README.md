@@ -1,8 +1,8 @@
-# rag-facile-tracing
+# ragtime-tracing
 
 RAG pipeline tracing — log queries, retrieved context, LLM responses, and user feedback.
 
-Part of the [rag-facile](https://github.com/etalab-ia/rag-facile) project.
+Part of the [ragtime](https://github.com/etalab-ia/ragtime) project.
 
 ## Built-in providers
 
@@ -15,5 +15,5 @@ Part of the [rag-facile](https://github.com/etalab-ia/rag-facile) project.
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 ```

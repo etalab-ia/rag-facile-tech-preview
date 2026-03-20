@@ -14,10 +14,10 @@ from supabase import create_client
 from supabase_auth.errors import AuthApiError
 
 from albert import AsyncAlbertClient
-from rag_facile.core import get_config
-from rag_facile.core.mediatech import get_collection_name
-from rag_facile.pipelines import process_query
-from rag_facile.tracing import update_trace_with_response
+from ragtime.core import get_config
+from ragtime.core.mediatech import get_collection_name
+from ragtime.pipelines import process_query
+from ragtime.tracing import update_trace_with_response
 
 
 # Increase the number of packets allowed in a single payload to prevent "Too

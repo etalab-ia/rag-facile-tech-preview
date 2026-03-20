@@ -1,7 +1,7 @@
 """Tests for the NoopProvider."""
 
-from rag_facile.tracing._models import TraceRecord
-from rag_facile.tracing.noop import NoopProvider
+from ragtime.tracing._models import TraceRecord
+from ragtime.tracing.noop import NoopProvider
 
 
 class TestNoopProvider:

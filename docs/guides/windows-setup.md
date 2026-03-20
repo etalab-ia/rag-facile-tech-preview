@@ -1,4 +1,4 @@
-# Windows Setup Guide for RAG Facile
+# Windows Setup Guide for Ragtime
 
 This guide covers installation on Windows using Git Bash.
 
@@ -13,17 +13,17 @@ This guide covers installation on Windows using Git Bash.
 Open **Git Bash** and run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
-This installs uv, just, and the `rag-facile` CLI as a global tool.
+This installs uv, just, and the `ragtime` CLI as a global tool.
 
 Then **restart Git Bash** (or run the `source` command shown by the installer) so the new tools are available on your PATH.
 
 ## Create your project
 
 ```bash
-rag-facile setup mon-projet
+ragtime setup mon-projet
 cd mon-projet && just run
 ```
 
@@ -33,12 +33,12 @@ cd mon-projet && just run
 
 Make sure you are using **Git Bash**, not Command Prompt or PowerShell. Git Bash includes `curl` by default.
 
-### `rag-facile` command not found after install
+### `ragtime` command not found after install
 
 Restart Git Bash so the updated PATH takes effect, then verify:
 
 ```bash
-rag-facile --version
+ragtime --version
 ```
 
 If still not found, add `~/.local/bin` to your PATH manually:
@@ -66,7 +66,7 @@ Set proxy environment variables before running the installer:
 ```bash
 export HTTP_PROXY=http://proxy.company.com:8080
 export HTTPS_PROXY=http://proxy.company.com:8080
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
 For more details, see [Proxy Setup Guide](../troubleshooting/proxy.md).
@@ -81,4 +81,4 @@ For more details, see [Proxy Setup Guide](../troubleshooting/proxy.md).
 
 ---
 
-**Still stuck?** Open an issue: https://github.com/etalab-ia/rag-facile/issues
+**Still stuck?** Open an issue: https://github.com/etalab-ia/ragtime/issues

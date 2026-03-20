@@ -160,9 +160,9 @@ class TestRunInitWizard:
 
 
 class TestChatInitIntegration:
-    def test_init_runs_when_no_rag_facile_dir(self, tmp_path, monkeypatch):
+    def test_init_runs_when_no_ragtime_dir(self, tmp_path, monkeypatch):
         """start_learn() calls init wizard when .agent/ is absent."""
-        (tmp_path / "ragfacile.toml").write_text('[meta]\npreset = "balanced"\n')
+        (tmp_path / "ragtime.toml").write_text('[meta]\npreset = "balanced"\n')
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
         with (
@@ -179,7 +179,7 @@ class TestChatInitIntegration:
 
     def test_init_skipped_when_already_initialised(self, tmp_path, monkeypatch):
         """start_learn() skips init wizard when .agent/ already exists."""
-        (tmp_path / "ragfacile.toml").write_text('[meta]\npreset = "balanced"\n')
+        (tmp_path / "ragtime.toml").write_text('[meta]\npreset = "balanced"\n')
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
         with (

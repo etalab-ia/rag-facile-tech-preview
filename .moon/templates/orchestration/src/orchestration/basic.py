@@ -3,7 +3,7 @@
 Parses documents locally (via the ingestion package) and injects the
 full text into the LLM prompt.  No retrieval search is performed.
 
-Selected when ``storage.provider = "local-sqlite"`` in ragfacile.toml.
+Selected when ``storage.provider = "local-sqlite"`` in ragtime.toml.
 """
 
 from __future__ import annotations

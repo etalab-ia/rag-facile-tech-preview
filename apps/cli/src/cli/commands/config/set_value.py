@@ -6,7 +6,7 @@ import typer
 from pydantic import ValidationError
 from rich.console import Console
 
-from rag_facile.core import load_config_or_default, parse_value, save_config
+from ragtime.core import load_config_or_default, parse_value, save_config
 
 
 console = Console()
@@ -22,7 +22,7 @@ def set_value(
         help="Value to set",
     ),
     config_path: str = typer.Option(
-        "ragfacile.toml",
+        "ragtime.toml",
         "--config",
         "-c",
         help="Path to configuration file",
@@ -40,16 +40,16 @@ def set_value(
 
     Examples:
         # Set generation model
-        rag-facile config set generation.model openweight-large
+        ragtime config set generation.model openweight-large
 
         # Set temperature
-        rag-facile config set generation.temperature 0.5
+        ragtime config set generation.temperature 0.5
 
         # Enable hallucination detection
-        rag-facile config set hallucination.enabled true
+        ragtime config set hallucination.enabled true
 
         # Set retrieval top_k
-        rag-facile config set retrieval.top_k 20
+        ragtime config set retrieval.top_k 20
     """
     path = Path(config_path)
 
@@ -58,7 +58,7 @@ def set_value(
         console.print(f"[red]✗ Configuration file not found: {config_path}[/red]")
         console.print("[dim]💡 Use --create to create a new config file[/dim]")
         console.print(
-            "[dim]💡 Or apply a preset: rag-facile config preset apply balanced[/dim]"
+            "[dim]💡 Or apply a preset: ragtime config preset apply balanced[/dim]"
         )
         raise typer.Exit(1)
 

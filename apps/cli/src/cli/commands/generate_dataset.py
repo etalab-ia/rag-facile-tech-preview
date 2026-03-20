@@ -15,7 +15,7 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from rag_facile.core import get_config
+from ragtime.core import get_config
 
 
 console = Console()
@@ -81,10 +81,10 @@ def run(
     high-quality Question/Answer/Context triplets in French from your documents.
 
     Example with Letta Cloud:
-        rag-facile generate-dataset ./docs -o golden_dataset.jsonl -n 50 --provider letta
+        ragtime generate-dataset ./docs -o golden_dataset.jsonl -n 50 --provider letta
 
     Example with Albert API:
-        rag-facile generate-dataset ./docs -o golden_dataset.jsonl -n 50 --provider albert
+        ragtime generate-dataset ./docs -o golden_dataset.jsonl -n 50 --provider albert
     """
     # Load config for defaults
     rag_config = get_config()
@@ -137,7 +137,7 @@ def run(
             if "OPENAI_MODEL" in missing:
                 console.print(
                     "\nTip: OPENAI_MODEL can be set via environment variable or "
-                    "in ragfacile.toml under [generation] section"
+                    "in ragtime.toml under [generation] section"
                 )
             raise typer.Exit(1)
 

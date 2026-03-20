@@ -19,7 +19,7 @@ cp .env.example .env
 Edit the `.env` file to add your `OPENAI_API_KEY` and `OPENAI_BASE_URL`.
 
 > [!TIP]
-> RAG parameters like model names, temperature, and retrieval settings are now managed in `ragfacile.toml` via the configuration system. Use `rag-facile config` to customize them.
+> RAG parameters like model names, temperature, and retrieval settings are now managed in `ragtime.toml` via the configuration system. Use `ragtime config` to customize them.
 
 ### 2. Run the application
 

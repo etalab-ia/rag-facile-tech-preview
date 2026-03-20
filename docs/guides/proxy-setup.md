@@ -1,6 +1,6 @@
-# RAG Facile Installation on Corporate/Restricted Networks
+# Ragtime Installation on Corporate/Restricted Networks
 
-This guide explains how to install RAG Facile when behind a corporate proxy or VPN, and provides troubleshooting steps.
+This guide explains how to install Ragtime when behind a corporate proxy or VPN, and provides troubleshooting steps.
 
 ## Quick Start
 
@@ -10,7 +10,7 @@ If you're behind a proxy, set the environment variables before running the insta
 export HTTP_PROXY=http://proxy.company.com:8080
 export HTTPS_PROXY=http://proxy.company.com:8080
 
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 The installer will automatically:
@@ -33,7 +33,7 @@ The installer will automatically:
 3. **Package managers** (uv, just)
    - Downloaded and installed via proto
    
-4. **RAG Facile CLI** (final step)
+4. **Ragtime CLI** (final step)
    - Installed via uv tool
 
 ### Where Proxy Issues Occur
@@ -93,7 +93,7 @@ mitmproxy --mode regular -p 8080
 # In another terminal, run installer with proxy
 export HTTP_PROXY=http://127.0.0.1:8080
 export HTTPS_PROXY=http://127.0.0.1:8080
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 ### Blocking Network Access
@@ -195,7 +195,7 @@ If you're still having issues:
    ```
 
 4. **Report an issue**:
-   - [RAG Facile GitHub Issues](https://github.com/etalab-ia/rag-facile/issues)
+   - [Ragtime GitHub Issues](https://github.com/etalab-ia/ragtime/issues)
    - [Proto GitHub Issues](https://github.com/moonrepo/proto/issues)
 
 5. **Ask your IT team**:
@@ -205,7 +205,7 @@ If you're still having issues:
 
 ## For IT Teams / System Administrators
 
-If you're setting up RAG Facile for your organization:
+If you're setting up Ragtime for your organization:
 
 ### Required Network Access
 
@@ -239,4 +239,4 @@ If your proxy performs SSL inspection:
 - [Proto Configuration](https://moonrepo.dev/docs/proto/config)
 - [Proto FAQ - Troubleshooting](https://moonrepo.dev/docs/proto/faq)
 - [Proto GitHub Repository](https://github.com/moonrepo/proto)
-- [RAG Facile Installation](https://github.com/etalab-ia/rag-facile#installation)
+- [Ragtime Installation](https://github.com/etalab-ia/ragtime#installation)

@@ -3,7 +3,7 @@
 import respx
 from httpx import Response
 
-from rag_facile.retrieval.albert import AlbertRetrievalProvider
+from ragtime.retrieval.albert import AlbertRetrievalProvider
 
 
 class TestAlbertRetrievalProvider:

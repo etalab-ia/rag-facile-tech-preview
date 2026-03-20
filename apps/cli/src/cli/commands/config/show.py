@@ -11,7 +11,7 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text
 
-from rag_facile.core import (
+from ragtime.core import (
     PIPELINE_STAGES,
     PipelineStage,
     flatten_model_fields,
@@ -25,7 +25,7 @@ console = Console()
 
 def show(
     path: str = typer.Option(
-        "ragfacile.toml",
+        "ragtime.toml",
         "--config",
         "-c",
         help="Path to configuration file",
@@ -50,21 +50,21 @@ def show(
 ) -> None:
     """Display current RAG configuration.
 
-    Shows the active configuration from ragfacile.toml and environment variables.
+    Shows the active configuration from ragtime.toml and environment variables.
     Supports multiple output formats for different use cases.
 
     Examples:
         # Show full config as table (default)
-        rag-facile config show
+        ragtime config show
 
         # Show config as TOML
-        rag-facile config show --format toml
+        ragtime config show --format toml
 
         # Show only generation section
-        rag-facile config show --section generation
+        ragtime config show --section generation
 
         # Show environment variable docs
-        rag-facile config show --env-docs
+        ragtime config show --env-docs
     """
     if env_docs:
         # Show environment variable documentation

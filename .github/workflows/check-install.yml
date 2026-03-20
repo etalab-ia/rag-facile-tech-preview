@@ -1,8 +1,8 @@
 name: Check Install
 
 # Validates install.sh across platforms:
-#  1. Run install.sh (installs uv, just, rag-facile as a global tool)
-#  2. Verify rag-facile --version, just --version, uv --version
+#  1. Run install.sh (installs uv, just, ragtime as a global tool)
+#  2. Verify ragtime --version, just --version, uv --version
 
 on:
   pull_request:
@@ -44,13 +44,14 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAGTIME_VERSION: ${{ github.sha }}
 
       - name: Verify tools are available
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           just --version
           uv --version
-          rag-facile --version
+          ragtime --version
 
   # ============================================================================
   # MACOS SMOKE TEST
@@ -68,13 +69,14 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAGTIME_VERSION: ${{ github.sha }}
 
       - name: Verify tools are available
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           just --version
           uv --version
-          rag-facile --version
+          ragtime --version
 
   # ============================================================================
   # WINDOWS SMOKE TEST (Git Bash)
@@ -93,6 +95,7 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAGTIME_VERSION: ${{ github.sha }}
 
       - name: Verify tools are available
         shell: bash
@@ -100,7 +103,7 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           just --version
           uv --version
-          rag-facile --version
+          ragtime --version
 
   # ============================================================================
   # SUMMARY

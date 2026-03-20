@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rag_facile.memory.lifecycle import (
+from ragtime.memory.lifecycle import (
     _extract_checkpoint_sections,
     _extract_checkpoint_summary,
     _extract_topics,
@@ -20,7 +20,7 @@ from rag_facile.memory.lifecycle import (
     run_checkpoint,
     should_checkpoint,
 )
-from rag_facile.memory.stores import SemanticStore
+from ragtime.memory.stores import SemanticStore
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -85,7 +85,7 @@ class TestRunCheckpoint:
 
     def test_writes_checkpoint_to_log(self, workspace, turns):
         run_checkpoint(workspace, turns)
-        from rag_facile.memory.stores import EpisodicLog
+        from ragtime.memory.stores import EpisodicLog
 
         content = EpisodicLog.today_path(workspace).read_text()
         assert "Checkpoint" in content
@@ -93,14 +93,14 @@ class TestRunCheckpoint:
     def test_uses_summarise_fn_when_provided(self, workspace, turns):
         mock_summarise = MagicMock(return_value="Custom summary here")
         run_checkpoint(workspace, turns, summarise_fn=mock_summarise)
-        from rag_facile.memory.stores import EpisodicLog
+        from ragtime.memory.stores import EpisodicLog
 
         content = EpisodicLog.today_path(workspace).read_text()
         assert "Custom summary" in content
 
     def test_fallback_uses_last_assistant_message(self, workspace, turns):
         run_checkpoint(workspace, turns)
-        from rag_facile.memory.stores import EpisodicLog
+        from ragtime.memory.stores import EpisodicLog
 
         content = EpisodicLog.today_path(workspace).read_text()
         assert "vectorielles" in content  # from last assistant message
@@ -116,14 +116,14 @@ class TestFinalizeSession:
         assert not sessions_dir.exists() or not list(sessions_dir.glob("*.md"))
 
     def test_creates_snapshot(self, workspace, turns):
-        with patch("rag_facile.memory.lifecycle.git_commit_session"):
+        with patch("ragtime.memory.lifecycle.git_commit_session"):
             finalize_session(workspace, turns, datetime(2026, 3, 1, 21, 30))
 
         sessions_dir = workspace / ".agent" / "sessions"
         assert len(list(sessions_dir.glob("*.md"))) == 1
 
     def test_increments_session_count(self, workspace, turns):
-        with patch("rag_facile.memory.lifecycle.git_commit_session"):
+        with patch("ragtime.memory.lifecycle.git_commit_session"):
             finalize_session(workspace, turns, datetime(2026, 3, 1, 21, 30))
 
         profile = (workspace / ".agent" / "profile.md").read_text()
@@ -132,7 +132,7 @@ class TestFinalizeSession:
     def test_extracts_facts_when_fn_provided(self, workspace, turns):
         SemanticStore.create(workspace)
         mock_extract = MagicMock(return_value=["User is learning about RAG"])
-        with patch("rag_facile.memory.lifecycle.git_commit_session"):
+        with patch("ragtime.memory.lifecycle.git_commit_session"):
             finalize_session(
                 workspace,
                 turns,
@@ -145,7 +145,7 @@ class TestFinalizeSession:
 
     def test_uses_summarise_fn(self, workspace, turns):
         mock_summarise = MagicMock(return_value="Explored chunking concepts")
-        with patch("rag_facile.memory.lifecycle.git_commit_session"):
+        with patch("ragtime.memory.lifecycle.git_commit_session"):
             finalize_session(
                 workspace,
                 turns,
@@ -160,7 +160,7 @@ class TestFinalizeSession:
     def test_graceful_on_extract_failure(self, workspace, turns):
         SemanticStore.create(workspace)
         mock_extract = MagicMock(side_effect=ValueError("API error"))
-        with patch("rag_facile.memory.lifecycle.git_commit_session"):
+        with patch("ragtime.memory.lifecycle.git_commit_session"):
             # Should not raise
             finalize_session(
                 workspace,
@@ -196,7 +196,7 @@ class TestIncrementSessionCount:
 class TestGitCommitSession:
     def test_silent_when_git_not_found(self, workspace):
         with patch(
-            "rag_facile.memory.lifecycle.subprocess.run",
+            "ragtime.memory.lifecycle.subprocess.run",
             side_effect=FileNotFoundError,
         ):
             git_commit_session(workspace)  # should not raise
@@ -204,7 +204,7 @@ class TestGitCommitSession:
     def test_skips_silently_when_gitignored(self, workspace):
         check_ignore = MagicMock(returncode=0)  # 0 = ignored
         with patch(
-            "rag_facile.memory.lifecycle.subprocess.run",
+            "ragtime.memory.lifecycle.subprocess.run",
             return_value=check_ignore,
         ) as mock_run:
             git_commit_session(workspace)
@@ -217,7 +217,7 @@ class TestGitCommitSession:
         diff_result = MagicMock(returncode=0)  # 0 = nothing staged
 
         with patch(
-            "rag_facile.memory.lifecycle.subprocess.run",
+            "ragtime.memory.lifecycle.subprocess.run",
             side_effect=[check_ignore, add_result, diff_result],
         ) as mock_run:
             git_commit_session(workspace)
@@ -227,7 +227,7 @@ class TestGitCommitSession:
     def test_warns_on_git_failure(self, workspace):
         err = subprocess.CalledProcessError(1, "git", stderr=b"error")
         with patch(
-            "rag_facile.memory.lifecycle.subprocess.run",
+            "ragtime.memory.lifecycle.subprocess.run",
             side_effect=err,
         ):
             git_commit_session(workspace)  # should not raise
@@ -368,7 +368,7 @@ class TestExtractCheckpointSummary:
             },
         ]
         run_checkpoint(workspace, turns)
-        from rag_facile.memory.stores import EpisodicLog
+        from ragtime.memory.stores import EpisodicLog
 
         content = EpisodicLog.today_path(workspace).read_text()
         assert "Checkpoint" in content
@@ -417,7 +417,7 @@ class TestCompactEpisodicLogs:
         assert compact_episodic_logs(workspace) == 0
 
     def test_leaves_recent_logs_untouched(self, workspace):
-        from rag_facile.memory.stores import EpisodicLog
+        from ragtime.memory.stores import EpisodicLog
 
         EpisodicLog.append_turn(workspace, "user", "Recent message")
         original = EpisodicLog.today_path(workspace).read_text()

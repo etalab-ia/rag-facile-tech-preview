@@ -23,7 +23,7 @@ err_console = Console(stderr=True)
 
 _NO_TRACER_HINT = (
     "[dim]💡 Tracing stores every RAG query for inspection and debugging.\n"
-    "   Enable it in ragfacile.toml:\n"
+    "   Enable it in ragtime.toml:\n"
     "   \\[tracing]\n"
     "   enabled = true\n"
     '   provider = "sqlite"   # or "postgres"[/dim]'
@@ -33,7 +33,7 @@ _NO_TRACER_HINT = (
 def _get_tracer():  # type: ignore[return]
     """Load the configured tracing provider, or exit with a helpful message."""
     try:
-        from rag_facile.tracing import get_tracer
+        from ragtime.tracing import get_tracer
 
         return get_tracer()
     except Exception as e:
@@ -97,17 +97,17 @@ def list_traces(
     """List recent RAG pipeline traces.
 
     Shows the most recent traces in a compact table. Use
-    ``rag-facile traces show <ID>`` to see full details.
+    ``ragtime traces show <ID>`` to see full details.
 
     Examples:
         # Show the 20 most recent traces
-        rag-facile traces list
+        ragtime traces list
 
         # Show more traces
-        rag-facile traces list --limit 100
+        ragtime traces list --limit 100
 
         # Filter by session
-        rag-facile traces list --session abc-123
+        ragtime traces list --session abc-123
     """
     tracer = _get_tracer()
     traces = tracer.list_traces(session_id=session, user_id=user, limit=limit)
@@ -141,8 +141,7 @@ def list_traces(
     console.print(table)
     console.print()
     console.print(
-        "[dim]💡 Use the first 8 chars of the ID with: "
-        "rag-facile traces show <ID>[/dim]"
+        "[dim]💡 Use the first 8 chars of the ID with: ragtime traces show <ID>[/dim]"
     )
 
 
@@ -155,8 +154,8 @@ def show_trace(
     context), LLM data (response, model, latency), and user feedback.
 
     Examples:
-        rag-facile traces show a1b2c3d4-...
-        rag-facile traces show a1b2c3d4
+        ragtime traces show a1b2c3d4-...
+        ragtime traces show a1b2c3d4
     """
     tracer = _get_tracer()
 
@@ -263,7 +262,7 @@ def stats_traces() -> None:
     from the most recent 10,000 traces.
 
     Examples:
-        rag-facile traces stats
+        ragtime traces stats
     """
     tracer = _get_tracer()
     traces = tracer.list_traces(limit=10_000)
@@ -364,13 +363,13 @@ def export_traces(
 
     Examples:
         # Export to file
-        rag-facile traces export --output traces.jsonl
+        ragtime traces export --output traces.jsonl
 
         # Pipe to another tool
-        rag-facile traces export | head -5
+        ragtime traces export | head -5
 
         # Export recent session
-        rag-facile traces export --session abc-123 --output session.jsonl
+        ragtime traces export --session abc-123 --output session.jsonl
     """
     tracer = _get_tracer()
     traces = tracer.list_traces(session_id=session, limit=limit)
@@ -411,10 +410,10 @@ def prune_traces(
 
     Examples:
         # Delete traces older than 30 days (default), with confirmation
-        rag-facile traces prune
+        ragtime traces prune
 
         # Delete traces older than 7 days, skip confirmation
-        rag-facile traces prune --days 7 --yes
+        ragtime traces prune --days 7 --yes
     """
     tracer = _get_tracer()
 

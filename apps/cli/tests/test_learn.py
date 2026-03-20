@@ -1,4 +1,4 @@
-"""Tests for the rag-facile learn command."""
+"""Tests for the ragtime learn command."""
 
 from unittest.mock import patch
 
@@ -11,10 +11,10 @@ runner = CliRunner()
 
 
 class TestLearnCommand:
-    """Tests for the `rag-facile learn` command and no-args behaviour."""
+    """Tests for the `ragtime learn` command and no-args behaviour."""
 
     def test_no_subcommand_shows_help(self):
-        """Running rag-facile with no args shows help, not the learning assistant."""
+        """Running ragtime with no args shows help, not the learning assistant."""
         result = runner.invoke(main_app, [])
 
         assert result.exit_code == 0
@@ -24,7 +24,7 @@ class TestLearnCommand:
         assert "Bonjour" not in result.output
 
     def test_learn_command_starts_assistant(self, monkeypatch):
-        """`rag-facile learn` starts the interactive learning assistant."""
+        """`ragtime learn` starts the interactive learning assistant."""
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
         with (
@@ -53,7 +53,7 @@ class TestLearnCommand:
 
         assert result.exit_code == 0
         # No-workspace hint visible in the welcome panel
-        assert "ragfacile.toml" in result.output
+        assert "ragtime.toml" in result.output
         # Learn still started
         assert "Bonjour" in result.output
 
@@ -68,18 +68,18 @@ class TestLearnCommand:
         assert result.exit_code == 1
         assert "No API key found" in result.output
 
-    def test_run_rag_facile_tool_no_workspace(self):
-        """run_rag_facile with no workspace still runs the command (no cwd requirement)."""
+    def test_run_ragtime_tool_no_workspace(self):
+        """run_ragtime with no workspace still runs the command (no cwd requirement)."""
         from unittest.mock import MagicMock, patch
 
         from cli.commands.learn import tools
 
         tools._workspace_root = None
         mock_result = MagicMock()
-        mock_result.stdout = "rag-facile v0.17.0"
+        mock_result.stdout = "ragtime v0.17.0"
         mock_result.stderr = ""
         with patch("cli.commands.learn.tools.subprocess.run", return_value=mock_result):
-            result = tools.run_rag_facile("version")
+            result = tools.run_ragtime("version")
 
         assert "0.17.0" in result
 
@@ -108,7 +108,7 @@ class TestNewCommand:
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
         # Create a minimal workspace
-        (tmp_path / "ragfacile.toml").write_text("")
+        (tmp_path / "ragtime.toml").write_text("")
         (tmp_path / ".env").write_text("")
         agent_dir = tmp_path / ".agent"
         agent_dir.mkdir()

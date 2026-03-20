@@ -4,7 +4,7 @@ import pytest
 import respx
 from httpx import Response
 
-from rag_facile.storage.albert import AlbertProvider
+from ragtime.storage.albert import AlbertProvider
 
 
 @pytest.fixture

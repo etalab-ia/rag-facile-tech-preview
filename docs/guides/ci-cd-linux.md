@@ -1,6 +1,6 @@
 # CI/CD Linux Testing Guide
 
-This guide explains how to test RAG Facile installation on Linux in CI/CD pipelines using GitHub Actions.
+This guide explains how to test Ragtime installation on Linux in CI/CD pipelines using GitHub Actions.
 
 **See also:** [Windows Testing Guide](ci-cd-windows.md) | [macOS Testing Guide](ci-cd-macos.md) | [Complete Workflow Example](../../.github/workflows/test-install.yml)
 
@@ -33,7 +33,7 @@ linux-install:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -73,7 +73,7 @@ linux-multi-distro:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -127,7 +127,7 @@ linux-custom-shell:
     - name: Verify installation
       shell: ${{ matrix.shell }}
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -158,7 +158,7 @@ linux-minimal-system:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
 ```
 

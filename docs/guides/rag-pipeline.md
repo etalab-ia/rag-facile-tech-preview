@@ -1,6 +1,6 @@
 # Understanding the RAG Pipeline
 
-This guide explains what happens under the hood when your RAG application answers a question. Each stage of the pipeline is a knob you can tune in [`ragfacile.toml`](../reference/ragfacile-toml.md).
+This guide explains what happens under the hood when your RAG application answers a question. Each stage of the pipeline is a knob you can tune in [`ragtime.toml`](../reference/ragfacile-toml.md).
 
 ## What is RAG?
 
@@ -161,7 +161,7 @@ The `system_prompt` shapes the model's personality and citation behavior.
 
 ## Configuring the Pipeline
 
-Every stage maps to a section in `ragfacile.toml`. To get started quickly, choose a preset:
+Every stage maps to a section in `ragtime.toml`. To get started quickly, choose a preset:
 
 | Preset | Philosophy | Key tradeoffs |
 |--------|-----------|---------------|
@@ -173,13 +173,13 @@ Every stage maps to a section in `ragfacile.toml`. To get started quickly, choos
 
 ```bash
 # Apply a preset
-rag-facile config preset apply balanced
+ragtime config preset apply balanced
 
 # Customize individual settings
-rag-facile config set generation.temperature 0.5
+ragtime config set generation.temperature 0.5
 ```
 
-For the full configuration reference, see [`ragfacile.toml` Reference](../reference/ragfacile-toml.md).
+For the full configuration reference, see [`ragtime.toml` Reference](../reference/ragfacile-toml.md).
 
 ## Further Reading
 

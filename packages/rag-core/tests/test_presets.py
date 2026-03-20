@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from rag_facile.core.presets import (
+from ragtime.core.presets import (
     apply_preset,
     compare_presets,
     get_preset_description,
@@ -90,7 +90,7 @@ def test_load_invalid_preset_raises_error():
 
 def test_apply_preset(tmp_path: Path):
     """Test applying preset to configuration file."""
-    config_file = tmp_path / "ragfacile.toml"
+    config_file = tmp_path / "ragtime.toml"
 
     # Apply preset
     apply_preset("accurate", config_file)
@@ -99,7 +99,7 @@ def test_apply_preset(tmp_path: Path):
     assert config_file.exists()
 
     # Load and verify
-    from rag_facile.core import load_config
+    from ragtime.core import load_config
 
     config = load_config(config_file)
     assert config.meta.preset == "accurate"

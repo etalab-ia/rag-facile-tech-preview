@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from rag_facile.tracing import (
+from ragtime.tracing import (
     _notify_hook,
     _reset_tracer,
     get_current_trace_id,
@@ -12,9 +12,9 @@ from rag_facile.tracing import (
     set_current_trace_id,
     set_trace_hook,
 )
-from rag_facile.tracing._models import TraceRecord
-from rag_facile.tracing.noop import NoopProvider
-from rag_facile.tracing.sqlite import SQLiteProvider
+from ragtime.tracing._models import TraceRecord
+from ragtime.tracing.noop import NoopProvider
+from ragtime.tracing.sqlite import SQLiteProvider
 
 
 @pytest.fixture(autouse=True)
@@ -72,7 +72,7 @@ class TestGetTracer:
             mock_connect.return_value.__enter__ = MagicMock(return_value=mock_conn)
             mock_connect.return_value.__exit__ = MagicMock(return_value=False)
 
-            from rag_facile.tracing.postgres import PostgresProvider
+            from ragtime.tracing.postgres import PostgresProvider
 
             tracer = get_tracer(mock_config)
             assert isinstance(tracer, PostgresProvider)
@@ -93,7 +93,7 @@ class TestGetTracer:
             mock_connect.return_value.__enter__ = MagicMock(return_value=mock_conn)
             mock_connect.return_value.__exit__ = MagicMock(return_value=False)
 
-            from rag_facile.tracing.postgres import PostgresProvider
+            from ragtime.tracing.postgres import PostgresProvider
 
             tracer = get_tracer(mock_config)
             assert isinstance(tracer, PostgresProvider)

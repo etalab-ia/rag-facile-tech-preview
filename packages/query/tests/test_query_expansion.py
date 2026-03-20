@@ -12,9 +12,9 @@ from unittest.mock import MagicMock
 import openai
 import pytest
 
-from rag_facile.query._models import ExpandedQueries, HypotheticalDocument
-from rag_facile.query.hyde import HyDEExpander
-from rag_facile.query.multi_query import MultiQueryExpander
+from ragtime.query._models import ExpandedQueries, HypotheticalDocument
+from ragtime.query.hyde import HyDEExpander
+from ragtime.query.multi_query import MultiQueryExpander
 
 
 # ---------------------------------------------------------------------------
@@ -194,23 +194,23 @@ class TestHyDEExpander:
 
 class TestGetExpander:
     def test_get_expander_multi_query(self):
-        from rag_facile.query import get_expander
-        from rag_facile.query.multi_query import MultiQueryExpander
+        from ragtime.query import get_expander
+        from ragtime.query.multi_query import MultiQueryExpander
 
         config = _make_config(strategy="multi_query")
         expander = get_expander(config)
         assert isinstance(expander, MultiQueryExpander)
 
     def test_get_expander_hyde(self):
-        from rag_facile.query import get_expander
-        from rag_facile.query.hyde import HyDEExpander
+        from ragtime.query import get_expander
+        from ragtime.query.hyde import HyDEExpander
 
         config = _make_config(strategy="hyde")
         expander = get_expander(config)
         assert isinstance(expander, HyDEExpander)
 
     def test_get_expander_unknown_raises(self):
-        from rag_facile.query import get_expander
+        from ragtime.query import get_expander
 
         config = _make_config(strategy="unknown_strategy")
         with pytest.raises(ValueError, match="Unknown query expansion strategy"):

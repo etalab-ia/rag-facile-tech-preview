@@ -1,7 +1,7 @@
 """Tests for the bootstrap context loader."""
 
-from rag_facile.memory.context import bootstrap_context
-from rag_facile.memory.stores import EpisodicLog, SemanticStore
+from ragtime.memory.context import bootstrap_context
+from ragtime.memory.stores import EpisodicLog, SemanticStore
 
 
 class TestBootstrapContext:

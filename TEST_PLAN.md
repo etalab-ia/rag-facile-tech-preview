@@ -1,4 +1,4 @@
-# RAG Facile Test Plan
+# Ragtime Test Plan
 
 ## 📋 Prerequisites
 
@@ -17,17 +17,17 @@
 
 **macOS/Linux/WSL/Windows (Git Bash):**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
 **Expected installer output:**
 - [ ] `✓ uv déjà installé` (or installs uv)
 - [ ] `✓ just déjà installé` (or installs just)
 - [ ] `==> Récupération de la dernière version...` → `Dernière version : vX.Y.Z`
-- [ ] `==> Installation de rag-facile vX.Y.Z .......`
-- [ ] `   Installed 1 executable: rag-facile`
-- [ ] `✓ rag-facile installé`
-- [ ] `✅ RAG Facile est prêt !`
+- [ ] `==> Installation de ragtime vX.Y.Z .......`
+- [ ] `   Installed 1 executable: ragtime`
+- [ ] `✓ ragtime installé`
+- [ ] `✅ Ragtime est prêt !`
 
 ### Step 2: Verify the Workspace
 
@@ -43,10 +43,10 @@ Expected commands listed: `run`, `learn`, `sync`.
 ls -la
 ```
 
-- [ ] `pyproject.toml` exists with `rag-facile-lib` dependency
+- [ ] `pyproject.toml` exists with `ragtime-lib` dependency
 - [ ] `app.py` exists (Chainlit entry point)
 - [ ] `.env.template` exists
-- [ ] `ragfacile.toml` exists
+- [ ] `ragtime.toml` exists
 - [ ] `justfile` exists
 - [ ] `.gitignore` exists (contains `.env`)
 - [ ] `src/my_rag_app/__init__.py` exists
@@ -75,29 +75,29 @@ just run
 just learn
 ```
 
-- [ ] `rag-facile learn` starts the chat assistant
+- [ ] `ragtime learn` starts the chat assistant
 - [ ] Welcome message (French) is shown
 - [ ] Can ask RAG-related questions
 - [ ] Type `q` or `quit` to exit cleanly
 
 ---
 
-## 🏗️ Scenario B: rag-facile setup (Advanced / Expert)
+## 🏗️ Scenario B: ragtime setup (Advanced / Expert)
 
 *Focus: Testing the `setup` command scaffold for developers who want customization.*
 
 ### Prerequisites
 
-The `rag-facile` CLI must be installed. From inside a workspace:
+The `ragtime` CLI must be installed. From inside a workspace:
 ```bash
-uv run rag-facile --version
+uv run ragtime --version
 ```
 
 ### Default Setup (non-expert)
 
 ```bash
 cd ~/tmp/rf-testing
-uv run rag-facile setup custom-app
+uv run ragtime setup custom-app
 ```
 
 **Interactive Prompts:**
@@ -105,10 +105,10 @@ uv run rag-facile setup custom-app
 - **Confirm**: Yes
 
 **Verify:**
-- [ ] `custom-app/pyproject.toml` has `rag-facile-lib` + `chainlit` + `rag-facile-cli` (dev)
+- [ ] `custom-app/pyproject.toml` has `ragtime-lib` + `chainlit` + `ragtime-cli` (dev)
 - [ ] `custom-app/app.py` exists
 - [ ] `custom-app/justfile` has `run`, `learn`, `sync` recipes
-- [ ] `custom-app/ragfacile.toml` has `provider = "albert-collections"`
+- [ ] `custom-app/ragtime.toml` has `provider = "albert-collections"`
 - [ ] `custom-app/.env` has `OPENAI_API_KEY`
 - [ ] `custom-app/.gitignore` has `.env`
 - [ ] Summary shows `Structure: Standalone`
@@ -116,7 +116,7 @@ uv run rag-facile setup custom-app
 ### Expert Setup
 
 ```bash
-uv run rag-facile setup expert-app --expert
+uv run ragtime setup expert-app --expert
 ```
 
 **Interactive Prompts:**
@@ -127,11 +127,11 @@ uv run rag-facile setup expert-app --expert
 - **Confirm**: Yes
 
 **Verify:**
-- [ ] `ragfacile.toml` has `preset = "legal"` in `[meta]`
+- [ ] `ragtime.toml` has `preset = "legal"` in `[meta]`
 - [ ] All files created as above
 - [ ] `--no-serve` flag skips starting the dev server:
   ```bash
-  uv run rag-facile setup no-serve-app --no-serve
+  uv run ragtime setup no-serve-app --no-serve
   ```
   - [ ] Completes without starting a server
   - [ ] Shows "Next steps" instructions
@@ -147,21 +147,21 @@ Navigate to an existing workspace and run:
 ### Config commands
 
 ```bash
-uv run rag-facile config show
+uv run ragtime config show
 ```
 - [ ] Shows RAG pipeline configuration in tabular form
 - [ ] Groups by pipeline stage (ingestion, retrieval, etc.)
 
 ```bash
-uv run rag-facile config set retrieval.top_k 15
+uv run ragtime config set retrieval.top_k 15
 ```
-- [ ] Updates `ragfacile.toml`
-- [ ] `uv run rag-facile config show` reflects the new value
+- [ ] Updates `ragtime.toml`
+- [ ] `uv run ragtime config show` reflects the new value
 
 ### Collections
 
 ```bash
-uv run rag-facile collections list
+uv run ragtime collections list
 ```
 - [ ] Lists available Albert public collections with IDs and names
 
@@ -169,7 +169,7 @@ uv run rag-facile collections list
 
 ```bash
 mkdir test-docs && echo "# Test document" > test-docs/test.md
-uv run rag-facile generate-dataset ./test-docs -o test-dataset.jsonl --provider albert
+uv run ragtime generate-dataset ./test-docs -o test-dataset.jsonl --provider albert
 ```
 - [ ] Generates Q/A pairs from the document
 - [ ] Output file is valid JSONL
@@ -188,13 +188,13 @@ From the monorepo root:
 ```bash
 uv run --project tools python tools/build_release_asset.py
 ```
-- [ ] Creates `dist/rag-facile-workspace-vX.Y.Z.zip`
+- [ ] Creates `dist/ragtime-workspace-vX.Y.Z.zip`
 - [ ] Zip contains `my-rag-app/` with all expected files
 
 ### Test install with local asset
 
 ```bash
-RAG_FACILE_LOCAL_ASSET="$(ls dist/rag-facile-workspace-*.zip | head -1)" bash install.sh
+RAG_FACILE_LOCAL_ASSET="$(ls dist/ragtime-workspace-*.zip | head -1)" bash install.sh
 ```
 - [ ] Skips GitHub API call
 - [ ] Extracts and installs correctly

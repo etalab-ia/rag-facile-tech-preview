@@ -15,12 +15,12 @@ Usage:
     uv run python tools/build_release_asset.py --output dist/
 
 Output:
-    dist/rag-facile-workspace-v{version}.zip
+    dist/ragtime-workspace-v{version}.zip
 
     The zip contains a single top-level directory `my-rag-app/` with:
-    - pyproject.toml (deps: rag-facile-lib + chainlit; dev: rag-facile-cli)
+    - pyproject.toml (deps: ragtime-lib + chainlit; dev: ragtime-cli)
     - app.py (Chainlit app, pre-configured)
-    - ragfacile.toml (balanced preset, Albert RAG backend)
+    - ragtime.toml (balanced preset, Albert RAG backend)
     - .env.template (OPENAI_API_KEY= placeholder)
     - justfile (run, learn, sync recipes)
     - chainlit.md (welcome screen)
@@ -44,7 +44,7 @@ console = Console()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 WORKSPACE_NAME = "my-rag-app"
-GITHUB_REPO = "https://github.com/etalab-ia/rag-facile.git"
+GITHUB_REPO = "https://github.com/etalab-ia/ragtime.git"
 
 
 def _get_version() -> str:
@@ -110,27 +110,27 @@ def build_workspace(target_dir: Path, version: str, git_sha: str) -> None:
     # This ensures the workspace always gets the packages that were present when
     # the zip was built, even if the version tag was created before recent merges.
     uv_sources = (
-        f'rag-facile-lib = {{ git = "{GITHUB_REPO}", rev = "{git_sha}", subdirectory = "packages/rag-facile-lib" }}\n'
+        f'ragtime-lib = {{ git = "{GITHUB_REPO}", rev = "{git_sha}", subdirectory = "packages/ragtime-lib" }}\n'
         f'albert-client = {{ git = "{GITHUB_REPO}", rev = "{git_sha}", subdirectory = "packages/albert-client" }}\n'
-        f'rag-facile-cli = {{ git = "{GITHUB_REPO}", rev = "{git_sha}", subdirectory = "apps/cli" }}\n'
+        f'ragtime-cli = {{ git = "{GITHUB_REPO}", rev = "{git_sha}", subdirectory = "apps/cli" }}\n'
     )
 
     pyproject = f"""\
 [project]
 name = "{project_name}"
 version = "0.1.0"
-description = "RAG Facile application"
+description = "Ragtime application"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "rag-facile-lib",
+    "ragtime-lib",
     "chainlit>=1.3.0",
     "python-dotenv>=1.0.0",
 ]
 
 [dependency-groups]
 dev = [
-    "rag-facile-cli",
+    "ragtime-cli",
 ]
 
 [tool.setuptools]
@@ -163,7 +163,7 @@ run:
 
 # Open the interactive RAG learning assistant
 learn:
-    uv run rag-facile learn
+    uv run ragtime learn
 """
     (target_dir / "justfile").write_text(justfile)
     console.print("[dim]  ✓ justfile[/dim]")
@@ -173,7 +173,7 @@ learn:
 
     variables: dict[str, str] = {
         "project_name": project_name,
-        "description": "RAG Facile application",
+        "description": "Ragtime application",
         "openai_api_key": "",
         "openai_base_url": "https://albert.api.etalab.gouv.fr/v1",
         "system_prompt": "Vous êtes un assistant utile.",
@@ -201,12 +201,12 @@ learn:
         shutil.copy(chainlit_config_src, chainlit_dir / "config.toml")
         console.print("[dim]  ✓ .chainlit/config.toml[/dim]")
 
-    # ── ragfacile.toml ───────────────────────────────────────────────────────
-    # Import here — this script is run from the monorepo, so rag_facile is on the path
-    from rag_facile.core import RAGConfig  # noqa: PLC0415
-    from rag_facile.core.loader import save_config  # noqa: PLC0415
-    from rag_facile.core.presets import load_preset  # noqa: PLC0415
-    from rag_facile.core.schema import (  # noqa: PLC0415
+    # ── ragtime.toml ───────────────────────────────────────────────────────
+    # Import here — this script is run from the monorepo, so ragtime is on the path
+    from ragtime.core import RAGConfig  # noqa: PLC0415
+    from ragtime.core.loader import save_config  # noqa: PLC0415
+    from ragtime.core.presets import load_preset  # noqa: PLC0415
+    from ragtime.core.schema import (  # noqa: PLC0415
         ChunkingConfig,
         EvalConfig,
         FormattingConfig,
@@ -242,8 +242,8 @@ learn:
             language="fr",
         ),
     )
-    save_config(config, target_dir / "ragfacile.toml")
-    console.print("[dim]  ✓ ragfacile.toml[/dim]")
+    save_config(config, target_dir / "ragtime.toml")
+    console.print("[dim]  ✓ ragtime.toml[/dim]")
 
     # ── .env.template ────────────────────────────────────────────────────────
     env_template = """\
@@ -258,7 +258,7 @@ OPENAI_BASE_URL=https://albert.api.etalab.gouv.fr/v1
     readme = f"""\
 # {project_name}
 
-A RAG application powered by [RAG Facile](https://github.com/etalab-ia/rag-facile)
+A RAG application powered by [Ragtime](https://github.com/etalab-ia/ragtime)
 and the [Albert API](https://albert.sites.beta.gouv.fr/).
 
 ## Quick Start
@@ -379,9 +379,7 @@ def create_zip(workspace_dir: Path, output_path: Path, workspace_name: str) -> N
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Build the RAG Facile release asset zip."
-    )
+    parser = argparse.ArgumentParser(description="Build the Ragtime release asset zip.")
     parser.add_argument(
         "--version",
         help="Release version (e.g. '0.17.0'). Defaults to CLI pyproject.toml version.",
@@ -402,11 +400,11 @@ def main() -> None:
 
     git_sha = _get_git_sha()
     tag = f"v{version}"
-    zip_name = f"rag-facile-workspace-{tag}.zip"
+    zip_name = f"ragtime-workspace-{tag}.zip"
     output_path = REPO_ROOT / args.output / zip_name
 
     console.print(
-        f"\n[bold]RAG Facile Release Asset Builder[/bold] — version [cyan]{tag}[/cyan] "
+        f"\n[bold]Ragtime Release Asset Builder[/bold] — version [cyan]{tag}[/cyan] "
         f"([dim]{git_sha[:8]}[/dim])\n"
     )
 

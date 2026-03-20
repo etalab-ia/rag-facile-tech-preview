@@ -1,20 +1,20 @@
 # rag-core
 
-Configuration management and shared types for the RAG Facile pipeline.
+Configuration management and shared types for the Ragtime pipeline.
 
 ## Overview
 
 The `rag-core` package provides:
 
 - **`RAGConfig`** — Pydantic model covering all 12 RAG pipeline stages
-- **`load_config` / `get_config`** — Load from `ragfacile.toml`, with env var overrides
+- **`load_config` / `get_config`** — Load from `ragtime.toml`, with env var overrides
 - **`load_preset` / `list_presets`** — Battle-tested preset configurations
 - **`RetrievedChunk`** — Shared TypedDict used across retrieval, reranking, and context modules
-- **`PIPELINE_STAGES`** — Ordered metadata for all pipeline stages (used by `rag-facile config show`)
+- **`PIPELINE_STAGES`** — Ordered metadata for all pipeline stages (used by `ragtime config show`)
 
 ## Installation
 
-This package is bundled into `rag-facile-lib`. To use it standalone in the workspace:
+This package is bundled into `ragtime-lib`. To use it standalone in the workspace:
 
 ```bash
 uv pip install -e packages/rag-core
@@ -25,9 +25,9 @@ uv pip install -e packages/rag-core
 ### Load configuration
 
 ```python
-from rag_facile.core import load_config, get_config
+from ragtime.core import load_config, get_config
 
-# Load from ragfacile.toml (auto-searches parent dirs)
+# Load from ragtime.toml (auto-searches parent dirs)
 config = load_config()
 
 # Singleton pattern (cached after first load)
@@ -40,7 +40,7 @@ print(config.retrieval.top_k)    # 10
 ### Use a preset
 
 ```python
-from rag_facile.core.presets import load_preset, list_presets
+from ragtime.core.presets import load_preset, list_presets
 
 print(list_presets())  # ['accurate', 'balanced', 'fast', 'hr', 'legal']
 
@@ -60,7 +60,7 @@ export RAG_RERANKING_ENABLED="false"
 ### Shared types
 
 ```python
-from rag_facile.core import RetrievedChunk
+from ragtime.core import RetrievedChunk
 
 chunks: list[RetrievedChunk] = [
     RetrievedChunk(
@@ -87,14 +87,14 @@ chunks: list[RetrievedChunk] = [
 
 ## Configuration sections
 
-12 pipeline stages, each tunable in `ragfacile.toml`:
+12 pipeline stages, each tunable in `ragtime.toml`:
 
 `eval` · `ingestion` · `chunking` · `embedding` · `storage` · `query` ·
 `retrieval` · `reranking` · `context` · `generation` · `hallucination` · `formatting`
 
-See [`ragfacile.toml` Reference](../../docs/reference/ragfacile-toml.md) for full documentation.
+See [`ragtime.toml` Reference](../../docs/reference/ragfacile-toml.md) for full documentation.
 
 ## Related packages
 
-- **rag-facile-lib**: Bundles this package with all other pipeline modules for distribution
+- **ragtime-lib**: Bundles this package with all other pipeline modules for distribution
 - **pipelines**: Orchestrates the full RAG pipeline using this config

@@ -1,7 +1,7 @@
-"""rag-facile learn command.
+"""ragtime learn command.
 
 start_chat() is the primary entry point — called from main.py when the user runs
-`rag-facile learn`.
+`ragtime learn`.
 """
 
 from cli.commands.learn.agent import start_chat

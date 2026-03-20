@@ -1,4 +1,4 @@
-# rag-facile evaluation
+# ragtime evaluation
 
 RAG evaluation package using [Inspect AI](https://inspect.aisi.org.uk/) (UK AISI).
 
@@ -12,9 +12,9 @@ Provides three scorers for RAG pipeline evaluation:
 
 ```bash
 # Run evaluation on a dataset
-rag-facile eval data/datasets/golden_v1.jsonl
+ragtime eval data/datasets/golden_v1.jsonl
 
 # Or use Inspect directly
-inspect eval packages/evaluation/src/rag_facile/evaluation/_tasks.py \
+inspect eval packages/evaluation/src/ragtime/evaluation/_tasks.py \
   --model openai/openweight-medium
 ```

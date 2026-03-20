@@ -2,7 +2,7 @@
 
 import pytest
 
-from rag_facile.memory.tool import (
+from ragtime.memory.tool import (
     _safe_resolve,
     memory_edit,
     memory_read,
@@ -255,7 +255,7 @@ class TestMemorySearch:
 
         monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
-        import rag_facile.memory.tool as tool_mod
+        import ragtime.memory.tool as tool_mod
 
         # Reset singleton so _get_albert_index creates a fresh one
         tool_mod._albert_index = None
@@ -264,7 +264,7 @@ class TestMemorySearch:
         mock_index.search.return_value = [sem_result]
 
         with __import__("unittest.mock", fromlist=["patch"]).patch(
-            "rag_facile.memory.tool._get_albert_index", return_value=mock_index
+            "ragtime.memory.tool._get_albert_index", return_value=mock_index
         ):
             result = memory_search.forward("Albert")
 
@@ -278,7 +278,7 @@ class TestMemorySearch:
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
         monkeypatch.delenv("ALBERT_API_KEY", raising=False)
 
-        import rag_facile.memory.tool as tool_mod
+        import ragtime.memory.tool as tool_mod
 
         tool_mod._albert_index = None
 

@@ -1,8 +1,8 @@
 # RAG Science: Contributor Reference
 
-This reference maps each rag-facile pipeline phase against state-of-the-art research (2024–2026), documents known capability gaps, and provides a prioritised roadmap for contributors. Each section links to the key papers.
+This reference maps each ragtime pipeline phase against state-of-the-art research (2024–2026), documents known capability gaps, and provides a prioritised roadmap for contributors. Each section links to the key papers.
 
-> For a non-technical introduction see [The Science Behind rag-facile](../guides/how-rag-works.md).  
+> For a non-technical introduction see [The Science Behind ragtime](../guides/how-rag-works.md).  
 > For stage-by-stage configuration see [Understanding the RAG Pipeline](../guides/rag-pipeline.md).
 
 ---
@@ -15,7 +15,7 @@ A production RAG system for French government applications must optimise three c
 2. **Sovereignty** — open-weight models, on-premise deployment, RGPD compliance
 3. **Cost** — sub-second latency at <€0.01/query for sustainable public service scale
 
-rag-facile is deliberately modular: every phase below can be upgraded independently. The roadmap at the end of this document prioritises changes by impact and effort.
+ragtime is deliberately modular: every phase below can be upgraded independently. The roadmap at the end of this document prioritises changes by impact and effort.
 
 ---
 
@@ -33,7 +33,7 @@ The dominant pattern in 2024–2025 is **Markdown as the universal intermediate 
 | **[olmOCR](https://huggingface.co/allenai/olmOCR-7B-0225-preview)** (AllenAI, Feb 2025) | SOTA scanned docs | ~30 pages/sec | $176/1M pages | Apache 2.0 |
 | Marker (current) | Good | Moderate | Free | GPL-3.0 |
 
-**Multimodal gap**: OpenRAG implements VLM image captioning (moondream/LLaVA) and Whisper transcription for audio. rag-facile currently ignores embedded images.
+**Multimodal gap**: OpenRAG implements VLM image captioning (moondream/LLaVA) and Whisper transcription for audio. ragtime currently ignores embedded images.
 
 ### Upgrade priorities
 
@@ -129,7 +129,7 @@ ColBERT v2 ([arXiv:2112.01488](https://arxiv.org/abs/2112.01488)) stores per-tok
 
 **Current implementation**: ❌ No preprocessing — raw query sent directly to retrieval
 
-This is **the largest single quality gap** in rag-facile. Unprocessed queries miss 15–30% of relevant documents due to vocabulary mismatch between informal user language and formal document vocabulary.
+This is **the largest single quality gap** in ragtime. Unprocessed queries miss 15–30% of relevant documents due to vocabulary mismatch between informal user language and formal document vocabulary.
 
 ### State of the art
 
@@ -273,11 +273,11 @@ All of these are low-effort, high-signal changes:
 
 ## Evaluation
 
-Uses **[Inspect AI](https://github.com/UKGovernmentBEIS/inspect_ai)** (UK AISI, MIT licence) as the evaluation orchestration framework. Implemented in `packages/evaluation/` (`rag_facile.evaluation`). Routes the judge to Albert for zero incremental cost:
+Uses **[Inspect AI](https://github.com/UKGovernmentBEIS/inspect_ai)** (UK AISI, MIT licence) as the evaluation orchestration framework. Implemented in `packages/evaluation/` (`ragtime.evaluation`). Routes the judge to Albert for zero incremental cost:
 
 ```python
-from rag_facile.evaluation import rag_eval_scorer, load_rag_dataset
-from rag_facile.evaluation._solvers import inject_rag_context
+from ragtime.evaluation import rag_eval_scorer, load_rag_dataset
+from ragtime.evaluation._solvers import inject_rag_context
 from inspect_ai import Task
 from inspect_ai.solver import generate
 
@@ -288,7 +288,7 @@ task = Task(
 )
 ```
 
-**CLI**: `rag-facile eval run`, `rag-facile eval view`, `rag-facile eval list`
+**CLI**: `ragtime eval run`, `ragtime eval view`, `ragtime eval list`
 
 **Built-in scorers**: recall@k, precision@k, faithfulness (LLM-as-judge)
 

@@ -1,13 +1,13 @@
 ---
 name: skill-creator
-description: Help the user design and write a new skill for the rag-facile agent.
+description: Help the user design and write a new skill for the ragtime agent.
 triggers: ["create skill", "new skill", "créer une compétence", "add skill", "custom skill", "write skill", "skill-creator"]
 ---
 
 # Skill: Skill Creator
 
-You are helping the user create a new custom skill for their rag-facile workspace.
-Skills live in `.rag-facile/skills/<name>/SKILL.md` and are loaded automatically.
+You are helping the user create a new custom skill for their ragtime workspace.
+Skills live in `.ragtime/skills/<name>/SKILL.md` and are loaded automatically.
 
 ## Step 1 — Understand what they want the skill to do
 Ask: "Quel type de questions ou de tâches voulez-vous que cette compétence gère ?"
@@ -41,7 +41,7 @@ triggers: ["keyword1", "keyword2", ...]
 
 Good skill instructions:
 - Tell the agent what to do step-by-step (numbered flow)
-- Reference which tools to call (`run_rag_facile()`, `get_docs()`, etc.)
+- Reference which tools to call (`run_ragtime()`, `get_docs()`, etc.)
 - Include "never" rules to prevent common mistakes
 - Are written for the agent, not the user
 

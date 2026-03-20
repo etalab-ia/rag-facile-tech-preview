@@ -14,8 +14,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rag_facile.tracing._models import TraceRecord
-from rag_facile.tracing.postgres import (
+from ragtime.tracing._models import TraceRecord
+from ragtime.tracing.postgres import (
     PostgresProvider,
     _config_hash,
     _row_to_trace,

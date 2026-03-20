@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from rag_facile.tracing._models import FeedbackUpdate, TraceRecord
+from ragtime.tracing._models import FeedbackUpdate, TraceRecord
 
 
 class TestTraceRecord:

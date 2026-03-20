@@ -1,19 +1,19 @@
-# Uninstalling RAG Facile
+# Uninstalling Ragtime
 
-This guide explains how to remove RAG Facile and optionally the toolchain installed by the installer.
+This guide explains how to remove Ragtime and optionally the toolchain installed by the installer.
 
 ## Quick Uninstall
 
-Remove the rag-facile CLI:
+Remove the ragtime CLI:
 
 ```bash
-rag-facile uninstall
+ragtime uninstall
 ```
 
 Remove the CLI **and** the entire toolchain (proto, moon, uv, just, direnv):
 
 ```bash
-rag-facile uninstall --all
+ragtime uninstall --all
 ```
 
 Both commands show what will be removed and ask for confirmation. Use `--yes` to skip the prompt.
@@ -24,7 +24,7 @@ With `--all`, the uninstall command removes everything the installer put on your
 
 | Component | Location | Description |
 |-----------|----------|-------------|
-| rag-facile CLI | `~/.local/bin/rag-facile` | The CLI tool itself |
+| ragtime CLI | `~/.local/bin/ragtime` | The CLI tool itself |
 | moon | `~/.proto/` | Workspace task runner |
 | uv | `~/.proto/` | Python package manager |
 | just | `~/.proto/` | Command runner |
@@ -34,25 +34,25 @@ With `--all`, the uninstall command removes everything the installer put on your
 
 On Windows, the uninstall also cleans up User PATH entries in the registry.
 
-> **Note**: Projects you created with `rag-facile setup` are **not** removed. Delete those directories yourself if you no longer need them.
+> **Note**: Projects you created with `ragtime setup` are **not** removed. Delete those directories yourself if you no longer need them.
 
 ## Windows
 
 On Windows (PowerShell), the same command works:
 
 ```powershell
-rag-facile uninstall
+ragtime uninstall
 ```
 
 ## Manual Uninstall
 
-If the `rag-facile` command is not available, you can remove everything manually.
+If the `ragtime` command is not available, you can remove everything manually.
 
 ### Linux / macOS / WSL
 
 ```bash
 # 1. Remove the CLI
-uv tool uninstall rag-facile-cli
+uv tool uninstall ragtime-cli
 
 # 2. Remove proto-managed tools
 proto uninstall moon
@@ -67,7 +67,7 @@ brew uninstall direnv    # macOS
 sudo apt remove direnv   # Ubuntu/Debian
 
 # 5. Clean your shell profile (~/.zshrc, ~/.bashrc, etc.)
-#    Remove lines marked with "# Added by RAG Facile installer"
+#    Remove lines marked with "# Added by Ragtime installer"
 #    and any "eval $(direnv hook ...)" lines
 ```
 
@@ -77,7 +77,7 @@ Then restart your terminal.
 
 ```powershell
 # 1. Remove the CLI
-uv tool uninstall rag-facile-cli
+uv tool uninstall ragtime-cli
 
 # 2. Remove proto-managed tools
 proto uninstall moon

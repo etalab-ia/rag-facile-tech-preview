@@ -4,13 +4,13 @@ import time
 from typing import Any, TypedDict
 
 import reflex as rx
-from rag_facile.pipelines import process_bytes, process_query
-from rag_facile.tracing import update_trace_with_response
+from ragtime.pipelines import process_bytes, process_query
+from ragtime.tracing import update_trace_with_response
 from dotenv import load_dotenv
 
 from albert import AlbertClient, ChatCompletionMessageParam
-from rag_facile.core import get_config
-from rag_facile.core.mediatech import get_collection_name
+from ragtime.core import get_config
+from ragtime.core.mediatech import get_collection_name
 
 
 # Load .env file

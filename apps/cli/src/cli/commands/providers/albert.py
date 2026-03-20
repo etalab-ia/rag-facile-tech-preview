@@ -1,7 +1,7 @@
 """Albert API provider for Data Foundry.
 
 Uses Albert API (OpenGateLLM) for document ingestion, search, and Q/A generation.
-Leverages the rag_facile pipeline packages (ingestion, storage, retrieval) for
+Leverages the ragtime pipeline packages (ingestion, storage, retrieval) for
 consistency with the main RAG pipeline.
 """
 
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class AlbertApiProvider:
     """Data Foundry provider using Albert API (OpenGateLLM).
 
-    Uses the rag_facile pipeline packages for document processing, storage,
+    Uses the ragtime pipeline packages for document processing, storage,
     and retrieval. This ensures consistency with the main RAG pipeline.
 
     The provider:
@@ -29,16 +29,16 @@ class AlbertApiProvider:
     2. Searches collections using configured retrieval strategy
     3. Generates Q/A pairs from search results via LLM streaming
 
-    All parameters (chunking, retrieval, generation) come from ragfacile.toml.
+    All parameters (chunking, retrieval, generation) come from ragtime.toml.
     """
 
     def __init__(self):
         """Initialize the Albert API provider."""
-        from rag_facile.core import get_config
-        from rag_facile.ingestion import get_provider as get_ingestion_provider
-        from rag_facile.reranking import get_provider as get_reranking_provider
-        from rag_facile.retrieval import get_provider as get_retrieval_provider
-        from rag_facile.storage import get_provider as get_storage_provider
+        from ragtime.core import get_config
+        from ragtime.ingestion import get_provider as get_ingestion_provider
+        from ragtime.reranking import get_provider as get_reranking_provider
+        from ragtime.retrieval import get_provider as get_retrieval_provider
+        from ragtime.storage import get_provider as get_storage_provider
 
         self.config = get_config()
         self._ingestion = get_ingestion_provider(self.config)
@@ -62,8 +62,8 @@ class AlbertApiProvider:
     def upload_documents(self, document_paths: list[str]) -> None:
         """Upload documents to Albert and create a collection.
 
-        Uses the rag_facile storage provider for Albert collections, which
-        respects chunking parameters from ragfacile.toml.
+        Uses the ragtime storage provider for Albert collections, which
+        respects chunking parameters from ragtime.toml.
 
         Args:
             document_paths: List of paths to documents (PDF, MD, HTML)
@@ -79,7 +79,7 @@ class AlbertApiProvider:
         self.collection_id = self._storage.create_collection(
             self.client,
             name=collection_name,
-            description="RAG Facile Data Foundry",
+            description="Ragtime Data Foundry",
         )
         logger.info(f"Created Albert collection: {self.collection_id}")
 
@@ -317,7 +317,7 @@ class AlbertApiProvider:
     def _retrieve_document_context(self) -> tuple[str, list[int]]:
         """Retrieve sample passages and chunk IDs from the collection.
 
-        Uses the rag_facile retrieval package with configured search strategy
+        Uses the ragtime retrieval package with configured search strategy
         to get representative passages from the uploaded documents.
 
         Returns:

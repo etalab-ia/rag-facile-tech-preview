@@ -1,4 +1,4 @@
-# Contributing to RAG Facile
+# Contributing to Ragtime
 
 ## Development Setup
 
@@ -33,8 +33,8 @@ brew install unzip
 ### 2. Clone and setup
 
 ```bash
-git clone https://github.com/etalab-ia/rag-facile.git
-cd rag-facile
+git clone https://github.com/etalab-ia/ragtime.git
+cd ragtime
 just sync  # Installs dependencies and pre-commit hooks
 ```
 
@@ -68,24 +68,24 @@ moon run tools:type-check   # Run type checker
 ## Project Structure
 
 ```
-rag-facile/
+ragtime/
 ├── apps/                    # Applications
-│   ├── cli/                 # rag-facile CLI tool
+│   ├── cli/                 # ragtime CLI tool
 │   ├── chainlit-chat/       # Chainlit frontend (golden master)
 │   └── reflex-chat/         # Reflex frontend (golden master)
 ├── packages/                # Shared packages
-│   ├── rag-core/            # Core config + schema (rag_facile.core)
-│   ├── albert-client/       # Albert API SDK (uses `albert` namespace, not rag_facile.*)
-│   ├── ingestion/           # Document parsing (rag_facile.ingestion)
-│   ├── pipelines/           # Pipeline orchestration (rag_facile.pipelines)
-│   ├── retrieval/           # Vector search (rag_facile.retrieval)
-│   ├── reranking/           # Cross-encoder re-scoring (rag_facile.reranking)
-│   ├── context/             # Context formatting (rag_facile.context)
-│   ├── storage/             # Collection management (rag_facile.storage)
-│   └── rag-facile-lib/      # Library bundle (all pipeline packages)
+│   ├── rag-core/            # Core config + schema (ragtime.core)
+│   ├── albert-client/       # Albert API SDK (uses `albert` namespace, not ragtime.*)
+│   ├── ingestion/           # Document parsing (ragtime.ingestion)
+│   ├── pipelines/           # Pipeline orchestration (ragtime.pipelines)
+│   ├── retrieval/           # Vector search (ragtime.retrieval)
+│   ├── reranking/           # Cross-encoder re-scoring (ragtime.reranking)
+│   ├── context/             # Context formatting (ragtime.context)
+│   ├── storage/             # Collection management (ragtime.storage)
+│   └── ragtime-lib/      # Library bundle (all pipeline packages)
 ├── docs/                    # User and contributor documentation
 │   ├── guides/              # Getting started, setup, pipelines
-│   ├── reference/           # Components, config, ragfacile.toml
+│   ├── reference/           # Components, config, ragtime.toml
 │   └── troubleshooting/     # Common issues and fixes
 ├── tools/                   # Development tools
 │   ├── generate_templates.py # Template generator
@@ -110,34 +110,34 @@ moon run cli:test
 
 ### Understanding the Pipeline Architecture
 
-RAG Facile uses a **phase-based pipeline** under the `rag_facile.*` namespace. Each RAG pipeline phase is its own package, and `rag_facile.pipelines` orchestrates them all.
+Ragtime uses a **phase-based pipeline** under the `ragtime.*` namespace. Each RAG pipeline phase is its own package, and `ragtime.pipelines` orchestrates them all.
 
 **Package → namespace mapping:**
 
 | Package | Import namespace | Responsibility |
 |---------|-----------------|----------------|
-| `packages/rag-core/` | `rag_facile.core` | Config schema, presets, `RAGConfig` |
-| `packages/ingestion/` | `rag_facile.ingestion` | Document parsing (local pypdf or Albert API) |
-| `packages/storage/` | `rag_facile.storage` | Collection management (Albert API) |
-| `packages/retrieval/` | `rag_facile.retrieval` | Vector search |
-| `packages/reranking/` | `rag_facile.reranking` | Cross-encoder re-scoring |
-| `packages/context/` | `rag_facile.context` | Format retrieved chunks → LLM context |
-| `packages/pipelines/` | `rag_facile.pipelines` | Orchestrates all phases |
-| `packages/rag-facile-lib/` | — | Bundles all the above for external projects |
-| `packages/albert-client/` | `albert` | Low-level Albert API SDK — **not** under `rag_facile.*` |
+| `packages/rag-core/` | `ragtime.core` | Config schema, presets, `RAGConfig` |
+| `packages/ingestion/` | `ragtime.ingestion` | Document parsing (local pypdf or Albert API) |
+| `packages/storage/` | `ragtime.storage` | Collection management (Albert API) |
+| `packages/retrieval/` | `ragtime.retrieval` | Vector search |
+| `packages/reranking/` | `ragtime.reranking` | Cross-encoder re-scoring |
+| `packages/context/` | `ragtime.context` | Format retrieved chunks → LLM context |
+| `packages/pipelines/` | `ragtime.pipelines` | Orchestrates all phases |
+| `packages/ragtime-lib/` | — | Bundles all the above for external projects |
+| `packages/albert-client/` | `albert` | Low-level Albert API SDK — **not** under `ragtime.*` |
 
-> **Note**: `albert-client` is versioned independently (tracks the Albert API OpenAPI spec) and is intentionally kept outside the `rag_facile.*` namespace so it can be used standalone.
+> **Note**: `albert-client` is versioned independently (tracks the Albert API OpenAPI spec) and is intentionally kept outside the `ragtime.*` namespace so it can be used standalone.
 
-**Pipeline selection** is driven by `storage.provider` in `ragfacile.toml`:
+**Pipeline selection** is driven by `storage.provider` in `ragtime.toml`:
 ```toml
 [storage]
 provider = "albert-collections"  # Full Albert RAG (default)
 # provider = "local-sqlite"      # Local text extraction (offline)
 ```
 
-**Chat apps** import from the `rag_facile.pipelines` namespace:
+**Chat apps** import from the `ragtime.pipelines` namespace:
 ```python
-from rag_facile.pipelines import get_pipeline
+from ragtime.pipelines import get_pipeline
 
 pipeline = get_pipeline(config)
 await pipeline.process_file(file_bytes, mime_type)
@@ -147,11 +147,11 @@ response = await pipeline.process_query(message_history)
 There is no `context_loader.py` or `modules.yml` — the pipeline factory handles backend selection automatically based on config.
 
 **Key files:**
-- `packages/pipelines/src/rag_facile/pipelines/` — Pipeline orchestration
+- `packages/pipelines/src/ragtime/pipelines/` — Pipeline orchestration
   - `__init__.py` — `get_pipeline(config)` factory
   - `albert.py` — `AlbertPipeline`: ingestion → storage → retrieval → reranking → context
   - `basic.py` — `BasicPipeline`: local text extraction only
-- `packages/rag-core/src/rag_facile/core/schema.py` — All config Pydantic models
+- `packages/rag-core/src/ragtime/core/schema.py` — All config Pydantic models
 
 When modifying pipeline logic:
 - Changes to orchestration belong in `packages/pipelines/`
@@ -236,11 +236,11 @@ apt-get update && apt-get install -y curl
 
 # Run the installer from a branch
 export RAG_FACILE_BRANCH=my-feature-branch
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/$RAG_FACILE_BRANCH/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/$RAG_FACILE_BRANCH/install.sh | bash
 source ~/.bashrc
 
 # Test workspace setup
-rag-facile setup my-rag-app
+ragtime setup my-rag-app
 ```
 
 The install script will automatically install other prerequisites (git, xz-utils) on Debian/Ubuntu.
@@ -328,9 +328,9 @@ All checks must pass before merging.
 
 ## Configuration-Driven Architecture
 
-RAG Facile uses a configuration-driven architecture. Most components (apps, packages) do not have hardcoded RAG parameters. Instead, they consume the `RAGConfig` Pydantic model from `packages/rag-core`.
+Ragtime uses a configuration-driven architecture. Most components (apps, packages) do not have hardcoded RAG parameters. Instead, they consume the `RAGConfig` Pydantic model from `packages/rag-core`.
 
 When adding new features that require configuration:
-1. Define the schema in `packages/rag-core/src/rag_facile/core/schema.py`.
+1. Define the schema in `packages/rag-core/src/ragtime/core/schema.py`.
 2. Update presets in `packages/rag-core/presets/` if applicable.
-3. Access the configuration in your code using `from rag_facile.core import get_config`.
+3. Access the configuration in your code using `from ragtime.core import get_config`.

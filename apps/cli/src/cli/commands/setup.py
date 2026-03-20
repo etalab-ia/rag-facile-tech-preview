@@ -1,4 +1,4 @@
-"""Setup new RAG Facile standalone workspaces."""
+"""Setup new Ragtime standalone workspaces."""
 
 import json
 import os
@@ -31,10 +31,10 @@ class PresetConfig(TypedDict):
 
 
 # GitHub repository URL for installing the library from source
-_GITHUB_REPO = "https://github.com/etalab-ia/rag-facile.git"
+_GITHUB_REPO = "https://github.com/etalab-ia/ragtime.git"
 
 # GitHub API URL for fetching the latest release
-_GITHUB_API_LATEST = "https://api.github.com/repos/etalab-ia/rag-facile/releases/latest"
+_GITHUB_API_LATEST = "https://api.github.com/repos/etalab-ia/ragtime/releases/latest"
 
 # Default .gitignore for generated projects
 _GITIGNORE_CONTENT = """\
@@ -109,13 +109,13 @@ frontend.zip
 
 
 def _get_latest_release_tag() -> str | None:
-    """Fetch the latest rag-facile release tag from GitHub. Returns None on failure."""
+    """Fetch the latest ragtime release tag from GitHub. Returns None on failure."""
     try:
         req = urllib.request.Request(
             _GITHUB_API_LATEST,
             headers={
                 "Accept": "application/vnd.github+json",
-                "User-Agent": "rag-facile-cli",
+                "User-Agent": "ragtime-cli",
             },
         )
         with urllib.request.urlopen(req, timeout=5) as resp:
@@ -126,7 +126,7 @@ def _get_latest_release_tag() -> str | None:
 
 
 def _get_library_git_ref() -> dict[str, str]:
-    """Determine the git ref for rag-facile-lib and albert-client sources.
+    """Determine the git ref for ragtime-lib and albert-client sources.
 
     Returns a dict with either {"tag": "v0.19.0"} or {"branch": "main"}.
     Priority: RAG_FACILE_BRANCH env var > latest GitHub release > CLI version tag > "main" fallback.
@@ -144,7 +144,7 @@ def _get_library_git_ref() -> dict[str, str]:
 
     # Offline fallback: use the version tag matching the installed CLI.
     try:
-        cli_version = get_version("rag-facile-cli")
+        cli_version = get_version("ragtime-cli")
         return {"tag": f"v{cli_version}"}
     except PackageNotFoundError:
         return {"branch": "main"}
@@ -220,7 +220,7 @@ def get_templates_dir() -> Path:
     if package_templates.exists() and (package_templates / "chainlit-chat").exists():
         return package_templates
 
-    # Fallback: check if we're in the rag-facile repo (development mode)
+    # Fallback: check if we're in the ragtime repo (development mode)
     repo_root = Path(__file__).resolve().parents[5]
     local_templates = repo_root / ".moon" / "templates"
     if local_templates.exists():
@@ -232,20 +232,20 @@ def get_templates_dir() -> Path:
 
 
 def get_default_config_template() -> Path:
-    """Get the default ragfacile.toml template."""
+    """Get the default ragtime.toml template."""
     # Try bundled location (installed CLI)
-    bundled = Path(__file__).resolve().parent.parent / "templates" / "ragfacile.toml"
+    bundled = Path(__file__).resolve().parent.parent / "templates" / "ragtime.toml"
     if bundled.exists():
         return bundled
 
     # Try development location (repo structure)
     repo_root = Path(__file__).resolve().parents[5]
-    dev = repo_root / "apps" / "cli" / "src" / "cli" / "templates" / "ragfacile.toml"
+    dev = repo_root / "apps" / "cli" / "src" / "cli" / "templates" / "ragtime.toml"
     if dev.exists():
         return dev
 
     raise FileNotFoundError(
-        "ragfacile.toml template not found. This is a packaging error - please reinstall the CLI."
+        "ragtime.toml template not found. This is a packaging error - please reinstall the CLI."
     )
 
 
@@ -299,7 +299,7 @@ def _print_no_serve_message(target_display: str) -> None:
     )
     console.print(
         f"💬 [bold]Chat with your assistant:[/bold]  "
-        f"[cyan]cd[/cyan] {target_display} [cyan]&&[/cyan] [bold]rag-facile[/bold]"
+        f"[cyan]cd[/cyan] {target_display} [cyan]&&[/cyan] [bold]ragtime[/bold]"
     )
 
 
@@ -309,18 +309,18 @@ def generate_config_file(
     preset_config: PresetConfig,
     selected_modules: list[str] | None = None,
 ) -> None:
-    """Generate ragfacile.toml at workspace root using config package.
+    """Generate ragtime.toml at workspace root using config package.
 
     Args:
-        workspace_root: Root directory where ragfacile.toml will be created
+        workspace_root: Root directory where ragtime.toml will be created
         preset: Name of the preset (fast, balanced, accurate, legal, hr)
         preset_config: Preset configuration dict with model_alias, temperature, etc.
         selected_modules: List of selected modules to determine storage backend
     """
-    from rag_facile.core import RAGConfig
-    from rag_facile.core.loader import save_config
-    from rag_facile.core.presets import load_preset
-    from rag_facile.core.schema import (
+    from ragtime.core import RAGConfig
+    from ragtime.core.loader import save_config
+    from ragtime.core.presets import load_preset
+    from ragtime.core.schema import (
         ChunkingConfig,
         EvalConfig,
         FormattingConfig,
@@ -369,8 +369,8 @@ def generate_config_file(
         ),
     )
 
-    # Write to ragfacile.toml
-    config_path = workspace_root / "ragfacile.toml"
+    # Write to ragtime.toml
+    config_path = workspace_root / "ragtime.toml"
     save_config(config, config_path)
 
 
@@ -420,9 +420,9 @@ def generate_standalone(
 
     # Build uv.sources for library, albert-client, and CLI (dev dep)
     uv_sources = f"""[tool.uv.sources]
-rag-facile-lib = {{ git = "{_GITHUB_REPO}", {ref_key} = "{ref_value}", subdirectory = "packages/rag-facile-lib" }}
+ragtime-lib = {{ git = "{_GITHUB_REPO}", {ref_key} = "{ref_value}", subdirectory = "packages/ragtime-lib" }}
 albert-client = {{ git = "{_GITHUB_REPO}", {ref_key} = "{ref_value}", subdirectory = "packages/albert-client" }}
-rag-facile-cli = {{ git = "{_GITHUB_REPO}", {ref_key} = "{ref_value}", subdirectory = "apps/cli" }}
+ragtime-cli = {{ git = "{_GITHUB_REPO}", {ref_key} = "{ref_value}", subdirectory = "apps/cli" }}
 """
 
     # Frontend-specific dependency and setuptools config
@@ -451,14 +451,14 @@ description = "{variables["description"]}"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "rag-facile-lib",
+    "ragtime-lib",
     {frontend_dep}
     "python-dotenv>=1.0.0",
 ]
 
 [dependency-groups]
 dev = [
-    "rag-facile-cli",
+    "ragtime-cli",
 ]
 
 {setuptools_block}
@@ -537,9 +537,9 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
     (target_path / ".env").write_text(env_content)
     console.print("[green]✓[/green] Created .env file")
 
-    # Generate ragfacile.toml with preset configuration
+    # Generate ragtime.toml with preset configuration
     generate_config_file(target_path, preset, preset_config, selected_modules)
-    console.print("[green]✓[/green] Created ragfacile.toml")
+    console.print("[green]✓[/green] Created ragtime.toml")
 
     # Create .python-version
     (target_path / ".python-version").write_text("3.13\n")
@@ -597,7 +597,7 @@ def _initial_git_commit(target_path: Path) -> None:
             capture_output=True,
         )
         subprocess.run(
-            ["git", "commit", "-m", "chore: initial workspace setup by rag-facile"],
+            ["git", "commit", "-m", "chore: initial workspace setup by ragtime"],
             cwd=target_path,
             check=True,
             capture_output=True,
@@ -662,7 +662,7 @@ def run(
         ),
     ] = False,
 ):
-    """Scaffold a new standalone RAG Facile workspace with interactive configuration."""
+    """Scaffold a new standalone Ragtime workspace with interactive configuration."""
     # 1. Gather inputs interactively (or use defaults with --yes)
     if not target:
         if yes:

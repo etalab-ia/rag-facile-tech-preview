@@ -1,11 +1,11 @@
-"""Tests for the rag-facile JSONL → Inspect AI dataset adapter."""
+"""Tests for the ragtime JSONL → Inspect AI dataset adapter."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from rag_facile.evaluation._dataset import load_rag_dataset
+from ragtime.evaluation._dataset import load_rag_dataset
 
 
 def _write_jsonl(tmp_path: Path, samples: list[dict]) -> Path:

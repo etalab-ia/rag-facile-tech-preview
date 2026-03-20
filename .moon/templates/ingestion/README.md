@@ -1,6 +1,6 @@
 # ingestion
 
-Document ingestion package for RAG Facile. Parses and extracts text from files (PDF, Markdown, HTML) using pluggable providers.
+Document ingestion package for Ragtime. Parses and extracts text from files (PDF, Markdown, HTML) using pluggable providers.
 
 ## Providers
 
@@ -10,14 +10,14 @@ Document ingestion package for RAG Facile. Parses and extracts text from files (
 ## Usage
 
 ```python
-from rag_facile.ingestion import get_provider
+from ragtime.ingestion import get_provider
 
-provider = get_provider()  # reads ragfacile.toml
+provider = get_provider()  # reads ragtime.toml
 text = provider.extract_text("document.pdf")
 context = provider.process_file("document.pdf")
 ```
 
-The provider is configured in `ragfacile.toml`:
+The provider is configured in `ragtime.toml`:
 
 ```toml
 [ingestion]

@@ -6,15 +6,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from rag_facile.evaluation._solvers import retrieve_rag_context
+from ragtime.evaluation._solvers import retrieve_rag_context
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 # Patch target: the module-level helper that calls the RAG pipeline.
-# Tests patch this instead of the lazily-imported rag_facile.core / .pipelines
+# Tests patch this instead of the lazily-imported ragtime.core / .pipelines
 # modules (which aren't available in the evaluation package's test environment).
-_PIPELINE_HELPER = "rag_facile.evaluation._solvers._call_pipeline"
+_PIPELINE_HELPER = "ragtime.evaluation._solvers._call_pipeline"
 
 
 def _make_state(question: str = "What is RAG?") -> MagicMock:

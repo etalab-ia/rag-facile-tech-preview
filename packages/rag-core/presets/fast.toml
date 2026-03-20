@@ -1,4 +1,4 @@
-# RAG Facile Configuration - Fast Preset
+# Ragtime Configuration - Fast Preset
 # Speed-optimized: smaller models, skip reranking, reduced retrieval
 # Use when: Quick prototypes, development, low-latency requirements
 
@@ -41,7 +41,7 @@ normalization = "L2"
 provider = "albert-collections"
 collection_naming = "workspace"
 distance_metric = "cosine"
-collections = [785]  # service-public (discover more with: rag-facile collections list)
+collections = [785]  # service-public (discover more with: ragtime collections list)
 
 [query]
 strategy = "none"                    # skip expansion for speed
@@ -105,7 +105,7 @@ include_sources = false  # Skip for speed
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 
 # ==============================================================================
 # PERSISTENCE & DATA LAYER

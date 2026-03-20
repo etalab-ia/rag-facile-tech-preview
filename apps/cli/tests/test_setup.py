@@ -258,7 +258,7 @@ class TestGenerateStandalone:
         assert pyproject.exists()
         content = pyproject.read_text()
         assert "chainlit>=1.3.0" in content
-        assert "rag-facile-lib" in content
+        assert "ragtime-lib" in content
         assert "python-dotenv>=1.0.0" in content
 
     def test_creates_app_files(
@@ -308,13 +308,13 @@ class TestGenerateStandalone:
         content = env_file.read_text()
         assert "OPENAI_API_KEY=my-secret-key" in content
         assert "OPENAI_BASE_URL=https://custom.api.com" in content
-        # OPENAI_MODEL is now in ragfacile.toml, not .env
+        # OPENAI_MODEL is now in ragtime.toml, not .env
         assert "OPENAI_MODEL" not in content
 
     def test_pyproject_includes_library_dependency(
         self, standalone_target, mock_standalone_deps, preset_config
     ):
-        """Should include rag-facile-lib as a dependency instead of copying modules."""
+        """Should include ragtime-lib as a dependency instead of copying modules."""
         from cli.commands.setup import generate_standalone
 
         generate_standalone(
@@ -333,7 +333,7 @@ class TestGenerateStandalone:
         pyproject = standalone_target / "pyproject.toml"
         assert pyproject.exists()
         content = pyproject.read_text()
-        assert "rag-facile-lib" in content
+        assert "ragtime-lib" in content
 
     def test_creates_python_version_file(
         self, standalone_target, mock_standalone_deps, preset_config
@@ -361,7 +361,7 @@ class TestGenerateStandalone:
     def test_pyproject_includes_pypdf_when_local_selected(
         self, standalone_target, mock_standalone_deps, preset_config
     ):
-        """Should include rag-facile-lib dependency which provides pypdf and other modules."""
+        """Should include ragtime-lib dependency which provides pypdf and other modules."""
         from cli.commands.setup import generate_standalone
 
         generate_standalone(
@@ -379,8 +379,8 @@ class TestGenerateStandalone:
 
         pyproject = standalone_target / "pyproject.toml"
         content = pyproject.read_text()
-        # pypdf and other dependencies come via rag-facile-lib
-        assert "rag-facile-lib" in content
+        # pypdf and other dependencies come via ragtime-lib
+        assert "ragtime-lib" in content
 
     def test_creates_chainlit_md_for_chainlit(
         self, standalone_target, mock_standalone_deps, preset_config
@@ -504,7 +504,7 @@ class TestGenerateStandalone:
         assert ["git", "add", "."] in cmds
         commit_calls = [c for c in cmds if c[:2] == ["git", "commit"]]
         assert len(commit_calls) == 1
-        assert "chore: initial workspace setup by rag-facile" in commit_calls[0]
+        assert "chore: initial workspace setup by ragtime" in commit_calls[0]
 
 
 class TestInitialGitCommit:

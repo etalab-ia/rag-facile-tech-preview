@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from rag_facile.tracing._models import TraceRecord
-from rag_facile.tracing.sqlite import SQLiteProvider
+from ragtime.tracing._models import TraceRecord
+from ragtime.tracing.sqlite import SQLiteProvider
 
 
 @pytest.fixture

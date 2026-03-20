@@ -14,7 +14,7 @@ Ask ONE of these depending on what they said:
 - "Quel type de documents traitez-vous ? (PDF juridiques, articles, documentation technique...)"
 
 ## Step 2 — Read their current config
-Call `run_rag_facile("config show --format json")`. Note the active preset and any overrides.
+Call `run_ragtime("config show --format json")`. Note the active preset and any overrides.
 
 ## Step 3 — Recommend a preset
 | Use case | Recommended preset | Why |
@@ -34,9 +34,9 @@ Only mention the parameters relevant to their symptom:
 
 ## Step 5 — Propose and confirm ONE change at a time
 Explain the change and its tradeoff, then ask explicitly:
-"Puis-je effectuer ce changement ? Il sera enregistré dans ragfacile.toml et committé dans git."
+"Puis-je effectuer ce changement ? Il sera enregistré dans ragtime.toml et committé dans git."
 
-Wait for an explicit "oui" / "yes" reply, THEN call `run_rag_facile("config set <key> <value>")`.
+Wait for an explicit "oui" / "yes" reply, THEN call `run_ragtime("config set <key> <value>")`.
 Never change config without this confirmation exchange.
 
 Use `get_docs("config")` to cite exact field names from the reference documentation.

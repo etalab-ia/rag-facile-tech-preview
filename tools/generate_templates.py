@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Template generation script for RAG Facile.
+"""Template generation script for Ragtime.
 
 Generates Moon templates from golden master apps and packages.
 Uses LibCST for Python code parameterization.
@@ -10,8 +10,8 @@ Usage:
 
 Note: App templates (chainlit-chat, reflex-chat) intentionally diverge from their
 golden master apps in one key way: the golden masters use workspace packages
-(pipelines, rag-core) for development within the rag-facile monorepo, but the
-generated templates use rag-facile-lib via git URL so that generated user workspaces
+(pipelines, rag-core) for development within the ragtime monorepo, but the
+generated templates use ragtime-lib via git URL so that generated user workspaces
 don't copy pipeline sources.
 """
 
@@ -31,7 +31,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = REPO_ROOT / ".moon" / "templates"
 
 # GitHub repository URL — must match setup.py's _GITHUB_REPO
-_GITHUB_REPO = "https://github.com/etalab-ia/rag-facile.git"
+_GITHUB_REPO = "https://github.com/etalab-ia/ragtime.git"
 
 # Artifacts to ignore when copying
 ARTIFACTS = [
@@ -84,7 +84,7 @@ def generate_sys_config(force: bool = False):
     # Create template.yml
     template_yml = {
         "title": "System Configuration",
-        "description": "RAG Facile workspace config (patches moon init defaults).",
+        "description": "Ragtime workspace config (patches moon init defaults).",
         "destination": ".",
         "variables": {
             "project_name": {
@@ -119,7 +119,7 @@ def generate_sys_config(force: bool = False):
 [project]
 name = "{{ project_name }}"
 version = "0.1.0"
-description = "RAG Facile workspace"
+description = "Ragtime workspace"
 requires-python = ">=3.13"
 dependencies = []
 
@@ -152,7 +152,7 @@ members = ["apps/*", "packages/*"]
 
     # Create justfile for common commands
     justfile = """\
-# {{ project_name }} - RAG Facile project
+# {{ project_name }} - Ragtime project
 
 # Display available commands
 default:
@@ -310,14 +310,14 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
                 "[\"{{ project_name | replace(from='-', to='_') }}*\"]",
             )
 
-        # Replace workspace pipeline deps with rag-facile-lib git URL.
+        # Replace workspace pipeline deps with ragtime-lib git URL.
         # Generated user workspaces depend on the library package via git URL;
         # they don't get individual pipeline package sources copied in.
-        rag_facile_source = (
-            'rag-facile-lib = { git = "'
+        ragtime_source = (
+            'ragtime-lib = { git = "'
             + _GITHUB_REPO
-            + '", {{ rag_facile_ref_key }} = "{{ rag_facile_ref_value }}",'
-            ' subdirectory = "packages/rag-facile-lib" }'
+            + '", {{ ragtime_ref_key }} = "{{ ragtime_ref_value }}",'
+            ' subdirectory = "packages/ragtime-lib" }'
         )
         # Remove individual pipeline workspace deps from dependencies list
         for dep in [
@@ -326,21 +326,19 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
             '"rag-core",\n    ',
         ]:
             content = content.replace(dep, "")
-        # Insert rag-facile-lib as the first dependency
+        # Insert ragtime-lib as the first dependency
         if '"chainlit' in content:
-            content = content.replace('"chainlit', '"rag-facile-lib",\n    "chainlit')
+            content = content.replace('"chainlit', '"ragtime-lib",\n    "chainlit')
         elif '"reflex' in content:
-            content = content.replace('"reflex', '"rag-facile-lib",\n    "reflex')
-        # Replace [tool.uv.sources] workspace entries with rag-facile-lib git source
+            content = content.replace('"reflex', '"ragtime-lib",\n    "reflex')
+        # Replace [tool.uv.sources] workspace entries with ragtime-lib git source
         old_sources = (
             "[tool.uv.sources]\n"
             "albert-client = { workspace = true }\n"
             "pipelines = { workspace = true }\n"
             "rag-core = { workspace = true }"
         )
-        content = content.replace(
-            old_sources, f"[tool.uv.sources]\n{rag_facile_source}"
-        )
+        content = content.replace(old_sources, f"[tool.uv.sources]\n{ragtime_source}")
 
         # Add [tool.uv] package = true if not present
         if "[tool.uv]\npackage = true" not in content:
@@ -440,9 +438,9 @@ def generate_app_template(app_name: str, source_dir: Path, force: bool = False):
         }
 
     # Internal variables injected by setup.py (no user prompt) for git ref resolution.
-    # setup.py passes these via: moon generate <app> -- --rag_facile_ref_key=branch ...
-    variables["rag_facile_ref_key"] = {"type": "string", "default": "branch"}
-    variables["rag_facile_ref_value"] = {"type": "string", "default": "main"}
+    # setup.py passes these via: moon generate <app> -- --ragtime_ref_key=branch ...
+    variables["ragtime_ref_key"] = {"type": "string", "default": "branch"}
+    variables["ragtime_ref_value"] = {"type": "string", "default": "main"}
 
     template_yml = {
         "title": app_name.replace("-", " ").title(),
@@ -489,7 +487,7 @@ def generate_package_template(pkg_name: str, source_dir: Path, force: bool = Fal
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate RAG Facile templates")
+    parser = argparse.ArgumentParser(description="Generate Ragtime templates")
     parser.add_argument(
         "--template",
         choices=[

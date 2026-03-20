@@ -99,7 +99,7 @@ include_sources = true
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 
 # ==============================================================================
 # PERSISTENCE & DATA LAYER

@@ -1,6 +1,6 @@
 # CI/CD Windows Testing Guide
 
-This guide explains how to test RAG Facile installation on Windows in CI/CD pipelines using GitHub Actions.
+This guide explains how to test Ragtime installation on Windows in CI/CD pipelines using GitHub Actions.
 
 **See also:** [Linux Testing Guide](ci-cd-linux.md) | [macOS Testing Guide](ci-cd-macos.md) | [Complete Workflow Example](../../.github/workflows/test-install.yml)
 
@@ -34,7 +34,7 @@ windows-powershell-install:
     - name: Verify installation
       shell: powershell
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -61,7 +61,7 @@ windows-git-bash-install:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -176,11 +176,11 @@ gh run view <run-id> -w
 1. **Spin up a Windows VM** (Azure, AWS, or local VirtualBox)
 2. **Test PowerShell path:**
    ```powershell
-   irm https://raw.githubusercontent.com/etalab-ia/rag-facile/YOUR-BRANCH/install.ps1 | iex
+   irm https://raw.githubusercontent.com/etalab-ia/ragtime/YOUR-BRANCH/install.ps1 | iex
    ```
 3. **Test Git Bash path:**
    ```bash
-   bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/YOUR-BRANCH/install.sh)
+   bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/YOUR-BRANCH/install.sh)
    ```
 
 ## Troubleshooting CI/CD Failures

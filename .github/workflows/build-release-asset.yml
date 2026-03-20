@@ -61,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
-          ASSET="dist/rag-facile-workspace-${TAG}.zip"
+          ASSET="dist/ragtime-workspace-${TAG}.zip"
           if [ ! -f "$ASSET" ]; then
             echo "❌ Asset not found: $ASSET"
             ls dist/ || echo "(dist/ is empty)"

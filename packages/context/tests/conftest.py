@@ -2,7 +2,7 @@
 
 import pytest
 
-from rag_facile.core.schema import (
+from ragtime.core.schema import (
     CitationsConfig,
     FormattingConfig,
     RAGConfig,
@@ -17,5 +17,5 @@ def mock_config(monkeypatch):
             citations=CitationsConfig(enabled=True, style="inline")
         ),
     )
-    monkeypatch.setattr("rag_facile.context.formatter.get_config", lambda: config)
+    monkeypatch.setattr("ragtime.context.formatter.get_config", lambda: config)
     return config

@@ -6,7 +6,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from rag_facile.core import (
+from ragtime.core import (
     apply_preset,
     compare_presets,
     get_preset_description,
@@ -30,7 +30,7 @@ def list_cmd() -> None:
     Shows all available presets with descriptions and key characteristics.
 
     Example:
-        rag-facile config preset list
+        ragtime config preset list
     """
     presets = list_presets()
 
@@ -45,10 +45,10 @@ def list_cmd() -> None:
     console.print(table)
     console.print()
     console.print(
-        "[dim]💡 Apply a preset with: rag-facile config preset apply <name>[/dim]"
+        "[dim]💡 Apply a preset with: ragtime config preset apply <name>[/dim]"
     )
     console.print(
-        "[dim]💡 Compare presets with: rag-facile config preset compare fast accurate[/dim]"
+        "[dim]💡 Compare presets with: ragtime config preset compare fast accurate[/dim]"
     )
 
 
@@ -64,7 +64,7 @@ def show(
     Displays the complete configuration for a specific preset.
 
     Example:
-        rag-facile config preset show legal
+        ragtime config preset show legal
     """
     try:
         config = load_preset(name)
@@ -96,7 +96,7 @@ def show(
         console.print(table)
         console.print()
         console.print(
-            f"[dim]💡 Apply this preset with: rag-facile config preset apply {name}[/dim]"
+            f"[dim]💡 Apply this preset with: ragtime config preset apply {name}[/dim]"
         )
 
     except ValueError as e:
@@ -111,7 +111,7 @@ def apply(
         help="Preset name",
     ),
     output: str = typer.Option(
-        "ragfacile.toml",
+        "ragtime.toml",
         "--output",
         "-o",
         help="Output configuration file",
@@ -130,13 +130,13 @@ def apply(
 
     Examples:
         # Apply balanced preset (default)
-        rag-facile config preset apply balanced
+        ragtime config preset apply balanced
 
         # Apply legal preset to custom location
-        rag-facile config preset apply legal --output config/legal.toml
+        ragtime config preset apply legal --output config/legal.toml
 
         # Force overwrite without confirmation
-        rag-facile config preset apply accurate --force
+        ragtime config preset apply accurate --force
     """
     output_path = Path(output)
 
@@ -156,8 +156,8 @@ def apply(
         console.print(f"[green]✓ Applied preset '{name}' to {output}[/green]")
         console.print(f"  [dim]Description:[/dim] {get_preset_description(name)}")
         console.print()
-        console.print("[dim]💡 View config with: rag-facile config show[/dim]")
-        console.print("[dim]💡 Validate config with: rag-facile config validate[/dim]")
+        console.print("[dim]💡 View config with: ragtime config show[/dim]")
+        console.print("[dim]💡 Validate config with: ragtime config validate[/dim]")
 
     except ValueError as e:
         console.print(f"[red]✗ {e}[/red]")
@@ -183,7 +183,7 @@ def compare(
     Shows differences between two presets to help choose the right one.
 
     Example:
-        rag-facile config preset compare fast accurate
+        ragtime config preset compare fast accurate
     """
     try:
         differences = compare_presets(preset1, preset2)
@@ -208,7 +208,7 @@ def compare(
         console.print(table)
         console.print()
         console.print(
-            "[dim]💡 Apply a preset with: rag-facile config preset apply <name>[/dim]"
+            "[dim]💡 Apply a preset with: ragtime config preset apply <name>[/dim]"
         )
 
     except ValueError as e:

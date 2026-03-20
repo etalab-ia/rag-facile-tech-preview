@@ -11,7 +11,7 @@ from typing import Optional
 
 
 try:
-    from rag_facile.core.pdf import extract_text_from_pdf
+    from ragtime.core.pdf import extract_text_from_pdf
 except ImportError:
     try:
         # Fallback for development/editable install

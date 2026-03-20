@@ -1,4 +1,4 @@
-"""Skills system for the rag-facile chat agent.
+"""Skills system for the ragtime chat agent.
 
 Skills are Markdown instruction files (SKILL.md) that specialise the agent's
 behaviour for a specific task. They are discovered from three locations:

@@ -1,4 +1,4 @@
-# RAG Facile Configuration - Legal Preset
+# Ragtime Configuration - Legal Preset
 # Legal documents: Strict citations, accuracy validation, precise terminology
 # Use when: Legal research, policy documents, regulatory compliance
 
@@ -41,7 +41,7 @@ normalization = "L2"
 provider = "albert-collections"
 collection_naming = "workspace"
 distance_metric = "cosine"
-collections = [785]  # service-public (discover more with: rag-facile collections list)
+collections = [785]  # service-public (discover more with: ragtime collections list)
 
 [query]
 strategy = "none"                    # preserve exact legal terminology — no expansion
@@ -110,7 +110,7 @@ include_sources = true  # Show all sources consulted
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 
 # ==============================================================================
 # PERSISTENCE & DATA LAYER

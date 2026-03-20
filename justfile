@@ -1,4 +1,4 @@
-# RAG Facile development tasks
+# Ragtime development tasks
 
 # Use PowerShell on Windows, sh on Unix
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
