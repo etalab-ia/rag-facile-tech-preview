@@ -568,6 +568,9 @@ OPENAI_BASE_URL={env_config["openai_base_url"]}
             "     [dim]• Add SUPABASE_URL and SUPABASE_ANON_KEY to .env[/dim]"
         )
         console.print(
+            "     [dim]• Run 'chainlit create-secret' and add CHAINLIT_AUTH_SECRET to .env[/dim]"
+        )
+        console.print(
             "     [dim]• Create your first user in Supabase Studio (http://127.0.0.1:54323)[/dim]"
         )
         console.print()
