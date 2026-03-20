@@ -119,12 +119,15 @@ fi
 
 # ── 4. Installation de ragtime ─────────────────────────────────────────────
 
+# Determine git URL (allow override for PR testing)
+RAGTIME_GIT_URL="${RAGTIME_GIT_URL:-https://github.com/etalab-ia/ragtime.git}"
+
 UV_LOG=$(mktemp)
 printf "==> Installation de ragtime %s " "$LATEST_TAG"
 spinner_start
 
 uv tool install \
-    "ragtime-cli @ git+https://github.com/etalab-ia/ragtime.git@${LATEST_TAG}#subdirectory=apps/cli" \
+    "ragtime-cli @ git+${RAGTIME_GIT_URL}@${LATEST_TAG}#subdirectory=apps/cli" \
     --force >"$UV_LOG" 2>&1 \
     || { UV_FAILED=true; }
 

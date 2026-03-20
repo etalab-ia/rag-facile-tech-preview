@@ -44,7 +44,10 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RAGTIME_VERSION: ${{ github.sha }}
+          # For PRs: use the head repo URL and SHA to fetch from the fork/branch
+          # For push: use the default (latest release or RAGTIME_VERSION if set)
+          RAGTIME_GIT_URL: ${{ github.event.pull_request.head.repo.full_name && format('https://github.com/{0}.git', github.event.pull_request.head.repo.full_name) || '' }}
+          RAGTIME_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Verify tools are available
         run: |
@@ -69,7 +72,8 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RAGTIME_VERSION: ${{ github.sha }}
+          RAGTIME_GIT_URL: ${{ github.event.pull_request.head.repo.full_name && format('https://github.com/{0}.git', github.event.pull_request.head.repo.full_name) || '' }}
+          RAGTIME_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Verify tools are available
         run: |
@@ -95,7 +99,8 @@ jobs:
         run: bash install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RAGTIME_VERSION: ${{ github.sha }}
+          RAGTIME_GIT_URL: ${{ github.event.pull_request.head.repo.full_name && format('https://github.com/{0}.git', github.event.pull_request.head.repo.full_name) || '' }}
+          RAGTIME_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Verify tools are available
         shell: bash
