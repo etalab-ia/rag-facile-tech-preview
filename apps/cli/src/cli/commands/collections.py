@@ -27,10 +27,10 @@ def list_collections(
 
     Examples:
         # List all accessible collections
-        rag-facile collections list
+        ragtime collections list
 
         # Limit results
-        rag-facile collections list --limit 20
+        ragtime collections list --limit 20
     """
     try:
         from albert import AlbertClient
@@ -88,16 +88,16 @@ def list_collections(
     if public_cols:
         public_ids = [str(c.id) for c in public_cols]
         console.print(
-            "[dim]💡 Add public collections to your RAG pipeline in ragfacile.toml:[/dim]"
+            "[dim]💡 Add public collections to your RAG pipeline in ragtime.toml:[/dim]"
         )
         console.print(
-            f'[dim]   rag-facile config set storage.collections "[{", ".join(public_ids)}]"[/dim]'
+            f'[dim]   ragtime config set storage.collections "[{", ".join(public_ids)}]"[/dim]'
         )
     else:
         console.print(
-            "[dim]💡 Add collection IDs to your RAG pipeline in ragfacile.toml:[/dim]"
+            "[dim]💡 Add collection IDs to your RAG pipeline in ragtime.toml:[/dim]"
         )
         example_ids = [str(c.id) for c in collections[:2]]
         console.print(
-            f'[dim]   rag-facile config set storage.collections "[{", ".join(example_ids)}]"[/dim]'
+            f'[dim]   ragtime config set storage.collections "[{", ".join(example_ids)}]"[/dim]'
         )

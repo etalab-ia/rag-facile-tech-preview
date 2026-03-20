@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from rag_facile.evaluation._scorers import (
+from ragtime.evaluation._scorers import (
     _normalize_tokens,
     _parse_faithfulness_score,
     _parse_score,
@@ -257,7 +257,7 @@ async def test_faithfulness_calls_grader() -> None:
     mock_result.completion = "- Claim A: SUPPORTED\nSCORE: 0.9"
     mock_model.generate = AsyncMock(return_value=mock_result)
 
-    with patch("rag_facile.evaluation._scorers.get_model", return_value=mock_model):
+    with patch("ragtime.evaluation._scorers.get_model", return_value=mock_model):
         scorer = faithfulness(model="test")
         state = _make_state(
             retrieved_contexts=["Paris is the capital of France."],
@@ -296,7 +296,7 @@ async def test_answer_correctness_calls_grader() -> None:
     mock_result.completion = "- Fact 1: COVERS\n- Fact 2: COVERS\nSCORE: 1.0"
     mock_model.generate = AsyncMock(return_value=mock_result)
 
-    with patch("rag_facile.evaluation._scorers.get_model", return_value=mock_model):
+    with patch("ragtime.evaluation._scorers.get_model", return_value=mock_model):
         scorer = answer_correctness(model="test")
         state = _make_state(completion="The capital of France is Paris.")
         result = await scorer(state, _make_target("Paris is the capital of France."))

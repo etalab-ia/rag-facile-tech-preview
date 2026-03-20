@@ -9,7 +9,7 @@ import pytest
 
 import re
 
-from rag_facile.memory.search import (
+from ragtime.memory.search import (
     _group_into_snippets,
     _recency_multiplier,
     _score_line,

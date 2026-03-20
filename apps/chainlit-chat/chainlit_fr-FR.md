@@ -1,4 +1,4 @@
-# Bienvenue sur RAG Facile
+# Bienvenue sur Ragtime
 
 Cet assistant vous aide a interroger vos documents grace a la technologie RAG (Retrieval-Augmented Generation).
 
@@ -10,5 +10,5 @@ Cet assistant vous aide a interroger vos documents grace a la technologie RAG (R
 
 ## Ressources utiles
 
-- Decouvrez le fonctionnement du RAG dans le [guide d'utilisation](https://github.com/etalab-ia/rag-facile)
-- Consultez la documentation des [collections publiques](https://github.com/etalab-ia/rag-facile/blob/main/docs/reference/components.md)
+- Decouvrez le fonctionnement du RAG dans le [guide d'utilisation](https://github.com/etalab-ia/ragtime)
+- Consultez la documentation des [collections publiques](https://github.com/etalab-ia/ragtime/blob/main/docs/reference/components.md)

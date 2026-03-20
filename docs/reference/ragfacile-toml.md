@@ -1,6 +1,6 @@
-# `ragfacile.toml` Reference
+# `ragtime.toml` Reference
 
-Complete reference for the RAG Facile configuration file. Every aspect of the RAG pipeline is configurable here — from document ingestion to response formatting — without touching code.
+Complete reference for the Ragtime configuration file. Every aspect of the RAG pipeline is configurable here — from document ingestion to response formatting — without touching code.
 
 > To understand *what* each pipeline stage does and *why*, see [Understanding the RAG Pipeline](../guides/rag-pipeline.md).
 
@@ -9,17 +9,17 @@ Complete reference for the RAG Facile configuration file. Every aspect of the RA
 Most users don't need to edit the TOML file by hand. The CLI handles it:
 
 ```bash
-# Apply a preset (creates ragfacile.toml with sensible defaults)
-rag-facile config preset apply balanced
+# Apply a preset (creates ragtime.toml with sensible defaults)
+ragtime config preset apply balanced
 
 # View current configuration
-rag-facile config show
+ragtime config show
 
 # Change individual settings
-rag-facile config set generation.temperature 0.5
+ragtime config set generation.temperature 0.5
 
 # Validate your configuration
-rag-facile config validate
+ragtime config validate
 ```
 
 ## Albert Model Aliases
@@ -36,7 +36,7 @@ for model in client.models.list().data:
 PY
 ```
 
-Common aliases used in RAG Facile:
+Common aliases used in Ragtime:
 
 - **Generation**: `openweight-small`, `openweight-medium`, `openweight-large` (also `albert-small`, `albert-large`)
 - **Embeddings**: `openweight-embeddings` (alias: `embeddings-small`)
@@ -60,7 +60,7 @@ top_k = 15
 
 ## Full Annotated Example
 
-Below is the full `ragfacile.toml` based on the `balanced` preset with every key documented:
+Below is the full `ragtime.toml` based on the `balanced` preset with every key documented:
 
 ```toml
 # ==========================================================
@@ -195,7 +195,7 @@ include_sources = true          # Append source list to response
 [tracing]
 enabled = true                  # Enable trace logging for RAG queries
 provider = "sqlite"             # "sqlite" (built-in) or "none" (disabled)
-database = ".rag-facile/traces.db"  # SQLite database path (relative to workspace)
+database = ".ragtime/traces.db"  # SQLite database path (relative to workspace)
 ```
 
 ### About Tracing
@@ -216,8 +216,8 @@ Set `enabled = false` or `provider = "none"` to disable tracing entirely.
 Presets are battle-tested configurations for common use cases. Apply one as a starting point, then customize.
 
 ```bash
-rag-facile config preset list           # See available presets
-rag-facile config preset apply legal    # Apply a preset
+ragtime config preset list           # See available presets
+ragtime config preset apply legal    # Apply a preset
 ```
 
 ### Comparison
@@ -277,23 +277,23 @@ export RAG_HALLUCINATION_ENABLED=true
 ### Precedence
 
 1. **Environment Variables** — Highest priority, always wins
-2. **`ragfacile.toml`** — Project-level configuration
+2. **`ragtime.toml`** — Project-level configuration
 3. **Preset Defaults** — Base values from the active preset
 
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `rag-facile config show` | View current settings (including active overrides) |
-| `rag-facile config set <key> <value>` | Update a setting in `ragfacile.toml` |
-| `rag-facile config validate` | Check for errors or suboptimal settings |
-| `rag-facile config preset list` | List available presets |
-| `rag-facile config preset apply <name>` | Reset config to a specific preset |
+| `ragtime config show` | View current settings (including active overrides) |
+| `ragtime config set <key> <value>` | Update a setting in `ragtime.toml` |
+| `ragtime config validate` | Check for errors or suboptimal settings |
+| `ragtime config preset list` | List available presets |
+| `ragtime config preset apply <name>` | Reset config to a specific preset |
 
 ## Best Practices
 
-1. **Keep secrets out of `ragfacile.toml`** — API keys belong in `.env` files or system environment variables. The TOML file is safe to commit to version control.
+1. **Keep secrets out of `ragtime.toml`** — API keys belong in `.env` files or system environment variables. The TOML file is safe to commit to version control.
 2. **Start with a preset** — Begin with `balanced` or `accurate` and tune individual values from there.
-3. **Validate after edits** — Run `rag-facile config validate` after manual changes to catch typos and invalid values.
+3. **Validate after edits** — Run `ragtime config validate` after manual changes to catch typos and invalid values.
 4. **Use env vars in production** — Override development settings without touching the repository's config file.
 5. **Keep `meta.preset` updated** — This helps teammates understand which base configuration you started from.

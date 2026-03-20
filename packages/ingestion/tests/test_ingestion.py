@@ -7,9 +7,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from rag_facile.ingestion import IngestionProvider, get_provider
-from rag_facile.ingestion._base import IngestionProvider as BaseClass
-from rag_facile.ingestion.local import LocalProvider
+from ragtime.ingestion import IngestionProvider, get_provider
+from ragtime.ingestion._base import IngestionProvider as BaseClass
+from ragtime.ingestion.local import LocalProvider
 
 
 # ---------------------------------------------------------------------------

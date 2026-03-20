@@ -1,6 +1,6 @@
 # query-expansion
 
-Query expansion for the RAG Facile pipeline — bridges the vocabulary gap between
+Query expansion for the Ragtime pipeline — bridges the vocabulary gap between
 colloquial user queries and formal French administrative language.
 
 ## Strategies
@@ -25,7 +25,7 @@ formal vocabulary of indexed documents.
 
 ## Usage
 
-Enable in `ragfacile.toml`:
+Enable in `ragtime.toml`:
 
 ```toml
 [query]

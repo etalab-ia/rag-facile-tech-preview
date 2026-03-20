@@ -1,6 +1,6 @@
 # Troubleshooting Proxy & Network Issues
 
-When installing RAG Facile on corporate networks, restricted networks, or behind VPNs, you may encounter network-related errors. This guide helps you diagnose and fix them.
+When installing Ragtime on corporate networks, restricted networks, or behind VPNs, you may encounter network-related errors. This guide helps you diagnose and fix them.
 
 ## Before You Start
 
@@ -49,7 +49,7 @@ If all are empty, set them and try again:
 ```bash
 export HTTP_PROXY=http://proxy.company.com:8080
 export HTTPS_PROXY=http://proxy.company.com:8080
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 #### Solution 2: Test Connectivity Through Proxy
@@ -78,7 +78,7 @@ If your proxy requires username/password:
 # Format: http://username:password@proxy.company.com:8080
 export HTTP_PROXY=http://user:password@proxy.company.com:8080
 export HTTPS_PROXY=http://user:password@proxy.company.com:8080
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 #### Solution 4: Whitelist Domains with IT Team
@@ -114,7 +114,7 @@ EOF
 Then try the installer again:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 ---
@@ -218,7 +218,7 @@ proto install moon --log trace
 
 If it works, continue with the installer:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 #### Solution 4: Emergency Fallback (Not Recommended)
@@ -322,7 +322,7 @@ Include credentials in the proxy URL:
 ```bash
 export HTTP_PROXY=http://username:password@proxy.company.com:8080
 export HTTPS_PROXY=http://username:password@proxy.company.com:8080
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 **Or in configuration file**:
@@ -429,7 +429,7 @@ If you've tried the above and still have issues:
 
 If you can't find the solution:
 
-1. **RAG Facile Issues**: [github.com/etalab-ia/rag-facile/issues](https://github.com/etalab-ia/rag-facile/issues)
+1. **Ragtime Issues**: [github.com/etalab-ia/ragtime/issues](https://github.com/etalab-ia/ragtime/issues)
    - Include: error message, proxy setup, OS, network info
 
 2. **Proto Issues**: [github.com/moonrepo/proto/issues](https://github.com/moonrepo/proto/issues)

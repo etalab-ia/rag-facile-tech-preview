@@ -23,12 +23,12 @@ def reset_workspace():
 
 @pytest.fixture()
 def workspace(tmp_path):
-    """Workspace with ragfacile.toml, AGENTS.md, and a git repo."""
-    (tmp_path / "ragfacile.toml").write_text(
+    """Workspace with ragtime.toml, AGENTS.md, and a git repo."""
+    (tmp_path / "ragtime.toml").write_text(
         "[meta]\npreset = 'balanced'\n", encoding="utf-8"
     )
     (tmp_path / "AGENTS.md").write_text(
-        "# Project Architecture\n\nThis is a rag-facile workspace.\n", encoding="utf-8"
+        "# Project Architecture\n\nThis is a ragtime workspace.\n", encoding="utf-8"
     )
     set_workspace_root(tmp_path)
     return tmp_path
@@ -45,7 +45,7 @@ class TestGetAgentsMd:
     def test_returns_agents_md_content(self, workspace):
         result = get_agents_md()
         assert "Project Architecture" in result
-        assert "rag-facile workspace" in result
+        assert "ragtime workspace" in result
 
     def test_returns_hint_when_no_agents_md(self, tmp_path):
         set_workspace_root(tmp_path)
@@ -126,7 +126,7 @@ class TestGetDocs:
         docs_dir = self._make_docs_dir(tmp_path)
         with patch("cli.commands.learn.tools._get_docs_dir", return_value=docs_dir):
             result = get_docs("")
-        assert "Available rag-facile documentation" in result
+        assert "Available ragtime documentation" in result
         assert "rag" in result
 
     def test_returns_doc_content_on_match(self, tmp_path):

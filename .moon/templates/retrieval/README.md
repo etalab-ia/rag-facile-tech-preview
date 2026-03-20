@@ -13,14 +13,14 @@ This package provides search capabilities via the Albert API:
 ## Usage
 
 ```python
-from rag_facile.retrieval import search_chunks
+from ragtime.retrieval import search_chunks
 
 chunks = search_chunks(client, "energy transition", collection_ids=[1])
 ```
 
 ### Parameters
 
-All parameters have sensible defaults from `ragfacile.toml`:
+All parameters have sensible defaults from `ragtime.toml`:
 
 ```python
 chunks = search_chunks(

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from rag_facile.ingestion import IngestionProvider
-from rag_facile.pipelines import get_pipeline
-from rag_facile.pipelines._base import RAGPipeline
-from rag_facile.reranking import RerankingProvider
-from rag_facile.retrieval import RetrievalProvider
-from rag_facile.storage import StorageProvider
+from ragtime.ingestion import IngestionProvider
+from ragtime.pipelines import get_pipeline
+from ragtime.pipelines._base import RAGPipeline
+from ragtime.reranking import RerankingProvider
+from ragtime.retrieval import RetrievalProvider
+from ragtime.storage import StorageProvider
 
 
 # ── Helpers ──
@@ -184,9 +184,9 @@ class TestProcessQueryWithRetrieval:
 
         with (
             patch(
-                "rag_facile.context.format_context", return_value="formatted context"
+                "ragtime.context.format_context", return_value="formatted context"
             ) as mock_format,
-            patch("rag_facile.core.get_config") as mock_get_config,
+            patch("ragtime.core.get_config") as mock_get_config,
         ):
             mock_config = MagicMock()
             mock_config.storage.collections = []
@@ -215,9 +215,9 @@ class TestProcessQueryWithRetrieval:
 
         with (
             patch(
-                "rag_facile.context.format_context", return_value="formatted context"
+                "ragtime.context.format_context", return_value="formatted context"
             ) as mock_format,
-            patch("rag_facile.core.get_config") as mock_get_config,
+            patch("ragtime.core.get_config") as mock_get_config,
         ):
             mock_config = MagicMock()
             mock_config.storage.collections = []
@@ -240,7 +240,7 @@ class TestProcessQueryWithRetrieval:
         )
         pipeline._collection_id = 1
 
-        with patch("rag_facile.core.get_config") as mock_get_config:
+        with patch("ragtime.core.get_config") as mock_get_config:
             mock_config = MagicMock()
             mock_config.storage.collections = []
             mock_get_config.return_value = mock_config
@@ -261,8 +261,8 @@ class TestProcessQueryWithRetrieval:
         # No _collection_id set (no file was uploaded this session)
 
         with (
-            patch("rag_facile.context.format_context", return_value="context"),
-            patch("rag_facile.core.get_config") as mock_get_config,
+            patch("ragtime.context.format_context", return_value="context"),
+            patch("ragtime.core.get_config") as mock_get_config,
         ):
             mock_config = MagicMock()
             mock_config.storage.collections = [42, 87]
@@ -288,8 +288,8 @@ class TestProcessQueryWithRetrieval:
         pipeline._collection_id = 999  # Active session collection
 
         with (
-            patch("rag_facile.context.format_context", return_value="context"),
-            patch("rag_facile.core.get_config") as mock_get_config,
+            patch("ragtime.context.format_context", return_value="context"),
+            patch("ragtime.core.get_config") as mock_get_config,
         ):
             mock_config = MagicMock()
             mock_config.storage.collections = [42, 87]
@@ -312,7 +312,7 @@ class TestProcessQueryWithRetrieval:
         )
         # No session collection, no config collections
 
-        with patch("rag_facile.core.get_config") as mock_get_config:
+        with patch("ragtime.core.get_config") as mock_get_config:
             mock_config = MagicMock()
             mock_config.storage.collections = []
             mock_get_config.return_value = mock_config
@@ -359,7 +359,7 @@ class TestRetrieveChunks:
         )
         pipeline._collection_id = 1
 
-        with patch("rag_facile.core.get_config") as mock_get_config:
+        with patch("ragtime.core.get_config") as mock_get_config:
             mock_config = MagicMock()
             mock_config.storage.collections = []
             mock_get_config.return_value = mock_config
@@ -399,10 +399,10 @@ class TestGetPipeline:
         config.query.strategy = query_strategy
         return config
 
-    @patch("rag_facile.reranking.get_provider")
-    @patch("rag_facile.retrieval.get_provider")
-    @patch("rag_facile.storage.get_provider")
-    @patch("rag_facile.ingestion.get_provider")
+    @patch("ragtime.reranking.get_provider")
+    @patch("ragtime.retrieval.get_provider")
+    @patch("ragtime.storage.get_provider")
+    @patch("ragtime.ingestion.get_provider")
     def test_albert_storage_wires_all_providers(
         self,
         mock_get_ingestion,
@@ -424,8 +424,8 @@ class TestGetPipeline:
         assert pipeline._retrieval is not None
         assert pipeline._reranking is not None
 
-    @patch("rag_facile.retrieval.get_provider", return_value=None)
-    @patch("rag_facile.ingestion.get_provider")
+    @patch("ragtime.retrieval.get_provider", return_value=None)
+    @patch("ragtime.ingestion.get_provider")
     def test_local_sqlite_has_no_storage(self, mock_get_ingestion, mock_get_retrieval):
         """local-sqlite config should result in storage=None."""
         mock_get_ingestion.return_value = MagicMock(spec=IngestionProvider)
@@ -435,10 +435,10 @@ class TestGetPipeline:
 
         assert pipeline._storage is None
 
-    @patch("rag_facile.reranking.get_provider")
-    @patch("rag_facile.retrieval.get_provider")
-    @patch("rag_facile.storage.get_provider")
-    @patch("rag_facile.ingestion.get_provider")
+    @patch("ragtime.reranking.get_provider")
+    @patch("ragtime.retrieval.get_provider")
+    @patch("ragtime.storage.get_provider")
+    @patch("ragtime.ingestion.get_provider")
     def test_retrieval_none_provider(
         self,
         mock_get_ingestion,
@@ -457,10 +457,10 @@ class TestGetPipeline:
 
         assert pipeline._retrieval is None
 
-    @patch("rag_facile.reranking.get_provider")
-    @patch("rag_facile.retrieval.get_provider")
-    @patch("rag_facile.storage.get_provider")
-    @patch("rag_facile.ingestion.get_provider")
+    @patch("ragtime.reranking.get_provider")
+    @patch("ragtime.retrieval.get_provider")
+    @patch("ragtime.storage.get_provider")
+    @patch("ragtime.ingestion.get_provider")
     def test_disabled_reranking_results_in_none(
         self,
         mock_get_ingestion,

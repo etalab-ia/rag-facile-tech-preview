@@ -3,7 +3,7 @@
 import respx
 from httpx import Response
 
-from rag_facile.reranking.albert import AlbertRerankingProvider
+from ragtime.reranking.albert import AlbertRerankingProvider
 
 
 class TestAlbertRerankingProvider:
@@ -59,7 +59,7 @@ class TestAlbertRerankingProvider:
         )
 
         provider = self._make_provider(client, model="custom-rerank-model", top_n=1)
-        from rag_facile.core import RetrievedChunk
+        from ragtime.core import RetrievedChunk
 
         chunks = [
             RetrievedChunk(

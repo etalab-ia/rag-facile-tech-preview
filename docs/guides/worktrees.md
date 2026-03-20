@@ -7,7 +7,7 @@ This repository uses a **bare repo + worktree** setup to support parallel develo
 ## Repository Layout
 
 ```
-rag-facile/
+ragtime/
 ├── .bare/              # Git data (bare clone — not a working directory)
 ├── .git                # Pointer file → .bare (makes standard git tools work)
 ├── .config/
@@ -19,7 +19,7 @@ rag-facile/
 └── main/               # Main branch — source of truth for shared files
     ├── .env            # Secrets — canonical copy, never commit
     ├── .letta/         # Letta Code settings
-    └── .rag-facile/    # Agent memory & config
+    └── .ragtime/    # Agent memory & config
 ```
 
 `main/` is a regular checkout of the `main` branch. **Never commit work directly to it** — it's a stable reference point. Create a worktree for every piece of work.
@@ -47,7 +47,7 @@ Configure worktrunk to place new worktrees in the hidden `.worktrees/` directory
 
 ```toml
 # ~/.config/worktrunk/config.toml
-[projects."github.com/etalab-ia/rag-facile"]
+[projects."github.com/etalab-ia/ragtime"]
 worktree-path = "../.worktrees/{{ branch | sanitize }}"
 ```
 
@@ -59,11 +59,11 @@ Create the file if it doesn't exist: `wt config create`, then add the `[projects
 
 ```bash
 # 1. Create the workspace directory
-mkdir ~/projects/rag-facile && cd ~/projects/rag-facile
+mkdir ~/projects/ragtime && cd ~/projects/ragtime
 
 # 2. Bare clone — --single-branch avoids creating local tracking branches for
 #    every remote branch
-git clone --bare --single-branch git@github.com:etalab-ia/rag-facile.git .bare
+git clone --bare --single-branch git@github.com:etalab-ia/ragtime.git .bare
 
 # 3. Create the .git pointer file
 echo "gitdir: ./.bare" > .git
@@ -101,7 +101,7 @@ wt switch --create feat/my-feature
 Worktrunk automatically:
 1. Creates the branch and worktree at `.worktrees/feat-my-feature/`
 2. Runs `uv sync` (post-create hook)
-3. Copies gitignored files from `main/` — `.env`, `.letta/`, `.rag-facile/` (post-start hook)
+3. Copies gitignored files from `main/` — `.env`, `.letta/`, `.ragtime/` (post-start hook)
 
 No manual dependency installation or `.env` copying needed.
 
@@ -130,7 +130,7 @@ wt step prune                   # remove all merged worktrees at once
 ### Update main
 
 ```bash
-cd ~/projects/rag-facile/main && git pull
+cd ~/projects/ragtime/main && git pull
 ```
 
 ---
@@ -151,7 +151,7 @@ The `.worktreeinclude` file in the repo root controls what gets copied:
 .letta
 
 # Agent memory & config
-.rag-facile
+.ragtime
 ```
 
 **Edit `.env` in `main/`** — it's the canonical source. Each new worktree gets a fresh copy on creation.

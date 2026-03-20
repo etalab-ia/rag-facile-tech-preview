@@ -31,7 +31,7 @@ Place your reference documents in `data/documents/raw/`, then generate Q/A pairs
 export LETTA_API_KEY="your-letta-api-key"
 export DATA_FOUNDRY_AGENT_ID="agent-xxx"
 
-rag-facile generate-dataset data/documents/raw/ -o data/datasets/golden_v1.jsonl -n 50 --provider letta
+ragtime generate-dataset data/documents/raw/ -o data/datasets/golden_v1.jsonl -n 50 --provider letta
 ```
 
 ### Option 2: Albert API (Self-Hosted)
@@ -41,7 +41,7 @@ export OPENAI_API_KEY="your-api-key"
 export OPENAI_BASE_URL="http://localhost:8000"
 export OPENAI_MODEL="openweight-small"
 
-rag-facile generate-dataset data/documents/raw/ -o data/datasets/golden_v1.jsonl -n 50 --provider albert
+ragtime generate-dataset data/documents/raw/ -o data/datasets/golden_v1.jsonl -n 50 --provider albert
 ```
 
 ### Dataset Format
@@ -61,7 +61,7 @@ Both providers create JSONL files with French Q/A pairs:
 
 ## Step 2: Run Evaluation
 
-rag-facile uses [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute) to run evaluations. Three metrics are computed:
+ragtime uses [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute) to run evaluations. Three metrics are computed:
 
 | Metric | What it Measures |
 |--------|-----------------|
@@ -72,13 +72,13 @@ rag-facile uses [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Insti
 Run an evaluation:
 
 ```bash
-rag-facile eval run data/datasets/golden_v1.jsonl
+ragtime eval run data/datasets/golden_v1.jsonl
 ```
 
 Or use the latest dataset automatically:
 
 ```bash
-rag-facile eval run
+ragtime eval run
 ```
 
 Options:
@@ -90,13 +90,13 @@ Options:
 Open the Inspect AI web viewer:
 
 ```bash
-rag-facile eval view
+ragtime eval view
 ```
 
 Or list past runs:
 
 ```bash
-rag-facile eval list
+ragtime eval list
 ```
 
 ## Advanced: Using Inspect AI Directly
@@ -104,7 +104,7 @@ rag-facile eval list
 The evaluation package exposes standard Inspect AI tasks. You can run them directly:
 
 ```bash
-inspect eval packages/evaluation/src/rag_facile/evaluation/_tasks.py \
+inspect eval packages/evaluation/src/ragtime/evaluation/_tasks.py \
   --model openai/openweight-medium \
   -T dataset_path=data/datasets/golden_v1.jsonl
 ```
@@ -114,19 +114,19 @@ inspect eval packages/evaluation/src/rag_facile/evaluation/_tasks.py \
 You can use individual scorers in your own Inspect tasks:
 
 ```python
-from rag_facile.evaluation import recall_at_k, precision_at_k, faithfulness
+from ragtime.evaluation import recall_at_k, precision_at_k, faithfulness
 
 # Use as standalone scorers
 scorer = recall_at_k()
 
 # Or the combined multi-scorer
-from rag_facile.evaluation import rag_eval_scorer
+from ragtime.evaluation import rag_eval_scorer
 scorer = rag_eval_scorer(model="openai/openweight-medium")
 ```
 
 ## Configuration
 
-Evaluation settings in `ragfacile.toml`:
+Evaluation settings in `ragtime.toml`:
 
 ```toml
 [eval]

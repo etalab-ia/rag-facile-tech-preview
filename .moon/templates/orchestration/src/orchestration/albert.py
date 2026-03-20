@@ -4,7 +4,7 @@ Parses documents via the Albert API (ingestion package) and supports
 query-time retrieval with search, reranking, and context formatting
 (retrieval package).
 
-Selected when ``storage.provider = "albert-collections"`` in ragfacile.toml.
+Selected when ``storage.provider = "albert-collections"`` in ragtime.toml.
 """
 
 from __future__ import annotations

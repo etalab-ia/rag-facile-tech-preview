@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from rag_facile.core.schema import (
+from ragtime.core.schema import (
     ChunkingConfig,
     EmbeddingConfig,
     GenerationConfig,

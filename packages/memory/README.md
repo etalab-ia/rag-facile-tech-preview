@@ -1,6 +1,6 @@
 # memory
 
-Flat-file persistent memory for the rag-facile chat agent.
+Flat-file persistent memory for the ragtime chat agent.
 
 ## Architecture
 

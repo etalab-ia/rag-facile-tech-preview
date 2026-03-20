@@ -1,6 +1,6 @@
 # CI/CD macOS Testing Guide
 
-This guide explains how to test RAG Facile installation on macOS in CI/CD pipelines using GitHub Actions.
+This guide explains how to test Ragtime installation on macOS in CI/CD pipelines using GitHub Actions.
 
 **See also:** [Windows Testing Guide](ci-cd-windows.md) | [Linux Testing Guide](ci-cd-linux.md) | [Complete Workflow Example](../../.github/workflows/test-install.yml)
 
@@ -34,7 +34,7 @@ macos-install-intel:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -59,7 +59,7 @@ macos-install-arm64:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -92,7 +92,7 @@ macos-multi-arch:
     - name: Verify installation
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         moon --version
         uv --version
@@ -155,7 +155,7 @@ macos-homebrew-coexistence:
     - name: Verify both proto and Homebrew tools work
       shell: bash
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
         # Verify Homebrew tools still work
         brew --version
@@ -191,7 +191,7 @@ macos-shell-variants:
     - name: Verify installation
       shell: ${{ matrix.shell }}
       run: |
-        rag-facile --version
+        ragtime --version
         proto --version
 ```
 
@@ -265,7 +265,7 @@ macos-path-persistence:
       run: |
         # Source the profile and verify tools are available
         source ~/.zshrc 2>/dev/null || source ~/.bashrc 2>/dev/null
-        rag-facile --version
+        ragtime --version
         proto --version
 ```
 

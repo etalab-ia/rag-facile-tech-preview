@@ -12,9 +12,9 @@ Vector storage and collection management for the RAG pipeline.
 ## Usage
 
 ```python
-from rag_facile.storage import get_provider
+from ragtime.storage import get_provider
 
-# Backend determined by ragfacile.toml [storage] section
+# Backend determined by ragtime.toml [storage] section
 provider = get_provider()
 
 # Collection lifecycle
@@ -27,7 +27,7 @@ provider.delete_collection(client, collection_id)
 ## Configuration
 
 ```toml
-# ragfacile.toml
+# ragtime.toml
 [storage]
 provider = "albert-collections"  # or "local-sqlite" (planned)
 collection_naming = "workspace"

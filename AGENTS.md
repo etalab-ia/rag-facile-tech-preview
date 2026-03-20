@@ -1,6 +1,6 @@
-# Agent Knowledge: RAG Facile Project
+# Agent Knowledge: Ragtime Project
 
-This document contains essential knowledge for coding agents working on RAG Facile.
+This document contains essential knowledge for coding agents working on Ragtime.
 
 ## 0. Critical Rules
 
@@ -33,7 +33,7 @@ This document contains essential knowledge for coding agents working on RAG Faci
 ## 1. Project Architecture
 
 ### Overview
-- **Name**: RAG Facile - RAG starter kit for French government
+- **Name**: Ragtime - RAG starter kit for French government
 - **Type**: Python 3.13+ monorepo
 - **Build System**: Moonrepo (moon) for workspace management
 - **Package Manager**: uv (fast Python package installer/manager)
@@ -41,30 +41,30 @@ This document contains essential knowledge for coding agents working on RAG Faci
 
 ### Repository Structure
 ```
-rag-facile/
+ragtime/
 ├── apps/                          # Applications
-│   ├── cli/                       # rag-facile CLI tool
+│   ├── cli/                       # ragtime CLI tool
 │   ├── chainlit-chat/             # Chainlit chat UI (golden master)
 │   └── reflex-chat/               # Reflex chat UI (golden master)
 ├── packages/                      # Shared packages
-│   ├── rag-core/                  # Core config + schema (rag_facile.core)
-│   ├── albert-client/             # Albert API SDK (uses `albert` namespace, not rag_facile.*)
-│   ├── ingestion/                 # Document parsing (rag_facile.ingestion)
-│   ├── pipelines/                 # Pipeline orchestration (rag_facile.pipelines)
-│   ├── retrieval/                 # Vector search (rag_facile.retrieval)
-│   ├── reranking/                 # Cross-encoder re-scoring (rag_facile.reranking)
-│   ├── context/                   # Context formatting (rag_facile.context)
-│   ├── storage/                   # Collection management (rag_facile.storage)
-│   ├── tracing/                   # Pipeline tracing & observability (rag_facile.tracing)
-│   ├── evaluation/                # RAG evaluation with Inspect AI (rag_facile.evaluation)
-│   └── rag-facile-lib/            # Library bundle for external projects
+│   ├── rag-core/                  # Core config + schema (ragtime.core)
+│   ├── albert-client/             # Albert API SDK (uses `albert` namespace, not ragtime.*)
+│   ├── ingestion/                 # Document parsing (ragtime.ingestion)
+│   ├── pipelines/                 # Pipeline orchestration (ragtime.pipelines)
+│   ├── retrieval/                 # Vector search (ragtime.retrieval)
+│   ├── reranking/                 # Cross-encoder re-scoring (ragtime.reranking)
+│   ├── context/                   # Context formatting (ragtime.context)
+│   ├── storage/                   # Collection management (ragtime.storage)
+│   ├── tracing/                   # Pipeline tracing & observability (ragtime.tracing)
+│   ├── evaluation/                # RAG evaluation with Inspect AI (ragtime.evaluation)
+│   └── ragtime-lib/            # Library bundle for external projects
 ├── .moon/                         # Moon workspace config
 │   ├── templates/                 # App/package templates (Tera syntax)
 │   ├── toolchain.yml              # Python/tool versions
 │   └── workspace.yml              # Workspace definition
 ├── docs/                          # User documentation
 │   ├── guides/                    # How-to guides (getting-started, proxy, etc.)
-│   ├── reference/                 # Reference docs (ragfacile.toml, components)
+│   ├── reference/                 # Reference docs (ragtime.toml, components)
 │   └── troubleshooting/           # Problem-solving guides
 ├── pyproject.toml                 # Root workspace config
 ├── install.sh                     # Installation script (macOS/Linux/Windows via Git Bash)
@@ -122,7 +122,7 @@ rag-facile/
   - `just type-check` → `moon run tools:type-check`
   - `just run [app]` → Run app(s)
 
-## 3. CLI Development (rag-facile-cli)
+## 3. CLI Development (ragtime-cli)
 
 ### Location
 - **Code**: `apps/cli/src/cli/`
@@ -131,7 +131,7 @@ rag-facile/
 ### Command Structure
 **Current commands** (alphabetically ordered):
 - `generate-dataset` - Generate synthetic Q/A evaluation datasets
-- `setup <name> [--expert]` - Setup a new RAG Facile workspace (--expert shows project structure, frontend, and pipeline options)
+- `setup <name> [--expert]` - Setup a new Ragtime workspace (--expert shows project structure, frontend, and pipeline options)
 - `version` - Show CLI version
 
 **Key Pattern**: Alphabetical ordering is important - check help output order when adding commands
@@ -228,7 +228,7 @@ apps/cli/src/cli/commands/eval/providers/
 ### Adding a New Package to the Monorepo
 
 When adding a new package to the monorepo (`packages/mypkg/`):
-1. Create `packages/mypkg/` with `pyproject.toml` and source under `packages/mypkg/src/rag_facile/mypkg/`
+1. Create `packages/mypkg/` with `pyproject.toml` and source under `packages/mypkg/src/ragtime/mypkg/`
 2. Add `# x-release-please-version` comment after version in pyproject.toml
 3. Add to root `pyproject.toml`:
    ```toml
@@ -239,7 +239,7 @@ When adding a new package to the monorepo (`packages/mypkg/`):
    my-package = { workspace = true }
    ```
 4. Add `pyproject.toml` path to `release-please-config.json` → `extra-files`
-5. If the package is a pipeline phase, add it to `packages/rag-facile-lib/pyproject.toml` dependencies
+5. If the package is a pipeline phase, add it to `packages/ragtime-lib/pyproject.toml` dependencies
 
 ### Template Generation
 
@@ -269,7 +269,7 @@ When adding a new package to the monorepo (`packages/mypkg/`):
 ### Query Expansion System (✅ Completed Feb 18, 2026)
 
 - **Problem**: Vocabulary mismatch — users write colloquial queries ("APL", "CNI") that don't match the formal French of indexed documents.
-- **Package**: `packages/query/` → `rag_facile.query` namespace
+- **Package**: `packages/query/` → `ragtime.query` namespace
 - **Architecture**: Strategy Pattern (`QueryExpander` ABC, `get_expander(client, config)` factory)
 - **Strategies**:
   - `multi_query`: generates 3–5 formal French administrative query variants via LLM (instructor + Pydantic structured output); results merged with Reciprocal Rank Fusion (RRF)
@@ -278,16 +278,16 @@ When adding a new package to the monorepo (`packages/mypkg/`):
 - **Aggregation**: `fuse_results()` in `packages/retrieval/` implements RRF (k=60), de-duplicating chunks by `(chunk_id, collection_id)` and boosting chunks confirmed by multiple query angles
 - **Integration**: `AlbertPipeline.process_query()` Step 0; default `strategy = "none"` → zero impact for existing deployments
 - **Preset activation**: `accurate` and `hr` presets set `strategy = "multi_query"`; `legal` keeps `strategy = "none"` to preserve exact terminology
-- **Config**: `[query] strategy = "multi_query"` in `ragfacile.toml`
+- **Config**: `[query] strategy = "multi_query"` in `ragtime.toml`
 
-### Library Package + rag_facile Namespace (✅ PR #121, Feb 17, 2026)
-- **What changed**: All 7 pipeline packages now live under `rag_facile.*` namespace
-- **Packages**: `rag_facile.core`, `rag_facile.ingestion`, `rag_facile.pipelines`, `rag_facile.retrieval`, `rag_facile.reranking`, `rag_facile.context`, `rag_facile.storage`, `rag_facile.tracing`, `rag_facile.evaluation`
-- **New bundle**: `packages/rag-facile-lib/` bundles all pipeline packages for external projects
-- **Generated projects** now depend on `rag-facile-lib` via git URL (no more copying pipeline source)
+### Library Package + ragtime Namespace (✅ PR #121, Feb 17, 2026)
+- **What changed**: All 7 pipeline packages now live under `ragtime.*` namespace
+- **Packages**: `ragtime.core`, `ragtime.ingestion`, `ragtime.pipelines`, `ragtime.retrieval`, `ragtime.reranking`, `ragtime.context`, `ragtime.storage`, `ragtime.tracing`, `ragtime.evaluation`
+- **New bundle**: `packages/ragtime-lib/` bundles all pipeline packages for external projects
+- **Generated projects** now depend on `ragtime-lib` via git URL (no more copying pipeline source)
 - **Standalone** structure: `pyproject.toml` + frontend app + `src/<name>/` for user code
 - **Monorepo** setup: inlines workspace config directly (no sys-config template)
-- **Import style**: `from rag_facile.pipelines import get_pipeline` (not `from pipelines import ...`)
+- **Import style**: `from ragtime.pipelines import get_pipeline` (not `from pipelines import ...`)
 
 ### Issue #46: Proxy Support (✅ Completed Feb 6, 2026)
 - **Problem**: Proto plugin installation fails on networks with proxies/VPNs
@@ -314,7 +314,7 @@ When adding a new package to the monorepo (`packages/mypkg/`):
 - **Pipeline names**: "Albert RAG" (server-side, recommended) and "Local" (offline, simple)
 
 ### Data Foundry / Eval Features
-- **Command**: `rag-facile generate-dataset ./docs -o output.jsonl`
+- **Command**: `ragtime generate-dataset ./docs -o output.jsonl`
 - **Purpose**: Generate synthetic Q/A evaluation datasets from documents
 - **Providers**: Letta Cloud (default) or Albert API
 - **Implementation**: `apps/cli/src/cli/commands/eval/providers/`
@@ -357,10 +357,10 @@ python -m pytest apps/cli/tests/
 - Check for missing type hints in new code
 - May need to configure `[tool.ty.rules]` for false positives
 
-### "Import not found" (from workspace packages or rag_facile namespace)
-- All pipeline packages use the `rag_facile.*` namespace (e.g., `from rag_facile.pipelines import get_pipeline`)
+### "Import not found" (from workspace packages or ragtime namespace)
+- All pipeline packages use the `ragtime.*` namespace (e.g., `from ragtime.pipelines import get_pipeline`)
 - In the monorepo: ensure the package is listed in root `pyproject.toml` dependencies + `[tool.uv.sources]`
-- In generated projects: ensure `rag-facile-lib` is in dependencies and `uv sync` has run
+- In generated projects: ensure `ragtime-lib` is in dependencies and `uv sync` has run
 - Run `uv sync` to regenerate lockfile
 
 ### "Moon command failed"
@@ -381,12 +381,12 @@ python -m pytest apps/cli/tests/
 - **Ruff**: https://docs.astral.sh/ruff/
 - **UV**: https://docs.astral.sh/uv/
 - **Typer**: https://typer.tiangolo.com/
-- **Project README**: https://github.com/etalab-ia/rag-facile/README.md
+- **Project README**: https://github.com/etalab-ia/ragtime/README.md
 - **CONTRIBUTING**: CONTRIBUTING.md in repo root
 
 ## 10. Agent Memory System
 
-The `rag-facile` chat assistant has a persistent memory system stored in the `.agent/` directory within the user's workspace. Other coding agents (Claude Code, Letta Code, Antigravity) can read and use these files.
+The `ragtime` chat assistant has a persistent memory system stored in the `.agent/` directory within the user's workspace. Other coding agents (Claude Code, Letta Code, Antigravity) can read and use these files.
 
 ### Directory Layout
 
@@ -425,7 +425,7 @@ The semantic store has 6 fixed sections, each serving a specific purpose:
 
 ### Package Location
 
-- **Source**: `packages/memory/src/rag_facile/memory/`
+- **Source**: `packages/memory/src/ragtime/memory/`
 - **Modules**: `stores.py`, `tool.py`, `context.py`, `lifecycle.py`, `consolidation.py`, `_paths.py`
 - **Tests**: `packages/memory/tests/`
 

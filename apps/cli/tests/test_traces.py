@@ -1,4 +1,4 @@
-"""Tests for the rag-facile traces command group."""
+"""Tests for the ragtime traces command group."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def _make_trace(
     response: str | None = "RAG stands for Retrieval-Augmented Generation.",
 ):
     """Build a minimal TraceRecord-like mock."""
-    from rag_facile.tracing import TraceRecord
+    from ragtime.tracing import TraceRecord
 
     return TraceRecord(
         id=trace_id,
@@ -57,7 +57,7 @@ def _mock_tracer(traces=None, trace_by_id=None, delete_count=0):
 class TestTracesListCommand:
     def test_empty_tracer_shows_no_traces_message(self):
         """list with no traces shows helpful message."""
-        with patch("rag_facile.tracing.get_tracer", return_value=_mock_tracer()):
+        with patch("ragtime.tracing.get_tracer", return_value=_mock_tracer()):
             result = runner.invoke(main_app, ["traces", "list"])
         assert result.exit_code == 0
         assert "No traces found" in result.output
@@ -69,7 +69,7 @@ class TestTracesListCommand:
             for i in range(3)
         ]
         with patch(
-            "rag_facile.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
+            "ragtime.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
         ):
             result = runner.invoke(main_app, ["traces", "list"])
         assert result.exit_code == 0
@@ -80,14 +80,14 @@ class TestTracesListCommand:
     def test_list_passes_limit_option(self):
         """--limit is forwarded to list_traces."""
         mock = _mock_tracer()
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             runner.invoke(main_app, ["traces", "list", "--limit", "5"])
         mock.list_traces.assert_called_once_with(session_id=None, user_id=None, limit=5)
 
     def test_list_passes_session_filter(self):
         """--session is forwarded to list_traces."""
         mock = _mock_tracer()
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             runner.invoke(main_app, ["traces", "list", "--session", "my-session"])
         mock.list_traces.assert_called_once_with(
             session_id="my-session", user_id=None, limit=20
@@ -101,7 +101,7 @@ class TestTracesShowCommand:
     def test_show_unknown_id_exits_with_error(self):
         """show with unknown ID exits 1 and prints error."""
         mock = _mock_tracer(traces=[], trace_by_id=None)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "show", "nonexistent-id"])
         assert result.exit_code == 1
         assert "not found" in result.output.lower()
@@ -110,7 +110,7 @@ class TestTracesShowCommand:
         """show with exact ID renders trace detail panels."""
         trace = _make_trace()
         mock = _mock_tracer(trace_by_id=trace)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "show", trace.id])
         assert result.exit_code == 0
         assert "What is RAG" in result.output
@@ -122,7 +122,7 @@ class TestTracesShowCommand:
         trace = _make_trace(trace_id="a1b2c3d4-1111-0000-0000-000000000000")
         # get_trace returns None for prefix, list_traces returns the trace
         mock = _mock_tracer(traces=[trace], trace_by_id=None)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "show", "a1b2c3d4"])
         assert result.exit_code == 0
         assert "What is RAG" in result.output
@@ -134,7 +134,7 @@ class TestTracesShowCommand:
 class TestTracesStatsCommand:
     def test_stats_empty_shows_no_traces(self):
         """stats with no traces shows empty state."""
-        with patch("rag_facile.tracing.get_tracer", return_value=_mock_tracer()):
+        with patch("ragtime.tracing.get_tracer", return_value=_mock_tracer()):
             result = runner.invoke(main_app, ["traces", "stats"])
         assert result.exit_code == 0
         assert "No traces found" in result.output
@@ -149,7 +149,7 @@ class TestTracesStatsCommand:
             for i in range(5)
         ]
         with patch(
-            "rag_facile.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
+            "ragtime.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
         ):
             result = runner.invoke(main_app, ["traces", "stats"])
         assert result.exit_code == 0
@@ -165,7 +165,7 @@ class TestTracesStatsCommand:
             for i in range(3)
         ]
         with patch(
-            "rag_facile.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
+            "ragtime.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
         ):
             result = runner.invoke(main_app, ["traces", "stats"])
         assert result.exit_code == 0
@@ -178,7 +178,7 @@ class TestTracesStatsCommand:
 class TestTracesExportCommand:
     def test_export_empty_prints_nothing_to_stdout(self):
         """export with no traces exits cleanly with no JSONL lines."""
-        with patch("rag_facile.tracing.get_tracer", return_value=_mock_tracer()):
+        with patch("ragtime.tracing.get_tracer", return_value=_mock_tracer()):
             result = runner.invoke(main_app, ["traces", "export"])
         assert result.exit_code == 0
         # No JSON objects in stdout
@@ -194,7 +194,7 @@ class TestTracesExportCommand:
             for i in range(3)
         ]
         with patch(
-            "rag_facile.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
+            "ragtime.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
         ):
             result = runner.invoke(main_app, ["traces", "export"])
         assert result.exit_code == 0
@@ -214,7 +214,7 @@ class TestTracesExportCommand:
         traces = [_make_trace()]
         out_file = tmp_path / "traces.jsonl"
         with patch(
-            "rag_facile.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
+            "ragtime.tracing.get_tracer", return_value=_mock_tracer(traces=traces)
         ):
             result = runner.invoke(
                 main_app, ["traces", "export", "--output", str(out_file)]
@@ -234,7 +234,7 @@ class TestTracesPruneCommand:
     def test_prune_with_yes_flag_deletes_and_reports(self):
         """prune --yes deletes traces and shows count."""
         mock = _mock_tracer(delete_count=42)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "prune", "--yes"])
         assert result.exit_code == 0
         mock.delete_traces.assert_called_once_with(older_than_days=30)
@@ -243,7 +243,7 @@ class TestTracesPruneCommand:
     def test_prune_custom_days(self):
         """--days is forwarded to delete_traces."""
         mock = _mock_tracer(delete_count=7)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(
                 main_app, ["traces", "prune", "--days", "7", "--yes"]
             )
@@ -253,7 +253,7 @@ class TestTracesPruneCommand:
     def test_prune_zero_deleted_shows_friendly_message(self):
         """prune with nothing to delete shows 'no traces' message."""
         mock = _mock_tracer(delete_count=0)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "prune", "--yes"])
         assert result.exit_code == 0
         assert "No traces" in result.output or "0" in result.output
@@ -261,7 +261,7 @@ class TestTracesPruneCommand:
     def test_prune_aborted_does_not_call_delete(self):
         """Answering 'n' to confirmation skips delete."""
         mock = _mock_tracer(delete_count=10)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "prune"], input="n\n")
         assert result.exit_code == 0
         mock.delete_traces.assert_not_called()
@@ -269,7 +269,7 @@ class TestTracesPruneCommand:
     def test_prune_confirmed_calls_delete(self):
         """Answering 'y' to confirmation proceeds with delete."""
         mock = _mock_tracer(delete_count=5)
-        with patch("rag_facile.tracing.get_tracer", return_value=mock):
+        with patch("ragtime.tracing.get_tracer", return_value=mock):
             result = runner.invoke(main_app, ["traces", "prune"], input="y\n")
         assert result.exit_code == 0
         mock.delete_traces.assert_called_once_with(older_than_days=30)

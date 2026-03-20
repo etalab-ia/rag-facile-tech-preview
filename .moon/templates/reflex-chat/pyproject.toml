@@ -1,24 +1,24 @@
 [project]
 name = "{{ project_name }}"
-version = "0.21.0" # x-release-please-version
+version = "0.22.0" # x-release-please-version
 description = "{{ description }}"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "python-dotenv>=1.0.0",
-    "rag-facile-lib",
+    "ragtime-lib",
     "reflex>=0.7.11",
 ]
 
 [project.scripts]
-reflex-chat = "rag-facile-lib",
+reflex-chat = "ragtime-lib",
     "reflex.reflex:cli"
 
 [tool.setuptools.packages.find]
 include = ["{{ project_name | replace(from='-', to='_') }}*"]
 
 [tool.uv.sources]
-rag-facile-lib = { git = "https://github.com/etalab-ia/rag-facile.git", {{ rag_facile_ref_key }} = "{{ rag_facile_ref_value }}", subdirectory = "packages/rag-facile-lib" }
+ragtime-lib = { git = "https://github.com/etalab-ia/ragtime.git", {{ ragtime_ref_key }} = "{{ ragtime_ref_value }}", subdirectory = "packages/ragtime-lib" }
 
 [tool.uv]
 package = true

@@ -20,14 +20,13 @@ from cli.commands import (
 console = Console()
 
 BANNER = """[magenta]
- ██████╗  █████╗  ██████╗     ███████╗ █████╗  ██████╗██╗██╗     ███████╗
- ██╔══██╗██╔══██╗██╔════╝     ██╔════╝██╔══██╗██╔════╝██║██║     ██╔════╝
- ██████╔╝███████║██║  ███╗    █████╗  ███████║██║     ██║██║     █████╗
- ██╔══██╗██╔══██║██║   ██║    ██╔══╝  ██╔══██║██║     ██║██║     ██╔══╝
- ██║  ██║██║  ██║╚██████╔╝    ██║     ██║  ██║╚██████╗██║███████╗███████╗
- ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝╚══════╝╚══════╝
+ ██████╗  █████╗  ██████╗██╗ ██████╗    ██████╗██╗  ██╗███████╗
+ ██╔══██╗██╔══██╗██╔════╝██║██╔════╝    ╚════██╗██║  ██║██╔════╝
+ ██████╔╝███████║██║     ██║██║          █████╔╝███████║█████╗
+ ██╔══██╗██╔══██║██║     ██║██║          ╚═══██╗╚════██║██╔══╝
+ ██║  ██║██║  ██║╚██████╗██║╚██████╗    ██████╔╝     ██║███████╗
+ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝ ╚═════╝    ╚═════╝      ╚═╝╚══════╝
 [/magenta]"""
-
 
 # Getting Started command definitions — single source of truth for both
 # panel registration and sort-key logic in PanelAlphabeticalGroup.
@@ -59,8 +58,8 @@ class PanelAlphabeticalGroup(typer.core.TyperGroup):
         try:
             console.print(BANNER)
             try:
-                cli_version = get_version("rag-facile-cli")
-                console.print(f"[cyan]rag-facile v{cli_version}[/cyan]\n")
+                cli_version = get_version("ragtime-cli")
+                console.print(f"[cyan]ragtime v{cli_version}[/cyan]\n")
             except PackageNotFoundError:
                 pass
         except Exception:
@@ -73,7 +72,7 @@ app = typer.Typer(
     cls=PanelAlphabeticalGroup,
     add_completion=False,
     invoke_without_command=True,
-    help="RAG Facile CLI - Build RAG applications for the French government",
+    help="Ragtime CLI - Build RAG applications for the French government",
 )
 
 
@@ -93,7 +92,7 @@ def main_callback(
         is_eager=False,
     ),
 ) -> None:
-    """RAG Facile CLI - Build RAG applications for the French government."""
+    """Ragtime CLI - Build RAG applications for the French government."""
     if version:
         raise typer.Exit()
 

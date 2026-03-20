@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Installateur RAG Facile pour Unix / macOS / WSL / Git Bash
+# Installateur Ragtime pour Unix / macOS / WSL / Git Bash
 # Prérequis : curl
-# Installe : uv, just, puis la commande rag-facile en tant qu'outil global.
+# Installe : uv, just, puis la commande ragtime en tant qu'outil global.
 #
 # Utilisation :
-#   curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 #
 # Variables d'environnement :
 #   RAG_FACILE_VERSION  Version spécifique à installer (par défaut : dernière version)
@@ -14,7 +14,7 @@ set -e
 LOCAL_BIN="$HOME/.local/bin"
 
 echo ""
-echo "==> Installateur RAG Facile"
+echo "==> Installateur Ragtime"
 echo ""
 
 # ── Fonctions utilitaires ──────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ else
         _CURL_AUTH=(-H "Authorization: Bearer $GITHUB_TOKEN")
     fi
     LATEST_TAG=$(curl -fsSL "${_CURL_AUTH[@]}" \
-        "https://api.github.com/repos/etalab-ia/rag-facile/releases/latest" \
+        "https://api.github.com/repos/etalab-ia/ragtime/releases/latest" \
         2>/dev/null | sed -n -E 's/.*"tag_name": *"([^"]+)".*/\1/p')
 
     if [[ -z "$LATEST_TAG" ]]; then
@@ -117,14 +117,14 @@ else
     echo "   Dernière version : $LATEST_TAG"
 fi
 
-# ── 4. Installation de rag-facile ─────────────────────────────────────────────
+# ── 4. Installation de ragtime ─────────────────────────────────────────────
 
 UV_LOG=$(mktemp)
-printf "==> Installation de rag-facile %s " "$LATEST_TAG"
+printf "==> Installation de ragtime %s " "$LATEST_TAG"
 spinner_start
 
 uv tool install \
-    "rag-facile-cli @ git+https://github.com/etalab-ia/rag-facile.git@${LATEST_TAG}#subdirectory=apps/cli" \
+    "ragtime-cli @ git+https://github.com/etalab-ia/ragtime.git@${LATEST_TAG}#subdirectory=apps/cli" \
     --force >"$UV_LOG" 2>&1 \
     || { UV_FAILED=true; }
 
@@ -133,34 +133,34 @@ spinner_stop
 if [[ "${UV_FAILED:-}" == "true" ]]; then
     cat "$UV_LOG"
     rm -f "$UV_LOG"
-    echo "ERREUR : l'installation de rag-facile a échoué"
+    echo "ERREUR : l'installation de ragtime a échoué"
     exit 1
 fi
 
-# Afficher uniquement la ligne de résumé (ex. "Installed 1 executable: rag-facile")
+# Afficher uniquement la ligne de résumé (ex. "Installed 1 executable: ragtime")
 SUMMARY=$(grep -E "^Installed [0-9]+ executable" "$UV_LOG" | tail -1)
 [[ -n "$SUMMARY" ]] && echo "   $SUMMARY"
 rm -f "$UV_LOG"
 
 ajouter_au_path
 
-if ! outil_disponible rag-facile; then
-    echo "ERREUR : la commande rag-facile n'est pas disponible après installation"
+if ! outil_disponible ragtime; then
+    echo "ERREUR : la commande ragtime n'est pas disponible après installation"
     exit 1
 fi
 
-echo "✓ rag-facile installé"
+echo "✓ ragtime installé"
 
 # ── 5. Terminé ────────────────────────────────────────────────────────────────
 
 echo ""
-echo "✅ RAG Facile est prêt !"
+echo "✅ Ragtime est prêt !"
 echo ""
 cat <<EOF
 Prochaines étapes :
 
   1. Créez votre projet RAG :
-       rag-facile setup mon-projet
+       ragtime setup mon-projet
 
   2. Lancez votre application :
        cd mon-projet && just run
@@ -194,12 +194,12 @@ if [[ ":$PATH:" != *":$LOCAL_BIN:"* ]]; then
 
     if ! grep -q "$LOCAL_BIN" "$PROFILE" 2>/dev/null; then
         echo "" >> "$PROFILE"
-        echo "# Ajouté par l'installateur RAG Facile" >> "$PROFILE"
+        echo "# Ajouté par l'installateur Ragtime" >> "$PROFILE"
         echo "export PATH=\"$LOCAL_BIN:\$PATH\"" >> "$PROFILE"
     fi
 
     echo "  ⚠️  Redémarrez votre terminal (ou lancez : source $PROFILE)"
-    echo "     pour que 'just', 'uv' et 'rag-facile' soient disponibles."
+    echo "     pour que 'just', 'uv' et 'ragtime' soient disponibles."
     echo ""
 fi
 

@@ -83,7 +83,7 @@ reaction_on_message_received = false
 
 [UI]
 # Name of the assistant.
-name = "Assistant RAG Facile"
+name = "Assistant Ragtime"
 
 # Default to light theme (DSFR preference for government sites)
 default_theme = "light"

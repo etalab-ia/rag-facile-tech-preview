@@ -1,6 +1,6 @@
 # Developer Setup on Windows
 
-This guide is for developers who want to contribute to RAG Facile itself (not just use it).
+This guide is for developers who want to contribute to Ragtime itself (not just use it).
 
 ## Prerequisites
 
@@ -15,11 +15,11 @@ This guide is for developers who want to contribute to RAG Facile itself (not ju
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR-USERNAME/rag-facile.git
-cd rag-facile
+git clone https://github.com/YOUR-USERNAME/ragtime.git
+cd ragtime
 
 # Add upstream remote for syncing
-git remote add upstream https://github.com/etalab-ia/rag-facile.git
+git remote add upstream https://github.com/etalab-ia/ragtime.git
 ```
 
 ### 2. Install the Development Toolchain
@@ -27,13 +27,13 @@ git remote add upstream https://github.com/etalab-ia/rag-facile.git
 Using Git Bash:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh | bash
 ```
 
 Or Git Bash:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/rag-facile/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/etalab-ia/ragtime/main/install.sh)
 ```
 
 This installs:
@@ -49,7 +49,7 @@ Proto updates `PATH` automatically, so restart your terminal for changes to take
 ### 4. Install Dependencies
 
 ```bash
-cd rag-facile
+cd ragtime
 just sync  # Installs dependencies and pre-commit hooks
 ```
 
@@ -113,9 +113,9 @@ just check
 ## Project Structure
 
 ```
-rag-facile/
+ragtime/
 ├── apps/                          # Applications
-│   ├── cli/                       # RAG Facile CLI (Typer)
+│   ├── cli/                       # Ragtime CLI (Typer)
 │   │   ├── src/cli/commands/      # CLI commands
 │   │   ├── tests/                 # CLI tests
 │   │   └── pyproject.toml
@@ -142,7 +142,7 @@ rag-facile/
 # Install CLI in editable mode
 cd apps/cli
 uv sync
-uv run rag-facile --help
+uv run ragtime --help
 ```
 
 ### Testing on Windows
@@ -166,10 +166,10 @@ To test the installer locally before pushing:
 
 ```bash
 # Test the PowerShell installer with your changes
-irm https://raw.githubusercontent.com/YOUR-USERNAME/rag-facile/YOUR-BRANCH/install.ps1 | iex
+irm https://raw.githubusercontent.com/YOUR-USERNAME/ragtime/YOUR-BRANCH/install.ps1 | iex
 
 # Or the bash installer
-bash <(curl -fsSL https://raw.githubusercontent.com/YOUR-USERNAME/rag-facile/YOUR-BRANCH/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/YOUR-USERNAME/ragtime/YOUR-BRANCH/install.sh)
 ```
 
 ## Common Tasks
@@ -252,7 +252,7 @@ which proto
 - **Moon docs:** https://moonrepo.dev/
 - **Uv docs:** https://docs.astral.sh/uv/
 - **Ruff docs:** https://docs.astral.sh/ruff/
-- **GitHub Issues:** https://github.com/etalab-ia/rag-facile/issues
+- **GitHub Issues:** https://github.com/etalab-ia/ragtime/issues
 
 ## Before Submitting a PR
 

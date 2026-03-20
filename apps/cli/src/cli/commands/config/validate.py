@@ -6,7 +6,7 @@ import typer
 from pydantic import ValidationError
 from rich.console import Console
 
-from rag_facile.core import RAGConfig, validate_config
+from ragtime.core import RAGConfig, validate_config
 
 
 console = Console()
@@ -14,7 +14,7 @@ console = Console()
 
 def validate(
     path: str = typer.Option(
-        "ragfacile.toml",
+        "ragtime.toml",
         "--config",
         "-c",
         help="Path to configuration file",
@@ -27,10 +27,10 @@ def validate(
 
     Examples:
         # Validate default config
-        rag-facile config validate
+        ragtime config validate
 
         # Validate specific file
-        rag-facile config validate --config custom.toml
+        ragtime config validate --config custom.toml
     """
     config_path = Path(path)
 
@@ -38,7 +38,7 @@ def validate(
     if not config_path.exists():
         console.print(f"[red]✗ Configuration file not found: {path}[/red]")
         console.print(
-            "[dim]💡 Create one with: rag-facile config preset apply balanced[/dim]"
+            "[dim]💡 Create one with: ragtime config preset apply balanced[/dim]"
         )
         raise typer.Exit(1)
 

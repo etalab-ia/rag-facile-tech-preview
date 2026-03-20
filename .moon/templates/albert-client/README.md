@@ -7,7 +7,7 @@ Official Python SDK for France's [Albert API](https://albert.api.etalab.gouv.fr/
 ## Why Use This SDK?
 
 - **OpenAI-Compatible**: Use the same code you know from OpenAI with French sovereign models
-- **Single Dependency**: The only dependency in RAG Facile that requires the OpenAI SDK - all apps and packages use albert-client
+- **Single Dependency**: The only dependency in Ragtime that requires the OpenAI SDK - all apps and packages use albert-client
 - **RAG Made Easy**: Built-in hybrid search, reranking, and collections management
 - **Type-Safe**: Full autocomplete and type checking in your IDE
 - **Production-Ready**: Async support, comprehensive error handling, battle-tested
@@ -32,8 +32,8 @@ pip install albert-client
 uv add albert-client
 
 # From source (development)
-git clone https://github.com/etalab-ia/rag-facile.git
-cd rag-facile
+git clone https://github.com/etalab-ia/ragtime.git
+cd ragtime
 uv pip install -e packages/albert-client
 ```
 
@@ -74,7 +74,7 @@ for model in client.models.list().data:
     print(model.id, "| aliases:", getattr(model, "aliases", None))
 ```
 
-Common aliases used in RAG Facile:
+Common aliases used in Ragtime:
 
 - **Generation**: `openweight-small`, `openweight-medium`, `openweight-large` (also `albert-small`, `albert-large`)
 - **Embeddings**: `openweight-embeddings` (alias: `embeddings-small`)
@@ -207,8 +207,8 @@ Interested in contributing to the SDK? We welcome improvements!
 
 ```bash
 # Clone the repository
-git clone https://github.com/etalab-ia/rag-facile.git
-cd rag-facile
+git clone https://github.com/etalab-ia/ragtime.git
+cd ragtime
 
 # Install dependencies
 uv sync
@@ -239,4 +239,4 @@ MIT - See [LICENSE](../../LICENSE) for details.
 
 - [Albert API Documentation](https://albert.api.etalab.gouv.fr/docs)
 - [OpenAI Python SDK](https://github.com/openai/openai-python) (compatibility layer)
-- [RAG Facile](https://github.com/etalab-ia/rag-facile) (parent project)
+- [Ragtime](https://github.com/etalab-ia/ragtime) (parent project)

@@ -25,9 +25,9 @@ variables:
     type: string
     default: You are a friendly chatbot named Reflex. Respond in markdown.
     prompt: Initial system prompt for the assistant
-  rag_facile_ref_key:
+  ragtime_ref_key:
     type: string
     default: branch
-  rag_facile_ref_value:
+  ragtime_ref_value:
     type: string
     default: main

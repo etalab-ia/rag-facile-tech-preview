@@ -11,11 +11,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rag_facile.memory.albert_search import (
+from ragtime.memory.albert_search import (
     AlbertMemoryIndex,
     fuse_search_results,
 )
-from rag_facile.memory.search import SearchResult
+from ragtime.memory.search import SearchResult
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────

@@ -5,7 +5,7 @@ RAG pipeline orchestration for chat applications. Coordinates document ingestion
 ## Usage
 
 ```python
-from rag_facile.pipelines import get_pipeline
+from ragtime.pipelines import get_pipeline
 
 pipeline = get_pipeline()
 
@@ -27,4 +27,4 @@ mime_types = pipeline.accepted_mime_types
 - **BasicPipeline** (`storage.provider = "local-sqlite"`): Context stuffing — parses files locally and injects full text into the LLM prompt.
 - **AlbertPipeline** (`storage.provider = "albert-collections"`): Full RAG — parses files via Albert API, supports query-time retrieval with search + reranking.
 
-Pipeline selection is driven by `ragfacile.toml` configuration.
+Pipeline selection is driven by `ragtime.toml` configuration.

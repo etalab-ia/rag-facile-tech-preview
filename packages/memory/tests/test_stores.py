@@ -4,7 +4,7 @@ from datetime import date, datetime
 
 import pytest
 
-from rag_facile.memory.stores import (
+from ragtime.memory.stores import (
     EpisodicLog,
     SemanticStore,
     SessionSnapshot,

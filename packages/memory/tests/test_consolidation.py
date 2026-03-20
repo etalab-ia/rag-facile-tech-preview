@@ -1,6 +1,6 @@
 """Tests for conflict detection and deduplication."""
 
-from rag_facile.memory.consolidation import (
+from ragtime.memory.consolidation import (
     consolidate_entry,
     find_conflicting_entry,
 )

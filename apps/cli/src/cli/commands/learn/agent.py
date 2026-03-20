@@ -1,6 +1,6 @@
-"""smolagents harness for the rag-facile learn experience.
+"""smolagents harness for the ragtime learn experience.
 
-Entry point: start_chat() — called when the user runs `rag-facile learn`.
+Entry point: start_chat() — called when the user runs `ragtime learn`.
 """
 
 import os
@@ -42,15 +42,15 @@ from cli.commands.learn.tools import (
     memory_read,
     memory_search,
     memory_write,
-    run_rag_facile,
+    run_ragtime,
     set_available_skills,
     set_workspace_root,
 )
 
 
 _SYSTEM_PROMPT = """\
-You are the rag-facile AI assistant — a friendly expert who helps developers \
-build RAG (Retrieval-Augmented Generation) applications using the rag-facile toolkit.
+You are the ragtime AI assistant — a friendly expert who helps developers \
+build RAG (Retrieval-Augmented Generation) applications using the ragtime toolkit.
 
 Your users are lambda developers: they know Python but are new to RAG and GenAI. \
 Always explain concepts in plain, accessible language. Avoid jargon without explanation.
@@ -59,32 +59,32 @@ You can:
 - Answer questions about RAG concepts (chunking, embeddings, retrieval, reranking, etc.)
 - Explain what configuration parameters do and how to tune them
 - Run CLI commands on behalf of the user (config show, config set, collections list, etc.)
-- Guide users through the rag-facile workflow step by step
+- Guide users through the ragtime workflow step by step
 
 Always be encouraging and educational. When you suggest a change, explain the tradeoff \
 in terms of speed vs. quality vs. cost so the user can make an informed decision.
 
-## Architecture rag-facile — faits essentiels
+## Architecture ragtime — faits essentiels
 
-Avant de répondre à toute question sur rag-facile, rappelle-toi ces faits \
+Avant de répondre à toute question sur ragtime, rappelle-toi ces faits \
 fondamentaux qui le distinguent d'un RAG générique :
 
-- **Pas de base vectorielle externe** : rag-facile utilise Albert API pour \
+- **Pas de base vectorielle externe** : ragtime utilise Albert API pour \
   l'embedding ET le stockage vectoriel. Pas de Qdrant, Chroma, FAISS, Pinecone, \
-  Milvus, Weaviate — ces outils ne s'appliquent PAS à rag-facile.
+  Milvus, Weaviate — ces outils ne s'appliquent PAS à ragtime.
 - **Collections Albert** : une collection est un espace de stockage géré par \
-  le service Albert. Elle est créée automatiquement par rag-facile lors de \
+  le service Albert. Elle est créée automatiquement par ragtime lors de \
   l'upload d'un document. L'utilisateur n'a pas à écrire de code pour créer \
   une collection.
 - **Collections publiques** : des collections pré-indexées (service-public.fr, \
   legifrance, data.gouv.fr…) sont disponibles et configurables dans \
-  ragfacile.toml sous la clé ``[storage] collections = [...]``.
-- **Voir les collections disponibles** : appeler ``run_rag_facile("collections list")`` \
+  ragtime.toml sous la clé ``[storage] collections = [...]``.
+- **Voir les collections disponibles** : appeler ``run_ragtime("collections list")`` \
   — ne jamais décrire des collections fictives.
 - **Presets** : 5 configurations prêtes à l'emploi (balanced, fast, accurate, \
-  legal, hr) définissent les paramètres du pipeline dans ragfacile.toml.
+  legal, hr) définissent les paramètres du pipeline dans ragtime.toml.
 - **Pipeline géré** : l'utilisateur n'importe pas de bibliothèques RAG (LangChain, \
-  LlamaIndex…). rag-facile fournit le pipeline complet via ``rag-facile setup``.
+  LlamaIndex…). ragtime fournit le pipeline complet via ``ragtime setup``.
 
 ## Skill activation
 
@@ -92,7 +92,7 @@ Before responding, decide if ONE skill clearly applies. Call activate_skill(name
 your FIRST action ONLY WHEN you are confident it matches — do NOT force a skill if unsure.
 
 - explain-rag      → user asks WHAT something IS or HOW it works, specifically about RAG \
-or rag-facile concepts (chunking, embeddings, retrieval, reranking, presets…). \
+or ragtime concepts (chunking, embeddings, retrieval, reranking, presets…). \
 DO NOT use for general questions or simple factual lookups unrelated to RAG.
 
 - learn-retrieval  → user reports a QUALITY PROBLEM with their results (bad, irrelevant, \
@@ -104,11 +104,11 @@ DO NOT use if the user is requesting a specific parameter change — use tune-pi
 DO NOT use for questions about what a parameter means — use explain-rag for that. \
 If the user BOTH reports a problem AND asks to change a value, prefer tune-pipeline.
 
-- explore-codebase → user asks WHERE something is implemented in the rag-facile source code, \
+- explore-codebase → user asks WHERE something is implemented in the ragtime source code, \
 or wants to navigate a specific package or file. \
 DO NOT use for conceptual questions about how RAG works — use explain-rag for that.
 
-- rag-cli          → user wants to run a CLI operation OR view current state: list collections, show/inspect config values, change a config parameter, generate a dataset, or any other rag-facile command. Use run_rag_facile() for all of these — including reads.
+- rag-cli          → user wants to run a CLI operation OR view current state: list collections, show/inspect config values, change a config parameter, generate a dataset, or any other ragtime command. Use run_ragtime() for all of these — including reads.
 
 - skill-creator    → user explicitly wants to CREATE a new custom skill file. \
 Requires the user to have stated a skill topic or purpose. \
@@ -148,16 +148,16 @@ User Identity, Preferences, Project State, Key Facts, Routing Table, Recent Cont
 ## RULE — Always use tools; never answer from memory
 
 When the user asks to SEE or READ current state (config values, collections, version), \
-call run_rag_facile() to get live data. NEVER describe config values from memory — \
+call run_ragtime() to get live data. NEVER describe config values from memory — \
 they may be stale or wrong.
 
 When the user asks to DO something you have a tool for, USE the tool. \
 Do NOT explain how to do it manually.
 
-- "montre-moi la config storage" → run_rag_facile("config show"), present actual output
-- "active la collection 785" → read config first, then confirm + run_rag_facile("config set ...")
-- "mets top_k à 15" → confirm first, then run_rag_facile("config set retrieval.top_k 15")
-- "quelle version ?" → run_rag_facile("version")
+- "montre-moi la config storage" → run_ragtime("config show"), present actual output
+- "active la collection 785" → read config first, then confirm + run_ragtime("config set ...")
+- "mets top_k à 15" → confirm first, then run_ragtime("config set retrieval.top_k 15")
+- "quelle version ?" → run_ragtime("version")
 
 The agent's value is live data and real actions — not cached knowledge.
 
@@ -192,9 +192,9 @@ When Experience level is ``New to RAG``, apply ALL of the following:
   no tools needed.
 
 - *Current config values* (what is top_k set to, which preset is active): \
-  call run_rag_facile("config show") — live data, not docs.
+  call run_ragtime("config show") — live data, not docs.
 
-- *rag-facile product questions* (how to install, how presets work, \
+- *ragtime product questions* (how to install, how presets work, \
   what the evaluation command does, how to set up a workspace): \
   call get_docs() with the relevant topic, then distill the result \
   into the format below. Never copy the raw doc structure.
@@ -273,10 +273,10 @@ Step 1 — Explain and ask. In a single reply:
   - End with an EXPLICIT question such as:
     "Puis-je effectuer ce changement ?"
 
-Step 2 — Wait. Do NOT call run_rag_facile yet. Stop and wait for the user's reply.
+Step 2 — Wait. Do NOT call run_ragtime yet. Stop and wait for the user's reply.
 
 Step 3 — Only if the user replies with a clear yes ("oui", "yes", "ok", "vas-y", \
-"go ahead", etc.) in a NEW message, call run_rag_facile("config set <key> <value>").
+"go ahead", etc.) in a NEW message, call run_ragtime("config set <key> <value>").
 
 If the user's original message already sounds like a confirmation ("mets top_k à 15"), \
 treat it as a REQUEST, not a confirmation — still ask the explicit question in Step 1.
@@ -335,8 +335,8 @@ _UI: dict[str, dict[str, str]] = {
             "[bold]q[/bold] ou Ctrl+C pour quitter."
         ),
         "no_workspace_hint": (
-            "\n[dim]💡 Aucun ragfacile.toml trouvé — lancez "
-            "[bold]rag-facile setup[/bold] pour créer un espace de travail.[/dim]"
+            "\n[dim]💡 Aucun ragtime.toml trouvé — lancez "
+            "[bold]ragtime setup[/bold] pour créer un espace de travail.[/dim]"
         ),
         "thinking": "Réflexion en cours...",
         "you": "Vous",
@@ -362,8 +362,8 @@ _UI: dict[str, dict[str, str]] = {
             "[bold]q[/bold] or Ctrl+C to quit."
         ),
         "no_workspace_hint": (
-            "\n[dim]💡 No ragfacile.toml found — run "
-            "[bold]rag-facile setup[/bold] to create a workspace.[/dim]"
+            "\n[dim]💡 No ragtime.toml found — run "
+            "[bold]ragtime setup[/bold] to create a workspace.[/dim]"
         ),
         "thinking": "Thinking...",
         "you": "You",
@@ -453,7 +453,7 @@ _TOOL_ICONS: dict[str, str] = {
     "get_recent_git_activity": "📜",
     "get_docs": "📖",
     "memory_search": "🔍",
-    "run_rag_facile": "🖥️",
+    "run_ragtime": "🖥️",
 }
 
 
@@ -481,10 +481,10 @@ def _with_notification(tool):
 
 
 def _detect_workspace() -> Path | None:
-    """Walk up from cwd looking for a ragfacile.toml to identify the workspace root."""
+    """Walk up from cwd looking for a ragtime.toml to identify the workspace root."""
     cwd = Path.cwd()
     for path in [cwd, *cwd.parents]:
-        if (path / "ragfacile.toml").exists():
+        if (path / "ragtime.toml").exists():
             return path
     return None
 
@@ -523,7 +523,7 @@ def _finalize(
     if not workspace or not session_turns:
         return
     try:
-        from rag_facile.memory.lifecycle import finalize_session
+        from ragtime.memory.lifecycle import finalize_session
 
         # Build an LLM-backed fact extractor if API credentials are available.
         extract_fn = _build_extract_fn()
@@ -546,7 +546,7 @@ def _build_extract_fn() -> Callable[[str], list[tuple[str, str]]] | None:
     if not api_key:
         return None
 
-    from rag_facile.memory.lifecycle import extract_facts_with_llm
+    from ragtime.memory.lifecycle import extract_facts_with_llm
 
     def _extract(transcript: str) -> list[tuple[str, str]]:
         return extract_facts_with_llm(
@@ -558,7 +558,7 @@ def _build_extract_fn() -> Callable[[str], list[tuple[str, str]]] | None:
 
 def start_chat(debug: bool = False) -> None:
     """Launch the interactive RAG assistant chat loop."""
-    # Detect workspace — walk up from cwd for ragfacile.toml
+    # Detect workspace — walk up from cwd for ragtime.toml
     workspace = _detect_workspace()
     language = "fr"  # default — overridden once we have a workspace
     experience = "new"  # default — overridden once we have a workspace
@@ -578,12 +578,12 @@ def start_chat(debug: bool = False) -> None:
     # Load persistent memory — injected into the first user turn (not system prompt)
     # so the model pays full attention to it rather than losing it at the end of
     # smolagents' long built-in system prompt.
-    from rag_facile.memory.context import bootstrap_context
-    from rag_facile.memory.stores import EpisodicLog, SemanticStore
+    from ragtime.memory.context import bootstrap_context
+    from ragtime.memory.stores import EpisodicLog, SemanticStore
 
     # Compact old episodic logs before loading context (prunes stale data)
     if workspace:
-        from rag_facile.memory.lifecycle import compact_episodic_logs
+        from ragtime.memory.lifecycle import compact_episodic_logs
 
         compact_episodic_logs(workspace)
 
@@ -632,7 +632,7 @@ def start_chat(debug: bool = False) -> None:
             get_agents_md,
             get_recent_git_activity,
             get_docs,
-            run_rag_facile,
+            run_ragtime,
             memory_read,
             memory_write,
             memory_edit,
@@ -849,7 +849,7 @@ def start_chat(debug: bool = False) -> None:
 
         # Mid-session checkpoint every 8 turns
         if workspace:
-            from rag_facile.memory.lifecycle import run_checkpoint, should_checkpoint
+            from ragtime.memory.lifecycle import run_checkpoint, should_checkpoint
 
             if should_checkpoint(ss.turn_count):
                 run_checkpoint(workspace, ss.turns[-8:])

@@ -1,6 +1,6 @@
 """CLI commands for RAG evaluation using Inspect AI.
 
-Provides ``rag-facile eval`` subcommands:
+Provides ``ragtime eval`` subcommands:
 - ``run`` — execute an evaluation on a dataset
 - ``view`` — open the Inspect AI log viewer
 - ``list`` — list past evaluation runs
@@ -18,7 +18,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from rag_facile.core.loader import load_config_or_default
+from ragtime.core.loader import load_config_or_default
 
 
 console = Console()
@@ -57,14 +57,14 @@ def run(
         if not data_dir.exists():
             console.print(
                 "[red]No data/datasets/ directory found. "
-                "Run `rag-facile generate-dataset` first.[/red]"
+                "Run `ragtime generate-dataset` first.[/red]"
             )
             raise typer.Exit(code=1)
         jsonl_files = sorted(data_dir.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
         if not jsonl_files:
             console.print(
                 "[red]No .jsonl files in data/datasets/. "
-                "Run `rag-facile generate-dataset` first.[/red]"
+                "Run `ragtime generate-dataset` first.[/red]"
             )
             raise typer.Exit(code=1)
         dataset = str(jsonl_files[-1])
@@ -88,7 +88,7 @@ def run(
 
     # Verify the evaluation package is installed
     try:
-        from rag_facile.evaluation._tasks import rag_eval  # ty: ignore[unresolved-import]
+        from ragtime.evaluation._tasks import rag_eval  # ty: ignore[unresolved-import]
     except ImportError:
         console.print(
             "[red]evaluation package not installed. "
@@ -124,7 +124,7 @@ def run(
         raise typer.Exit(code=1)
 
     console.print("\n[green]Evaluation complete![/green]")
-    console.print("View results: [cyan]rag-facile eval view[/cyan]")
+    console.print("View results: [cyan]ragtime eval view[/cyan]")
 
 
 def view(
@@ -139,7 +139,7 @@ def view(
 
     if not effective_log_dir.exists():
         console.print(f"[red]Log directory not found:[/red] {effective_log_dir}")
-        console.print("Run an evaluation first: [cyan]rag-facile eval run[/cyan]")
+        console.print("Run an evaluation first: [cyan]ragtime eval run[/cyan]")
         raise typer.Exit(code=1)
 
     cmd = [

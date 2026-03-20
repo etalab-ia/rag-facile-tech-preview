@@ -1,6 +1,6 @@
 # Supabase Setup Guide
 
-rag-facile uses [Supabase](https://supabase.com) (self-hosted) for persistent storage when you need:
+ragtime uses [Supabase](https://supabase.com) (self-hosted) for persistent storage when you need:
 
 - **Conversation history** — resume past chats in Chainlit
 - **RAG tracing** — query logs, retrieved chunks, feedback, and latency data
@@ -47,7 +47,7 @@ supabase status
 
 Copy the `DB URL` value (looks like `postgresql://postgres:postgres@127.0.0.1:54322/postgres`).
 
-### 4. Configure rag-facile
+### 4. Configure ragtime
 
 Add to your `.env`:
 
@@ -56,7 +56,7 @@ Add to your `.env`:
 DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
 ```
 
-Update `ragfacile.toml`:
+Update `ragtime.toml`:
 
 ```toml
 [tracing]

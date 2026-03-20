@@ -16,7 +16,7 @@ Ask: "Pouvez-vous me décrire le problème ? Par exemple : le système ne trouve
 passages, ou il trouve trop peu de résultats ?"
 
 **Step 2 — Check current config**
-Call `run_rag_facile("config show --format json")` to read the current settings. Look for:
+Call `run_ragtime("config show --format json")` to read the current settings. Look for:
 - `retrieval.top_k` (how many candidates to retrieve)
 - `reranking.top_n` (how many to keep after reranking)
 - `retrieval.strategy` (semantic / hybrid / lexical)
@@ -30,8 +30,8 @@ Call `run_rag_facile("config show --format json")` to read the current settings.
 | Slow responses | `top_k` too high | Decrease `top_k`, increase `top_n` ratio |
 
 **Step 4 — Suggest a concrete change**
-Tell the user exactly which line to change in ragfacile.toml, e.g.:
-"Dans votre ragfacile.toml, changez `top_k = 10` en `top_k = 20`."
+Tell the user exactly which line to change in ragtime.toml, e.g.:
+"Dans votre ragtime.toml, changez `top_k = 10` en `top_k = 20`."
 
 **Step 5 — Invite them to test**
 "Essayez avec cette configuration et dites-moi si les résultats s'améliorent."

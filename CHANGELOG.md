@@ -5,836 +5,836 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.22.0](https://github.com/etalab-ia/rag-facile-tech-preview/compare/v0.21.0...v0.22.0) (2026-03-17)
+## [0.22.0](https://github.com/etalab-ia/ragtime-tech-preview/compare/v0.21.0...v0.22.0) (2026-03-17)
 
 
 ### Features
 
-* add persistence config to ragfacile.toml ([aa59f3b](https://github.com/etalab-ia/rag-facile-tech-preview/commit/aa59f3b2caaf5cccdb39ae0e856071725b0fdfd6))
-* add persistence config to ragfacile.toml ([89d7a14](https://github.com/etalab-ia/rag-facile-tech-preview/commit/89d7a14a1f0e2f8ebcb06a6f73e0d48dc455f5d6))
+* add persistence config to ragtime.toml ([aa59f3b](https://github.com/etalab-ia/ragtime-tech-preview/commit/aa59f3b2caaf5cccdb39ae0e856071725b0fdfd6))
+* add persistence config to ragtime.toml ([89d7a14](https://github.com/etalab-ia/ragtime-tech-preview/commit/89d7a14a1f0e2f8ebcb06a6f73e0d48dc455f5d6))
 
 
 ### Bug Fixes
 
-* shorten link text for readability ([bd96093](https://github.com/etalab-ia/rag-facile-tech-preview/commit/bd9609327f235af7a77e5c45d5efa60d0b162d66))
+* shorten link text for readability ([bd96093](https://github.com/etalab-ia/ragtime-tech-preview/commit/bd9609327f235af7a77e5c45d5efa60d0b162d66))
 
 
 ### Documentation
 
-* add archived tech preview notice to README ([2ecc80c](https://github.com/etalab-ia/rag-facile-tech-preview/commit/2ecc80caf27fdbc85859ce8c138529461f552f90))
-* add archived tech preview notice to README ([f606bea](https://github.com/etalab-ia/rag-facile-tech-preview/commit/f606beac8fea1fb37a0b448cc0f8f97f932c7460))
+* add archived tech preview notice to README ([2ecc80c](https://github.com/etalab-ia/ragtime-tech-preview/commit/2ecc80caf27fdbc85859ce8c138529461f552f90))
+* add archived tech preview notice to README ([f606bea](https://github.com/etalab-ia/ragtime-tech-preview/commit/f606beac8fea1fb37a0b448cc0f8f97f932c7460))
 
-## [0.21.0](https://github.com/etalab-ia/rag-facile/compare/v0.20.0...v0.21.0) (2026-03-16)
+## [0.21.0](https://github.com/etalab-ia/ragtime/compare/v0.20.0...v0.21.0) (2026-03-16)
 
 
 ### Features
 
-* add rag-facile traces CLI subcommands ([4171b0b](https://github.com/etalab-ia/rag-facile/commit/4171b0bcfd045db1c900f28cba17a530cc7e4a61))
-* add Supabase infrastructure and SQL migrations with RLS ([f5ef1d9](https://github.com/etalab-ia/rag-facile/commit/f5ef1d98cb1fae7a87a2da25a77591b3ece502d5))
-* **chainlit:** add Supabase auth and conversation persistence ([771d485](https://github.com/etalab-ia/rag-facile/commit/771d48582a0f2a08015a2fcaae944d51e1807b04))
-* **chainlit:** read display_name from Supabase user metadata ([15544e5](https://github.com/etalab-ia/rag-facile/commit/15544e5434d416151ce7123b5bd6dbbedc89f0c7))
-* **chainlit:** Supabase auth and conversation persistence ([9b8dc58](https://github.com/etalab-ia/rag-facile/commit/9b8dc5889786648f0dfcecb7db965d81d2e43d2f))
-* rag-facile traces CLI subcommands ([99ad50c](https://github.com/etalab-ia/rag-facile/commit/99ad50cf3488ad1a551c4c5df0b5d5c05cf43d15))
-* Supabase PostgreSQL storage for tracing ([425b5eb](https://github.com/etalab-ia/rag-facile/commit/425b5eb9d32c9647c72014bc311785fa346efb5e))
-* **tracing:** add PostgresProvider for Supabase/PostgreSQL tracing ([8ca0d08](https://github.com/etalab-ia/rag-facile/commit/8ca0d08a8bab250e415f0751d50ac7bbb771136b))
+* add ragtime traces CLI subcommands ([4171b0b](https://github.com/etalab-ia/ragtime/commit/4171b0bcfd045db1c900f28cba17a530cc7e4a61))
+* add Supabase infrastructure and SQL migrations with RLS ([f5ef1d9](https://github.com/etalab-ia/ragtime/commit/f5ef1d98cb1fae7a87a2da25a77591b3ece502d5))
+* **chainlit:** add Supabase auth and conversation persistence ([771d485](https://github.com/etalab-ia/ragtime/commit/771d48582a0f2a08015a2fcaae944d51e1807b04))
+* **chainlit:** read display_name from Supabase user metadata ([15544e5](https://github.com/etalab-ia/ragtime/commit/15544e5434d416151ce7123b5bd6dbbedc89f0c7))
+* **chainlit:** Supabase auth and conversation persistence ([9b8dc58](https://github.com/etalab-ia/ragtime/commit/9b8dc5889786648f0dfcecb7db965d81d2e43d2f))
+* ragtime traces CLI subcommands ([99ad50c](https://github.com/etalab-ia/ragtime/commit/99ad50cf3488ad1a551c4c5df0b5d5c05cf43d15))
+* Supabase PostgreSQL storage for tracing ([425b5eb](https://github.com/etalab-ia/ragtime/commit/425b5eb9d32c9647c72014bc311785fa346efb5e))
+* **tracing:** add PostgresProvider for Supabase/PostgreSQL tracing ([8ca0d08](https://github.com/etalab-ia/ragtime/commit/8ca0d08a8bab250e415f0751d50ac7bbb771136b))
 
 
 ### Bug Fixes
 
-* address PR [#195](https://github.com/etalab-ia/rag-facile/issues/195) review comments ([571272a](https://github.com/etalab-ia/rag-facile/commit/571272a08e827ffa036d151363c500a0873c3eeb))
-* **chainlit:** address review comments on auth and persistence ([e18e9f7](https://github.com/etalab-ia/rag-facile/commit/e18e9f78e8b5c5b14fa3ad11e0bbf2512bf15487))
-* **chainlit:** import ThreadDict from chainlit.types, not cl namespace ([2f27e0c](https://github.com/etalab-ia/rag-facile/commit/2f27e0cc69ec0266f8daa29624c17ce1c7e5f994))
-* **chainlit:** require CHAINLIT_AUTH_SECRET for auth login ([ca1b874](https://github.com/etalab-ia/rag-facile/commit/ca1b874dca319a27a1f095056fed4853ee8b8615))
-* **chainlit:** show email as display_name in user menu ([4292c6b](https://github.com/etalab-ia/rag-facile/commit/4292c6bf06330fc38244e343dc3255dbdd9e6f40))
-* correct upgrade-pkg recipe to use uv lock --upgrade-package ([b208b88](https://github.com/etalab-ia/rag-facile/commit/b208b8818a7bba969d937554e9078fe3372e51a1))
-* ensure initial git commit works on fresh machines without git user config ([ec30e6f](https://github.com/etalab-ia/rag-facile/commit/ec30e6fdcda9b4993bf0f02b300235f3f5eae555))
-* ensure initial git commit works on fresh machines without git user config ([6d8b684](https://github.com/etalab-ia/rag-facile/commit/6d8b684d4d1462c20e153cf732ed82b90a6bebca))
-* **migrations:** add deletedAt column to Thread table ([05a0802](https://github.com/etalab-ia/rag-facile/commit/05a080215a3fa4a8e3525814dcf620b56b15dd1b))
-* **migrations:** nullable Step.threadId, non-null Thread.metadata default ([a41facb](https://github.com/etalab-ia/rag-facile/commit/a41facb55558af8d15dc89c556fec4893e15039f))
-* **migrations:** use PascalCase table names matching ChainlitDataLayer ([1c9669a](https://github.com/etalab-ia/rag-facile/commit/1c9669a7a4027da38bdce7d799daedd0de5d7123))
-* set SECURITY INVOKER on ragas_export view ([b767e85](https://github.com/etalab-ia/rag-facile/commit/b767e85479f80e5407b6177724ea195b7a2e3ea7))
-* show actionable warning when initial git commit fails ([ac72417](https://github.com/etalab-ia/rag-facile/commit/ac724178ad3d0caca4afc18a17007e61cd037e65))
-* **traces:** escape Rich markup in hint and add [tracing] config section ([565bf7b](https://github.com/etalab-ia/rag-facile/commit/565bf7b88c3dced0a40195c87b8b22e5835c4aa3))
-* use top-level project_id in supabase config.toml ([b3bffbd](https://github.com/etalab-ia/rag-facile/commit/b3bffbdb9f723b8d9228e5a0abde0b2f0e812b76))
+* address PR [#195](https://github.com/etalab-ia/ragtime/issues/195) review comments ([571272a](https://github.com/etalab-ia/ragtime/commit/571272a08e827ffa036d151363c500a0873c3eeb))
+* **chainlit:** address review comments on auth and persistence ([e18e9f7](https://github.com/etalab-ia/ragtime/commit/e18e9f78e8b5c5b14fa3ad11e0bbf2512bf15487))
+* **chainlit:** import ThreadDict from chainlit.types, not cl namespace ([2f27e0c](https://github.com/etalab-ia/ragtime/commit/2f27e0cc69ec0266f8daa29624c17ce1c7e5f994))
+* **chainlit:** require CHAINLIT_AUTH_SECRET for auth login ([ca1b874](https://github.com/etalab-ia/ragtime/commit/ca1b874dca319a27a1f095056fed4853ee8b8615))
+* **chainlit:** show email as display_name in user menu ([4292c6b](https://github.com/etalab-ia/ragtime/commit/4292c6bf06330fc38244e343dc3255dbdd9e6f40))
+* correct upgrade-pkg recipe to use uv lock --upgrade-package ([b208b88](https://github.com/etalab-ia/ragtime/commit/b208b8818a7bba969d937554e9078fe3372e51a1))
+* ensure initial git commit works on fresh machines without git user config ([ec30e6f](https://github.com/etalab-ia/ragtime/commit/ec30e6fdcda9b4993bf0f02b300235f3f5eae555))
+* ensure initial git commit works on fresh machines without git user config ([6d8b684](https://github.com/etalab-ia/ragtime/commit/6d8b684d4d1462c20e153cf732ed82b90a6bebca))
+* **migrations:** add deletedAt column to Thread table ([05a0802](https://github.com/etalab-ia/ragtime/commit/05a080215a3fa4a8e3525814dcf620b56b15dd1b))
+* **migrations:** nullable Step.threadId, non-null Thread.metadata default ([a41facb](https://github.com/etalab-ia/ragtime/commit/a41facb55558af8d15dc89c556fec4893e15039f))
+* **migrations:** use PascalCase table names matching ChainlitDataLayer ([1c9669a](https://github.com/etalab-ia/ragtime/commit/1c9669a7a4027da38bdce7d799daedd0de5d7123))
+* set SECURITY INVOKER on ragas_export view ([b767e85](https://github.com/etalab-ia/ragtime/commit/b767e85479f80e5407b6177724ea195b7a2e3ea7))
+* show actionable warning when initial git commit fails ([ac72417](https://github.com/etalab-ia/ragtime/commit/ac724178ad3d0caca4afc18a17007e61cd037e65))
+* **traces:** escape Rich markup in hint and add [tracing] config section ([565bf7b](https://github.com/etalab-ia/ragtime/commit/565bf7b88c3dced0a40195c87b8b22e5835c4aa3))
+* use top-level project_id in supabase config.toml ([b3bffbd](https://github.com/etalab-ia/ragtime/commit/b3bffbdb9f723b8d9228e5a0abde0b2f0e812b76))
 
 
 ### Documentation
 
-* add Colima troubleshooting to Supabase setup guide ([17f7f1b](https://github.com/etalab-ia/rag-facile/commit/17f7f1b642319a7020b76b24b01a922dd97b4fb3))
-* clarify SUPABASE_URL must be API URL, not REST URL ([8f56a3c](https://github.com/etalab-ia/rag-facile/commit/8f56a3c0c774f929dab9ee915e500335bc515ebf))
+* add Colima troubleshooting to Supabase setup guide ([17f7f1b](https://github.com/etalab-ia/ragtime/commit/17f7f1b642319a7020b76b24b01a922dd97b4fb3))
+* clarify SUPABASE_URL must be API URL, not REST URL ([8f56a3c](https://github.com/etalab-ia/ragtime/commit/8f56a3c0c774f929dab9ee915e500335bc515ebf))
 
-## [0.20.0](https://github.com/etalab-ia/rag-facile/compare/v0.19.1...v0.20.0) (2026-03-10)
-
-
-### Features
-
-* **albert-client:** add /me/info and /me/keys management methods ([858010d](https://github.com/etalab-ia/rag-facile/commit/858010df40e24102209a50ef738fb461dcf3167f))
-* **albert-client:** update to Albert API 0.4.1 ([e65898d](https://github.com/etalab-ia/rag-facile/commit/e65898d231273e62bf461e87142b8c9b75ae59fd))
-* Tier 1 format enforcement — few-shot, format anchor, validator+retry ([b5f2664](https://github.com/etalab-ia/rag-facile/commit/b5f26648db853226ca800b423f6a0d2c5b096055))
-
-
-### Bug Fixes
-
-* adapt learn assistant tone and verbosity to user experience level ([65f9683](https://github.com/etalab-ia/rag-facile/commit/65f9683bf129e5dff3b089ed961ccfea55483b90))
-* adapt learn assistant tone and verbosity to user experience level ([070cc0b](https://github.com/etalab-ia/rag-facile/commit/070cc0b219c32f93aa4fdcad6701ec7191e65fb2))
-* add complete response example to newbie style instruction ([136b797](https://github.com/etalab-ia/rag-facile/commit/136b7979bba6fffba04e40dafe472c9e2141cbdc))
-* add rag-facile architecture facts to prevent LLM hallucination ([3195351](https://github.com/etalab-ia/rag-facile/commit/319535184b85415bea6011420a9e754662b69e34))
-* align get_docs() trigger with system prompt rules, prefer live data ([0c6b1c4](https://github.com/etalab-ia/rag-facile/commit/0c6b1c4e1eab076d76dfa48d9bf74901e73fc254))
-* allow get_docs() for rag-facile specific facts, block for RAG concepts ([589aca4](https://github.com/etalab-ia/rag-facile/commit/589aca4031b4d7b1608ae69b56889ed222d79e6d))
-* always default to French — remove locale detection, add language instruction ([92ff5f5](https://github.com/etalab-ia/rag-facile/commit/92ff5f54a5a9bc719c4c30dab4856dbd687baea8))
-* block get_docs() for new users — doc retrieval was the root cause ([65ec5d4](https://github.com/etalab-ia/rag-facile/commit/65ec5d4a8a18096a6fd890391bc0c4bc7455041a))
-* **ci:** allow PEP 440 post/dev/rc suffixes in albert version check ([bd6ba93](https://github.com/etalab-ia/rag-facile/commit/bd6ba93ffd3081d6b4292492d0da578fab2dc61c))
-* glossaire entries as bullet list (- prefix) for vertical rendering ([962a101](https://github.com/etalab-ia/rag-facile/commit/962a101d8b0376d5208c4d7e67512daf48b8a422))
-* inject language instruction into agent system prompt ([6cac5ff](https://github.com/etalab-ia/rag-facile/commit/6cac5fff67dcc099ef18970d1b84413864b836c5))
-* inject language instruction into agent system prompt ([addd872](https://github.com/etalab-ia/rag-facile/commit/addd872ae2eeb2abe8e8c57dd58d19ac9b7db581))
-* newbie responses — plain language + glossary-last for technical terms ([c5955f5](https://github.com/etalab-ia/rag-facile/commit/c5955f5943501414174df3ea02cf5fde4a431dad))
-* pass GITHUB_TOKEN to install.sh to avoid API rate limits in CI ([81a6f99](https://github.com/etalab-ia/rag-facile/commit/81a6f99a99340c99d5335fba8081264e5d96e039))
-* promote newbie format to STRICT RULE and enforce in explain-rag skill ([90c6a6c](https://github.com/etalab-ia/rag-facile/commit/90c6a6cb616de70fcdfd7b10681a5db42f6b29b8))
-* remove language question from init wizard — detect from system locale ([a075048](https://github.com/etalab-ia/rag-facile/commit/a075048c47ae571fc30ab9bfc0ab3bb18a8cb809))
-* respond in French by default, follow user language if they switch ([2cbbc70](https://github.com/etalab-ia/rag-facile/commit/2cbbc70e6b160c5385ca9781d56d1a0785a57dd8))
-* **retrieval:** apply 0.4.1 API params to main's new AlbertRetrievalProvider class ([1439224](https://github.com/etalab-ia/rag-facile/commit/1439224868af495d4cfedd140609400291812801))
-* translate init wizard question and choices to French ([208ef28](https://github.com/etalab-ia/rag-facile/commit/208ef28c953ea849316533f352cac2872017d135))
-
-## [0.19.1](https://github.com/etalab-ia/rag-facile/compare/v0.19.0...v0.19.1) (2026-03-09)
-
-
-### Bug Fixes
-
-* always pin generated workspaces to latest GitHub release ([9b4e844](https://github.com/etalab-ia/rag-facile/commit/9b4e844e740981f924904459b1479770435c5ec5))
-* always pin generated workspaces to latest GitHub release ([5c04fda](https://github.com/etalab-ia/rag-facile/commit/5c04fdaac9a9d6e02db3ee9ab233440ebf2c8cf8))
-* remove language selection from learn init wizard — always French ([4aa699c](https://github.com/etalab-ia/rag-facile/commit/4aa699ccc91d3b9dcb9c9cda100de2d0c5b54e71))
-* remove language selection from learn init wizard — always French ([b3433e6](https://github.com/etalab-ia/rag-facile/commit/b3433e6329837e32676ec23d270dcc9df655629a))
-
-## [0.19.0](https://github.com/etalab-ia/rag-facile/compare/v0.18.3...v0.19.0) (2026-03-09)
+## [0.20.0](https://github.com/etalab-ia/ragtime/compare/v0.19.1...v0.20.0) (2026-03-10)
 
 
 ### Features
 
-* /new session reset + structured checkpoint summaries ([#172](https://github.com/etalab-ia/rag-facile/issues/172)) ([6366d78](https://github.com/etalab-ia/rag-facile/commit/6366d785440fcb4f80ef5f577525d96e53d37410))
-* flat-file memory package with standard file-operation tools ([1af6a04](https://github.com/etalab-ia/rag-facile/commit/1af6a04769a4e0d6470dc0ca6f55e348d8624d59))
-* full French UI + dot spinner for uv install step ([7f87dd8](https://github.com/etalab-ia/rag-facile/commit/7f87dd8bacd0db48f596a6c4481ae7d2aa162f40))
-* memory compaction — 3-layer pruning for unbounded token growth ([#173](https://github.com/etalab-ia/rag-facile/issues/173)) ([a0bb6e3](https://github.com/etalab-ia/rag-facile/commit/a0bb6e3cf8a61bf40c9a0d639e74d834fa9baa72))
-* memory consolidation wiring + LLM fact extraction ([#174](https://github.com/etalab-ia/rag-facile/issues/174)) ([101fe9d](https://github.com/etalab-ia/rag-facile/commit/101fe9d19cd7d8bbc6ffbf1c48c639cbcf9de23d))
-* memory search — keyword + optional Albert semantic search ([1a8dace](https://github.com/etalab-ia/rag-facile/commit/1a8dace73a90cad3ef0fa1769a04e1f87a1268d2))
-* memory search — keyword + optional Albert semantic search ([9907666](https://github.com/etalab-ia/rag-facile/commit/99076669d5a5d211757d9798b65716299cc41455))
-* move API key prompt to start of install (before dependencies) ([126ec54](https://github.com/etalab-ia/rag-facile/commit/126ec54e080f580fa06770869589d8c702155ac3))
-* new memory package with flat-file tools and simplified directory layout ([2b8900d](https://github.com/etalab-ia/rag-facile/commit/2b8900dcc29b0a0c021170d344c7d98f26b44844))
-* prompt for Albert API key during install and write .env ([3a05f46](https://github.com/etalab-ia/rag-facile/commit/3a05f467e0741ed054c572b288107b61c21037a7))
-* prompt for Albert API key during install and write .env ([917b41b](https://github.com/etalab-ia/rag-facile/commit/917b41bf62a088094da208387dfeb8bbf085692f))
-* prompt for Albert API key in Windows installer (install.ps1) ([821e58c](https://github.com/etalab-ia/rag-facile/commit/821e58c7f46cab170d04e9905a1bc4dbd084540d))
+* **albert-client:** add /me/info and /me/keys management methods ([858010d](https://github.com/etalab-ia/ragtime/commit/858010df40e24102209a50ef738fb461dcf3167f))
+* **albert-client:** update to Albert API 0.4.1 ([e65898d](https://github.com/etalab-ia/ragtime/commit/e65898d231273e62bf461e87142b8c9b75ae59fd))
+* Tier 1 format enforcement — few-shot, format anchor, validator+retry ([b5f2664](https://github.com/etalab-ia/ragtime/commit/b5f26648db853226ca800b423f6a0d2c5b096055))
 
 
 ### Bug Fixes
 
-* address review comments — gitignore, dead code, robustness ([9bc804c](https://github.com/etalab-ia/rag-facile/commit/9bc804c4edc851a795a2202ec60689235795064f))
-* download just from GitHub Releases directly (bypass just.systems CDN) ([8270b8f](https://github.com/etalab-ia/rag-facile/commit/8270b8fe8bba3c6221868218eb1cf281e94e58f4))
-* install just via uv tool install rust-just ([cc2d73c](https://github.com/etalab-ia/rag-facile/commit/cc2d73c7e55efb6e6c644b24f40d8d63e425af6f))
-* replace char-by-char star loop with silent read for paste support ([ba7351c](https://github.com/etalab-ia/rag-facile/commit/ba7351ca7b1d8e8b28c33d76c92d95607b9ad5cc))
-* restore feat→minor version bumps (remove bump-patch-for-minor-pre-major) ([3b2849a](https://github.com/etalab-ia/rag-facile/commit/3b2849aee32e4ba91d2815497ed3028d057c46ae))
-* restore feat→minor version bumps (remove bump-patch-for-minor-pre-major) ([9326422](https://github.com/etalab-ia/rag-facile/commit/93264222ffe4263254644a80fe712fd051f1003e))
-* show * feedback per character when entering API key ([c2fdf20](https://github.com/etalab-ia/rag-facile/commit/c2fdf20be908ae5a3e8e25fbf927e96cd86af438))
-* suppress uv output for just install, add dot spinner ([de5b611](https://github.com/etalab-ia/rag-facile/commit/de5b611727a5561c52a6ae795b038810d6060766))
-* use awk/ForEach-Object for safe API key substitution in .env ([79d82c9](https://github.com/etalab-ia/rag-facile/commit/79d82c9448712eb2ccc43a6a1b87a366b38fae27))
-* wire Albert semantic search + RRF fusion into memory_search tool ([fc5ca93](https://github.com/etalab-ia/rag-facile/commit/fc5ca93849ad5697bb102d3f91e0925e64147fe4))
+* adapt learn assistant tone and verbosity to user experience level ([65f9683](https://github.com/etalab-ia/ragtime/commit/65f9683bf129e5dff3b089ed961ccfea55483b90))
+* adapt learn assistant tone and verbosity to user experience level ([070cc0b](https://github.com/etalab-ia/ragtime/commit/070cc0b219c32f93aa4fdcad6701ec7191e65fb2))
+* add complete response example to newbie style instruction ([136b797](https://github.com/etalab-ia/ragtime/commit/136b7979bba6fffba04e40dafe472c9e2141cbdc))
+* add ragtime architecture facts to prevent LLM hallucination ([3195351](https://github.com/etalab-ia/ragtime/commit/319535184b85415bea6011420a9e754662b69e34))
+* align get_docs() trigger with system prompt rules, prefer live data ([0c6b1c4](https://github.com/etalab-ia/ragtime/commit/0c6b1c4e1eab076d76dfa48d9bf74901e73fc254))
+* allow get_docs() for ragtime specific facts, block for RAG concepts ([589aca4](https://github.com/etalab-ia/ragtime/commit/589aca4031b4d7b1608ae69b56889ed222d79e6d))
+* always default to French — remove locale detection, add language instruction ([92ff5f5](https://github.com/etalab-ia/ragtime/commit/92ff5f54a5a9bc719c4c30dab4856dbd687baea8))
+* block get_docs() for new users — doc retrieval was the root cause ([65ec5d4](https://github.com/etalab-ia/ragtime/commit/65ec5d4a8a18096a6fd890391bc0c4bc7455041a))
+* **ci:** allow PEP 440 post/dev/rc suffixes in albert version check ([bd6ba93](https://github.com/etalab-ia/ragtime/commit/bd6ba93ffd3081d6b4292492d0da578fab2dc61c))
+* glossaire entries as bullet list (- prefix) for vertical rendering ([962a101](https://github.com/etalab-ia/ragtime/commit/962a101d8b0376d5208c4d7e67512daf48b8a422))
+* inject language instruction into agent system prompt ([6cac5ff](https://github.com/etalab-ia/ragtime/commit/6cac5fff67dcc099ef18970d1b84413864b836c5))
+* inject language instruction into agent system prompt ([addd872](https://github.com/etalab-ia/ragtime/commit/addd872ae2eeb2abe8e8c57dd58d19ac9b7db581))
+* newbie responses — plain language + glossary-last for technical terms ([c5955f5](https://github.com/etalab-ia/ragtime/commit/c5955f5943501414174df3ea02cf5fde4a431dad))
+* pass GITHUB_TOKEN to install.sh to avoid API rate limits in CI ([81a6f99](https://github.com/etalab-ia/ragtime/commit/81a6f99a99340c99d5335fba8081264e5d96e039))
+* promote newbie format to STRICT RULE and enforce in explain-rag skill ([90c6a6c](https://github.com/etalab-ia/ragtime/commit/90c6a6cb616de70fcdfd7b10681a5db42f6b29b8))
+* remove language question from init wizard — detect from system locale ([a075048](https://github.com/etalab-ia/ragtime/commit/a075048c47ae571fc30ab9bfc0ab3bb18a8cb809))
+* respond in French by default, follow user language if they switch ([2cbbc70](https://github.com/etalab-ia/ragtime/commit/2cbbc70e6b160c5385ca9781d56d1a0785a57dd8))
+* **retrieval:** apply 0.4.1 API params to main's new AlbertRetrievalProvider class ([1439224](https://github.com/etalab-ia/ragtime/commit/1439224868af495d4cfedd140609400291812801))
+* translate init wizard question and choices to French ([208ef28](https://github.com/etalab-ia/ragtime/commit/208ef28c953ea849316533f352cac2872017d135))
+
+## [0.19.1](https://github.com/etalab-ia/ragtime/compare/v0.19.0...v0.19.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* always pin generated workspaces to latest GitHub release ([9b4e844](https://github.com/etalab-ia/ragtime/commit/9b4e844e740981f924904459b1479770435c5ec5))
+* always pin generated workspaces to latest GitHub release ([5c04fda](https://github.com/etalab-ia/ragtime/commit/5c04fdaac9a9d6e02db3ee9ab233440ebf2c8cf8))
+* remove language selection from learn init wizard — always French ([4aa699c](https://github.com/etalab-ia/ragtime/commit/4aa699ccc91d3b9dcb9c9cda100de2d0c5b54e71))
+* remove language selection from learn init wizard — always French ([b3433e6](https://github.com/etalab-ia/ragtime/commit/b3433e6329837e32676ec23d270dcc9df655629a))
+
+## [0.19.0](https://github.com/etalab-ia/ragtime/compare/v0.18.3...v0.19.0) (2026-03-09)
+
+
+### Features
+
+* /new session reset + structured checkpoint summaries ([#172](https://github.com/etalab-ia/ragtime/issues/172)) ([6366d78](https://github.com/etalab-ia/ragtime/commit/6366d785440fcb4f80ef5f577525d96e53d37410))
+* flat-file memory package with standard file-operation tools ([1af6a04](https://github.com/etalab-ia/ragtime/commit/1af6a04769a4e0d6470dc0ca6f55e348d8624d59))
+* full French UI + dot spinner for uv install step ([7f87dd8](https://github.com/etalab-ia/ragtime/commit/7f87dd8bacd0db48f596a6c4481ae7d2aa162f40))
+* memory compaction — 3-layer pruning for unbounded token growth ([#173](https://github.com/etalab-ia/ragtime/issues/173)) ([a0bb6e3](https://github.com/etalab-ia/ragtime/commit/a0bb6e3cf8a61bf40c9a0d639e74d834fa9baa72))
+* memory consolidation wiring + LLM fact extraction ([#174](https://github.com/etalab-ia/ragtime/issues/174)) ([101fe9d](https://github.com/etalab-ia/ragtime/commit/101fe9d19cd7d8bbc6ffbf1c48c639cbcf9de23d))
+* memory search — keyword + optional Albert semantic search ([1a8dace](https://github.com/etalab-ia/ragtime/commit/1a8dace73a90cad3ef0fa1769a04e1f87a1268d2))
+* memory search — keyword + optional Albert semantic search ([9907666](https://github.com/etalab-ia/ragtime/commit/99076669d5a5d211757d9798b65716299cc41455))
+* move API key prompt to start of install (before dependencies) ([126ec54](https://github.com/etalab-ia/ragtime/commit/126ec54e080f580fa06770869589d8c702155ac3))
+* new memory package with flat-file tools and simplified directory layout ([2b8900d](https://github.com/etalab-ia/ragtime/commit/2b8900dcc29b0a0c021170d344c7d98f26b44844))
+* prompt for Albert API key during install and write .env ([3a05f46](https://github.com/etalab-ia/ragtime/commit/3a05f467e0741ed054c572b288107b61c21037a7))
+* prompt for Albert API key during install and write .env ([917b41b](https://github.com/etalab-ia/ragtime/commit/917b41bf62a088094da208387dfeb8bbf085692f))
+* prompt for Albert API key in Windows installer (install.ps1) ([821e58c](https://github.com/etalab-ia/ragtime/commit/821e58c7f46cab170d04e9905a1bc4dbd084540d))
+
+
+### Bug Fixes
+
+* address review comments — gitignore, dead code, robustness ([9bc804c](https://github.com/etalab-ia/ragtime/commit/9bc804c4edc851a795a2202ec60689235795064f))
+* download just from GitHub Releases directly (bypass just.systems CDN) ([8270b8f](https://github.com/etalab-ia/ragtime/commit/8270b8fe8bba3c6221868218eb1cf281e94e58f4))
+* install just via uv tool install rust-just ([cc2d73c](https://github.com/etalab-ia/ragtime/commit/cc2d73c7e55efb6e6c644b24f40d8d63e425af6f))
+* replace char-by-char star loop with silent read for paste support ([ba7351c](https://github.com/etalab-ia/ragtime/commit/ba7351ca7b1d8e8b28c33d76c92d95607b9ad5cc))
+* restore feat→minor version bumps (remove bump-patch-for-minor-pre-major) ([3b2849a](https://github.com/etalab-ia/ragtime/commit/3b2849aee32e4ba91d2815497ed3028d057c46ae))
+* restore feat→minor version bumps (remove bump-patch-for-minor-pre-major) ([9326422](https://github.com/etalab-ia/ragtime/commit/93264222ffe4263254644a80fe712fd051f1003e))
+* show * feedback per character when entering API key ([c2fdf20](https://github.com/etalab-ia/ragtime/commit/c2fdf20be908ae5a3e8e25fbf927e96cd86af438))
+* suppress uv output for just install, add dot spinner ([de5b611](https://github.com/etalab-ia/ragtime/commit/de5b611727a5561c52a6ae795b038810d6060766))
+* use awk/ForEach-Object for safe API key substitution in .env ([79d82c9](https://github.com/etalab-ia/ragtime/commit/79d82c9448712eb2ccc43a6a1b87a366b38fae27))
+* wire Albert semantic search + RRF fusion into memory_search tool ([fc5ca93](https://github.com/etalab-ia/ragtime/commit/fc5ca93849ad5697bb102d3f91e0925e64147fe4))
 
 
 ### Documentation
 
-* remove PowerShell installer references, update Windows → Git Bash ([3608d6e](https://github.com/etalab-ia/rag-facile/commit/3608d6e2508c713f25773973c1b3aed8d31a33e7))
+* remove PowerShell installer references, update Windows → Git Bash ([3608d6e](https://github.com/etalab-ia/ragtime/commit/3608d6e2508c713f25773973c1b3aed8d31a33e7))
 
-## [0.18.3](https://github.com/etalab-ia/rag-facile/compare/v0.18.2...v0.18.3) (2026-03-02)
-
-
-### Bug Fixes
-
-* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([d129693](https://github.com/etalab-ia/rag-facile/commit/d129693a0c833c526dcd8cf7213d20d7ff2b6e0b))
-* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([6e017bd](https://github.com/etalab-ia/rag-facile/commit/6e017bdc76c21fa5c13f71cfae8a790294aef07f))
-* **ci:** use branch HEAD SHA in release asset to avoid PR merge commit ([039320d](https://github.com/etalab-ia/rag-facile/commit/039320d28dabf7a86b505893229406aef27213cb))
-
-## [0.18.2](https://github.com/etalab-ia/rag-facile/compare/v0.18.1...v0.18.2) (2026-03-01)
+## [0.18.3](https://github.com/etalab-ia/ragtime/compare/v0.18.2...v0.18.3) (2026-03-02)
 
 
 ### Bug Fixes
 
-* disable session memory and conversation logging in learn command ([9d54ade](https://github.com/etalab-ia/rag-facile/commit/9d54adea08caed5e25e9d6228ee82b963e2f445a))
-* disable session memory and conversation logging in learn command ([98a2876](https://github.com/etalab-ia/rag-facile/commit/98a2876de288f548b0226c5eb0e436c3324683ac))
+* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([d129693](https://github.com/etalab-ia/ragtime/commit/d129693a0c833c526dcd8cf7213d20d7ff2b6e0b))
+* **ci:** pass GITHUB_TOKEN to installer steps to fix just 403 rate limit ([6e017bd](https://github.com/etalab-ia/ragtime/commit/6e017bdc76c21fa5c13f71cfae8a790294aef07f))
+* **ci:** use branch HEAD SHA in release asset to avoid PR merge commit ([039320d](https://github.com/etalab-ia/ragtime/commit/039320d28dabf7a86b505893229406aef27213cb))
 
-## [0.18.1](https://github.com/etalab-ia/rag-facile/compare/v0.18.0...v0.18.1) (2026-03-01)
+## [0.18.2](https://github.com/etalab-ia/ragtime/compare/v0.18.1...v0.18.2) (2026-03-01)
 
 
 ### Bug Fixes
 
-* **ci:** build and upload workspace zip on every release ([2be050a](https://github.com/etalab-ia/rag-facile/commit/2be050aa7fec92214832dea83be3b1661e69fed8))
-* **ci:** build and upload workspace zip on every release ([9416479](https://github.com/etalab-ia/rag-facile/commit/9416479089da4d0372c60d8fae75a0bccba8b624))
+* disable session memory and conversation logging in learn command ([9d54ade](https://github.com/etalab-ia/ragtime/commit/9d54adea08caed5e25e9d6228ee82b963e2f445a))
+* disable session memory and conversation logging in learn command ([98a2876](https://github.com/etalab-ia/ragtime/commit/98a2876de288f548b0226c5eb0e436c3324683ac))
 
-## [0.18.0](https://github.com/etalab-ia/rag-facile/compare/v0.17.0...v0.18.0) (2026-03-01)
+## [0.18.1](https://github.com/etalab-ia/ragtime/compare/v0.18.0...v0.18.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* **ci:** build and upload workspace zip on every release ([2be050a](https://github.com/etalab-ia/ragtime/commit/2be050aa7fec92214832dea83be3b1661e69fed8))
+* **ci:** build and upload workspace zip on every release ([9416479](https://github.com/etalab-ia/ragtime/commit/9416479089da4d0372c60d8fae75a0bccba8b624))
+
+## [0.18.0](https://github.com/etalab-ia/ragtime/compare/v0.17.0...v0.18.0) (2026-03-01)
 
 
 ### ⚠ BREAKING CHANGES
 
-* install.sh no longer installs `rag-facile` globally. The CLI is available as `uv run rag-facile` inside the workspace.
+* install.sh no longer installs `ragtime` globally. The CLI is available as `uv run ragtime` inside the workspace.
 
 ### Features
 
-* add DSFR theme for Chainlit chat app ([a9d4570](https://github.com/etalab-ia/rag-facile/commit/a9d4570a9bc51caf1b23c33bf7666b9cd3e114c5))
-* add DSFR theme for Reflex chat app ([d523204](https://github.com/etalab-ia/rag-facile/commit/d523204d16a639b7a8a54f1fcb680b561b6b0a7d))
-* add DSFR-style theme toggle dropdown to Reflex navbar ([b402a67](https://github.com/etalab-ia/rag-facile/commit/b402a6763ee95bd790b2189ced88be0552fc69aa))
-* add pipeline tracing with SQLite backend ([563a206](https://github.com/etalab-ia/rag-facile/commit/563a2064a98e975e81a6d3d2e5e8dbecd15a65b3))
-* add pipeline tracing with SQLite backend ([6701619](https://github.com/etalab-ia/rag-facile/commit/67016199ede798a6c5b94f7dc37a2c6b48fc0e01))
-* add random seed to LLM calls for diversity ([53de37b](https://github.com/etalab-ia/rag-facile/commit/53de37bbe016686e6f95e4baeb59cf5912850092))
-* apply reranking consistently in dataset generation and evaluation ([d50a319](https://github.com/etalab-ia/rag-facile/commit/d50a319c328366246c7419b22e202b698e160fe1))
-* capture chunk IDs in dataset generation and evaluation ([1b60175](https://github.com/etalab-ia/rag-facile/commit/1b60175a35ef99410d67c11c3bb58b8a6160b5c3))
-* capture relevant_chunk_ids and relevant_contexts for ground truth ([bdd5911](https://github.com/etalab-ia/rag-facile/commit/bdd5911801aea57408c1237b35adba75ff3ab9aa))
-* DSFR theme for Chainlit chat app ([6eef5cf](https://github.com/etalab-ia/rag-facile/commit/6eef5cf3559c055e738279a7fe1e0570b7806c4a))
-* DSFR theme for Reflex chat app ([16b1c06](https://github.com/etalab-ia/rag-facile/commit/16b1c0614c6daf06b6b37a4357825071f7fedc88))
-* end-to-end evaluation with live RAG pipeline ([bd6b426](https://github.com/etalab-ia/rag-facile/commit/bd6b42686aab568d048c6843f1345d2dcbd4a69d))
-* extract text content from `Hub-France-IA-Les-risques-de-lIA-Generative.pdf` into a new `.txt` file. ([0f190ff](https://github.com/etalab-ia/rag-facile/commit/0f190ff2dda7259dbc09e3e765a910f10cc2174a))
-* new install flow — curl+uv+just, pre-built workspace zip ([9ab8c7a](https://github.com/etalab-ia/rag-facile/commit/9ab8c7a0ae0e5f4643c09b6a54cb358ab7d6d461))
-* RAG evaluation with Inspect AI — recall@k, precision@k, faithfulness ([6151adf](https://github.com/etalab-ia/rag-facile/commit/6151adf1566152f682e6ef3b022df96d10d90480))
-* RAG evaluation with Inspect AI — recall@k, precision@k, faithfulness ([9820954](https://github.com/etalab-ia/rag-facile/commit/982095424e51c5e0493c70537ab2275191fc0d60))
-* semantic skill routing via activate_skill tool — drop keyword detection ([aaac2e9](https://github.com/etalab-ia/rag-facile/commit/aaac2e995865e1ff762083672fe3441abe076398))
-* universal run_rag_facile tool + rag-cli skill ([1e4bbfd](https://github.com/etalab-ia/rag-facile/commit/1e4bbfd310420e64f220205b09797efd687337fd))
-* universal run_rag_facile tool + rag-cli skill ([1d46a39](https://github.com/etalab-ia/rag-facile/commit/1d46a3999c2afe3e8b3d69ab831adb6391647ca2))
-* update_config tool, model aliases, shared console ([fe464ef](https://github.com/etalab-ia/rag-facile/commit/fe464ef7637e9da1861bec5125bce88d76c981e5))
-* update_config tool, model aliases, shared console ([cf47f73](https://github.com/etalab-ia/rag-facile/commit/cf47f73aa9d938a9a76432081aef71c043921507))
-* use openweight-large for dataset generation ([f382dd3](https://github.com/etalab-ia/rag-facile/commit/f382dd34ec6442c4ee9d51dd2abc4d29c95a6452))
+* add DSFR theme for Chainlit chat app ([a9d4570](https://github.com/etalab-ia/ragtime/commit/a9d4570a9bc51caf1b23c33bf7666b9cd3e114c5))
+* add DSFR theme for Reflex chat app ([d523204](https://github.com/etalab-ia/ragtime/commit/d523204d16a639b7a8a54f1fcb680b561b6b0a7d))
+* add DSFR-style theme toggle dropdown to Reflex navbar ([b402a67](https://github.com/etalab-ia/ragtime/commit/b402a6763ee95bd790b2189ced88be0552fc69aa))
+* add pipeline tracing with SQLite backend ([563a206](https://github.com/etalab-ia/ragtime/commit/563a2064a98e975e81a6d3d2e5e8dbecd15a65b3))
+* add pipeline tracing with SQLite backend ([6701619](https://github.com/etalab-ia/ragtime/commit/67016199ede798a6c5b94f7dc37a2c6b48fc0e01))
+* add random seed to LLM calls for diversity ([53de37b](https://github.com/etalab-ia/ragtime/commit/53de37bbe016686e6f95e4baeb59cf5912850092))
+* apply reranking consistently in dataset generation and evaluation ([d50a319](https://github.com/etalab-ia/ragtime/commit/d50a319c328366246c7419b22e202b698e160fe1))
+* capture chunk IDs in dataset generation and evaluation ([1b60175](https://github.com/etalab-ia/ragtime/commit/1b60175a35ef99410d67c11c3bb58b8a6160b5c3))
+* capture relevant_chunk_ids and relevant_contexts for ground truth ([bdd5911](https://github.com/etalab-ia/ragtime/commit/bdd5911801aea57408c1237b35adba75ff3ab9aa))
+* DSFR theme for Chainlit chat app ([6eef5cf](https://github.com/etalab-ia/ragtime/commit/6eef5cf3559c055e738279a7fe1e0570b7806c4a))
+* DSFR theme for Reflex chat app ([16b1c06](https://github.com/etalab-ia/ragtime/commit/16b1c0614c6daf06b6b37a4357825071f7fedc88))
+* end-to-end evaluation with live RAG pipeline ([bd6b426](https://github.com/etalab-ia/ragtime/commit/bd6b42686aab568d048c6843f1345d2dcbd4a69d))
+* extract text content from `Hub-France-IA-Les-risques-de-lIA-Generative.pdf` into a new `.txt` file. ([0f190ff](https://github.com/etalab-ia/ragtime/commit/0f190ff2dda7259dbc09e3e765a910f10cc2174a))
+* new install flow — curl+uv+just, pre-built workspace zip ([9ab8c7a](https://github.com/etalab-ia/ragtime/commit/9ab8c7a0ae0e5f4643c09b6a54cb358ab7d6d461))
+* RAG evaluation with Inspect AI — recall@k, precision@k, faithfulness ([6151adf](https://github.com/etalab-ia/ragtime/commit/6151adf1566152f682e6ef3b022df96d10d90480))
+* RAG evaluation with Inspect AI — recall@k, precision@k, faithfulness ([9820954](https://github.com/etalab-ia/ragtime/commit/982095424e51c5e0493c70537ab2275191fc0d60))
+* semantic skill routing via activate_skill tool — drop keyword detection ([aaac2e9](https://github.com/etalab-ia/ragtime/commit/aaac2e995865e1ff762083672fe3441abe076398))
+* universal run_rag_facile tool + rag-cli skill ([1e4bbfd](https://github.com/etalab-ia/ragtime/commit/1e4bbfd310420e64f220205b09797efd687337fd))
+* universal run_rag_facile tool + rag-cli skill ([1d46a39](https://github.com/etalab-ia/ragtime/commit/1d46a3999c2afe3e8b3d69ab831adb6391647ca2))
+* update_config tool, model aliases, shared console ([fe464ef](https://github.com/etalab-ia/ragtime/commit/fe464ef7637e9da1861bec5125bce88d76c981e5))
+* update_config tool, model aliases, shared console ([cf47f73](https://github.com/etalab-ia/ragtime/commit/cf47f73aa9d938a9a76432081aef71c043921507))
+* use openweight-large for dataset generation ([f382dd3](https://github.com/etalab-ia/ragtime/commit/f382dd34ec6442c4ee9d51dd2abc4d29c95a6452))
 
 
 ### Bug Fixes
 
-* address PR [#138](https://github.com/etalab-ia/rag-facile/issues/138) review comments + rename chat model env var ([c633a10](https://github.com/etalab-ia/rag-facile/commit/c633a10d46b0fb8dff827d9382acc6354f935f28))
-* address PR [#143](https://github.com/etalab-ia/rag-facile/issues/143) review comments ([e5acc66](https://github.com/etalab-ia/rag-facile/commit/e5acc66c8861ff3f37ea6486dbde1f1f2ef6200b))
-* address review — missed mauve→slate + document !important ([4838d30](https://github.com/etalab-ia/rag-facile/commit/4838d309c5dd5366aaa9ee7ba702e4b92f54c51d))
-* address review comments — imports, ty exclusions, solver API ([1d417f8](https://github.com/etalab-ia/rag-facile/commit/1d417f8b5333ab2158c2db5b5dc436b8287d0c16))
-* address review comments, schema migration, and stage ordering ([704199d](https://github.com/etalab-ia/rag-facile/commit/704199dc7b0040047301fe4b58c64c3b7d2fb701))
-* agent must use run_rag_facile for reads, not answer from memory ([cb3e3e7](https://github.com/etalab-ia/rag-facile/commit/cb3e3e7a986ccc1c5f93d569676b26ae593f7f5a))
-* catch httpx.HTTPStatusError in eval solver for Albert API failures ([2bd5457](https://github.com/etalab-ia/rag-facile/commit/2bd5457b756dd337a376a5bb66720bb55e59453f))
-* check for unzip and auto-install on Linux if missing ([d67a23b](https://github.com/etalab-ia/rag-facile/commit/d67a23b0ae0f982c92ccca172f74c04e1dc500fe))
-* **ci:** drop --project tools so rag_facile is available when building release asset ([2cdb1c7](https://github.com/etalab-ia/rag-facile/commit/2cdb1c7f1931da946d463f1e318e465070887431))
-* consolidate grep|sed into single sed command ([aaa717f](https://github.com/etalab-ia/rag-facile/commit/aaa717f646cb90500d6230f124cac0a67dcf46d9))
-* enforce two-step confirmation before update_config tool call ([d2aa5a3](https://github.com/etalab-ia/rag-facile/commit/d2aa5a3bf9185f73a3f4311394aa2a8b5cd0b0ae))
-* ground dataset generation in actual document content ([21606b9](https://github.com/etalab-ia/rag-facile/commit/21606b93800f94bc1138dc8f96e60dd125c57f6e))
-* harden skill routing against hallucination ([4d0f831](https://github.com/etalab-ia/rag-facile/commit/4d0f831eef4cdabc8865323e901e16abed327a33))
-* harden skill routing against hallucination ([dddb619](https://github.com/etalab-ia/rag-facile/commit/dddb619402483197300db3d72c6624cc8eb5619f))
-* install scripts now default to latest release tag instead of main ([de24615](https://github.com/etalab-ia/rag-facile/commit/de246155e1a99efdc4d3e3897b698bbb0eb6a883))
-* install scripts now default to latest release tag instead of main ([8be87bb](https://github.com/etalab-ia/rag-facile/commit/8be87bb68bb9c42ef3f78505cc6c7c8e3a4257a0))
-* normalize text before token-F1 (strip punctuation, lowercase) ([5b7958b](https://github.com/etalab-ia/rag-facile/commit/5b7958b9468b8a7631a8a967707b939f72fa6aec))
-* pass module name to Inspect AI instead of absolute path ([0725c5e](https://github.com/etalab-ia/rag-facile/commit/0725c5e5ea9a330597046a1fd47c1b5425c563a1))
-* pin workspace deps to git SHA instead of version tag ([e2c95b8](https://github.com/etalab-ia/rag-facile/commit/e2c95b8163bfcb9c13129ae102228b0f69518751))
-* populate relevant_contexts in dataset loader for recall/precision scorers ([4d9833f](https://github.com/etalab-ia/rag-facile/commit/4d9833f058f964ee8ff76f9431a707bc0ffd4fc3))
-* precision_at_k returns 1.0 when no chunk IDs defined ([cb15694](https://github.com/etalab-ia/rag-facile/commit/cb156945cb3fda15abd668e05d5c59d497dd43f4))
-* remove double confirmation from update_config — resolves terminal freeze ([a4ea2ea](https://github.com/etalab-ia/rag-facile/commit/a4ea2ea54b12d948d6eb39d989f72a066f8d0726))
-* resolve trace database path relative to workspace root ([63f3692](https://github.com/etalab-ia/rag-facile/commit/63f3692314a1d26d07222b920ef7fb02b3c00901))
-* resolve ty type check errors in letta provider and tests ([ef83e2c](https://github.com/etalab-ia/rag-facile/commit/ef83e2c546564fc149ce7f7065fcfed6cebbf8b6))
-* revert dark mode button color to match DSFR purple/lavender ([37ac0c2](https://github.com/etalab-ia/rag-facile/commit/37ac0c266462e5fc2649f6a567f0cc5877f0d911))
-* search for unique chunk IDs for each generated question ([65034b8](https://github.com/etalab-ia/rag-facile/commit/65034b879bebfade6d63854a776cca6a847b5f64))
-* three bugs in dataset generation ([b82fb48](https://github.com/etalab-ia/rag-facile/commit/b82fb48e7154c839292334905bd1765ec714dc5e))
-* update CLI to match refactored Albert provider ([b054452](https://github.com/etalab-ia/rag-facile/commit/b054452cac46dc608889dc62203a9c9ce5f91cb7))
-* update search() to use query/collection_ids per Albert API v0.4.1 ([f123ad7](https://github.com/etalab-ia/rag-facile/commit/f123ad7e2e9a4a9ef81a5d5b6f5684fe79b4bdd3))
-* use Chainlit i18n for welcome message instead of hardcoding ([7327ea1](https://github.com/etalab-ia/rag-facile/commit/7327ea106cd0fc0a87a067f6f8f32c885e8323ca))
-* use get_running_loop() and handle empty context in eval solver ([88c3df4](https://github.com/etalab-ia/rag-facile/commit/88c3df4c32ccf9be2785eb9cf79daa4d979039a9))
-* use Inspect AI Python API instead of subprocess CLI ([ab99b48](https://github.com/etalab-ia/rag-facile/commit/ab99b484c9ca8d498016724690e12bb923d2cc1a))
-* use set_color_mode from reflex.style for Reflex 0.8.27 ([ae78a80](https://github.com/etalab-ia/rag-facile/commit/ae78a8013feb9a4bd46cc1b00218ebf394387dcf))
-* **windows:** install just from GitHub Releases binary zip ([c1899ba](https://github.com/etalab-ia/rag-facile/commit/c1899ba2b2924bcb805df44a75e25e7ea85226e3))
-* **windows:** replace non-ASCII chars in install.ps1 ([0add5ed](https://github.com/etalab-ia/rag-facile/commit/0add5ed3efc0e314292db5ba61263715e6515b6e))
+* address PR [#138](https://github.com/etalab-ia/ragtime/issues/138) review comments + rename chat model env var ([c633a10](https://github.com/etalab-ia/ragtime/commit/c633a10d46b0fb8dff827d9382acc6354f935f28))
+* address PR [#143](https://github.com/etalab-ia/ragtime/issues/143) review comments ([e5acc66](https://github.com/etalab-ia/ragtime/commit/e5acc66c8861ff3f37ea6486dbde1f1f2ef6200b))
+* address review — missed mauve→slate + document !important ([4838d30](https://github.com/etalab-ia/ragtime/commit/4838d309c5dd5366aaa9ee7ba702e4b92f54c51d))
+* address review comments — imports, ty exclusions, solver API ([1d417f8](https://github.com/etalab-ia/ragtime/commit/1d417f8b5333ab2158c2db5b5dc436b8287d0c16))
+* address review comments, schema migration, and stage ordering ([704199d](https://github.com/etalab-ia/ragtime/commit/704199dc7b0040047301fe4b58c64c3b7d2fb701))
+* agent must use run_rag_facile for reads, not answer from memory ([cb3e3e7](https://github.com/etalab-ia/ragtime/commit/cb3e3e7a986ccc1c5f93d569676b26ae593f7f5a))
+* catch httpx.HTTPStatusError in eval solver for Albert API failures ([2bd5457](https://github.com/etalab-ia/ragtime/commit/2bd5457b756dd337a376a5bb66720bb55e59453f))
+* check for unzip and auto-install on Linux if missing ([d67a23b](https://github.com/etalab-ia/ragtime/commit/d67a23b0ae0f982c92ccca172f74c04e1dc500fe))
+* **ci:** drop --project tools so rag_facile is available when building release asset ([2cdb1c7](https://github.com/etalab-ia/ragtime/commit/2cdb1c7f1931da946d463f1e318e465070887431))
+* consolidate grep|sed into single sed command ([aaa717f](https://github.com/etalab-ia/ragtime/commit/aaa717f646cb90500d6230f124cac0a67dcf46d9))
+* enforce two-step confirmation before update_config tool call ([d2aa5a3](https://github.com/etalab-ia/ragtime/commit/d2aa5a3bf9185f73a3f4311394aa2a8b5cd0b0ae))
+* ground dataset generation in actual document content ([21606b9](https://github.com/etalab-ia/ragtime/commit/21606b93800f94bc1138dc8f96e60dd125c57f6e))
+* harden skill routing against hallucination ([4d0f831](https://github.com/etalab-ia/ragtime/commit/4d0f831eef4cdabc8865323e901e16abed327a33))
+* harden skill routing against hallucination ([dddb619](https://github.com/etalab-ia/ragtime/commit/dddb619402483197300db3d72c6624cc8eb5619f))
+* install scripts now default to latest release tag instead of main ([de24615](https://github.com/etalab-ia/ragtime/commit/de246155e1a99efdc4d3e3897b698bbb0eb6a883))
+* install scripts now default to latest release tag instead of main ([8be87bb](https://github.com/etalab-ia/ragtime/commit/8be87bb68bb9c42ef3f78505cc6c7c8e3a4257a0))
+* normalize text before token-F1 (strip punctuation, lowercase) ([5b7958b](https://github.com/etalab-ia/ragtime/commit/5b7958b9468b8a7631a8a967707b939f72fa6aec))
+* pass module name to Inspect AI instead of absolute path ([0725c5e](https://github.com/etalab-ia/ragtime/commit/0725c5e5ea9a330597046a1fd47c1b5425c563a1))
+* pin workspace deps to git SHA instead of version tag ([e2c95b8](https://github.com/etalab-ia/ragtime/commit/e2c95b8163bfcb9c13129ae102228b0f69518751))
+* populate relevant_contexts in dataset loader for recall/precision scorers ([4d9833f](https://github.com/etalab-ia/ragtime/commit/4d9833f058f964ee8ff76f9431a707bc0ffd4fc3))
+* precision_at_k returns 1.0 when no chunk IDs defined ([cb15694](https://github.com/etalab-ia/ragtime/commit/cb156945cb3fda15abd668e05d5c59d497dd43f4))
+* remove double confirmation from update_config — resolves terminal freeze ([a4ea2ea](https://github.com/etalab-ia/ragtime/commit/a4ea2ea54b12d948d6eb39d989f72a066f8d0726))
+* resolve trace database path relative to workspace root ([63f3692](https://github.com/etalab-ia/ragtime/commit/63f3692314a1d26d07222b920ef7fb02b3c00901))
+* resolve ty type check errors in letta provider and tests ([ef83e2c](https://github.com/etalab-ia/ragtime/commit/ef83e2c546564fc149ce7f7065fcfed6cebbf8b6))
+* revert dark mode button color to match DSFR purple/lavender ([37ac0c2](https://github.com/etalab-ia/ragtime/commit/37ac0c266462e5fc2649f6a567f0cc5877f0d911))
+* search for unique chunk IDs for each generated question ([65034b8](https://github.com/etalab-ia/ragtime/commit/65034b879bebfade6d63854a776cca6a847b5f64))
+* three bugs in dataset generation ([b82fb48](https://github.com/etalab-ia/ragtime/commit/b82fb48e7154c839292334905bd1765ec714dc5e))
+* update CLI to match refactored Albert provider ([b054452](https://github.com/etalab-ia/ragtime/commit/b054452cac46dc608889dc62203a9c9ce5f91cb7))
+* update search() to use query/collection_ids per Albert API v0.4.1 ([f123ad7](https://github.com/etalab-ia/ragtime/commit/f123ad7e2e9a4a9ef81a5d5b6f5684fe79b4bdd3))
+* use Chainlit i18n for welcome message instead of hardcoding ([7327ea1](https://github.com/etalab-ia/ragtime/commit/7327ea106cd0fc0a87a067f6f8f32c885e8323ca))
+* use get_running_loop() and handle empty context in eval solver ([88c3df4](https://github.com/etalab-ia/ragtime/commit/88c3df4c32ccf9be2785eb9cf79daa4d979039a9))
+* use Inspect AI Python API instead of subprocess CLI ([ab99b48](https://github.com/etalab-ia/ragtime/commit/ab99b484c9ca8d498016724690e12bb923d2cc1a))
+* use set_color_mode from reflex.style for Reflex 0.8.27 ([ae78a80](https://github.com/etalab-ia/ragtime/commit/ae78a8013feb9a4bd46cc1b00218ebf394387dcf))
+* **windows:** install just from GitHub Releases binary zip ([c1899ba](https://github.com/etalab-ia/ragtime/commit/c1899ba2b2924bcb805df44a75e25e7ea85226e3))
+* **windows:** replace non-ASCII chars in install.ps1 ([0add5ed](https://github.com/etalab-ia/ragtime/commit/0add5ed3efc0e314292db5ba61263715e6515b6e))
 
 
 ### Documentation
 
-* add worktrees guide for bare repo + worktrunk workflow ([e1d8762](https://github.com/etalab-ia/rag-facile/commit/e1d876270d1ad18297f456a048da58922c4edbd1))
-* add worktrees guide for bare repo + worktrunk workflow ([06b2294](https://github.com/etalab-ia/rag-facile/commit/06b2294a640317526841939f65b9dd120b66f5dc))
-* fix cp path and remove duplicate wt config block ([ed12336](https://github.com/etalab-ia/rag-facile/commit/ed123362ab18ec5b46ca491653c5d062821e25a0))
+* add worktrees guide for bare repo + worktrunk workflow ([e1d8762](https://github.com/etalab-ia/ragtime/commit/e1d876270d1ad18297f456a048da58922c4edbd1))
+* add worktrees guide for bare repo + worktrunk workflow ([06b2294](https://github.com/etalab-ia/ragtime/commit/06b2294a640317526841939f65b9dd120b66f5dc))
+* fix cp path and remove duplicate wt config block ([ed12336](https://github.com/etalab-ia/ragtime/commit/ed123362ab18ec5b46ca491653c5d062821e25a0))
 
-## [0.17.0](https://github.com/etalab-ia/rag-facile/compare/v0.16.0...v0.17.0) (2026-02-20)
-
-
-### Features
-
-* add --debug flag to show agent tool calls ([54a9a4a](https://github.com/etalab-ia/rag-facile/commit/54a9a4a4cb1e70b76a9bf60bbab86fcdfae5ba05))
-* add get_docs tool with bundled documentation ([b315d6f](https://github.com/etalab-ia/rag-facile/commit/b315d6fca7b9262267235c6d8bd609c31ef40a6c))
-* auto initial commit after rag-facile setup ([4d83f3e](https://github.com/etalab-ia/rag-facile/commit/4d83f3ef6c74083119a40aaee05aa85152a78150))
-* chat workspace init — first-run wizard ([465094c](https://github.com/etalab-ia/rag-facile/commit/465094c2be08792b23da414b644535ccf732e99e))
-* chat workspace init — first-run wizard ([051301c](https://github.com/etalab-ia/rag-facile/commit/051301c999bb5a8ada2332ef816c5c32ead8be27))
-* codebase awareness tools (get_agents_md, get_recent_git_activity) ([4f845e6](https://github.com/etalab-ia/rag-facile/commit/4f845e6200beb330ab04d2d5302989c1cc8507da))
-* codebase awareness tools (get_agents_md, get_recent_git_activity) ([771ab25](https://github.com/etalab-ia/rag-facile/commit/771ab25de3cdbbb96ff38ee07e002a0740bb0d8e))
-* git-backed session memory with post-session summarisation ([18502bc](https://github.com/etalab-ia/rag-facile/commit/18502bc879489c052ef29975fda8cead6701c4ef))
-* git-backed session memory with post-session summarisation ([46e3928](https://github.com/etalab-ia/rag-facile/commit/46e3928432a02fe65b805353d32654dc3bb9f3eb))
-* rag-facile chat — smolagents harness spike ([e912a0e](https://github.com/etalab-ia/rag-facile/commit/e912a0e7bd40e56064a89763dc6073fc9c30713c))
-* rag-facile chat — smolagents harness spike ([4764f55](https://github.com/etalab-ia/rag-facile/commit/4764f55892749871f0a89dbeaf77a00e0ce63817))
-* rationalise CLI UX — grouped help panels, simpler setup, smarter just run ([f846b93](https://github.com/etalab-ia/rag-facile/commit/f846b933d4bf182b3f70adbd8b925f09ea9e2959))
-* rationalise CLI UX — grouped help panels, simpler setup, smarter just run ([03a0f7f](https://github.com/etalab-ia/rag-facile/commit/03a0f7f548a99947cf163b9f286baea039668ed4))
-* skills system with 5 built-in skills + npx skills integration ([aefe01a](https://github.com/etalab-ia/rag-facile/commit/aefe01a22870685d11d7048fcf00a2ed55574d15))
-* skills system with 5 built-in skills + npx skills integration ([72b1f3d](https://github.com/etalab-ia/rag-facile/commit/72b1f3d61fc322cfce56bcf98b600f5a986b4dbf))
-* tool call notifications + skill bootstrap on explicit load ([6c019cd](https://github.com/etalab-ia/rag-facile/commit/6c019cd3f5f01c56efc74da9ff43d5b0b4a914c3))
-
-
-### Bug Fixes
-
-* address PR [#132](https://github.com/etalab-ia/rag-facile/issues/132) review comments ([c684454](https://github.com/etalab-ia/rag-facile/commit/c684454c4b7bd63f484543513830ae8b68be77d4))
-* address PR [#133](https://github.com/etalab-ia/rag-facile/issues/133) review comments ([79dd1dc](https://github.com/etalab-ia/rag-facile/commit/79dd1dc68946d5c0a3a0cef64f06bd71abdf96a5))
-* address PR [#134](https://github.com/etalab-ia/rag-facile/issues/134) review comments ([fc4ba80](https://github.com/etalab-ia/rag-facile/commit/fc4ba803f68c5be48e5cad93e686125ca93e6e22))
-* address PR [#135](https://github.com/etalab-ia/rag-facile/issues/135) review comments ([67665fe](https://github.com/etalab-ia/rag-facile/commit/67665fef517807845b7e5c5c8767b7bbfb23dccc))
-* address PR [#136](https://github.com/etalab-ia/rag-facile/issues/136) review comments ([625edbb](https://github.com/etalab-ia/rag-facile/commit/625edbba77da23451d1d38069e9d90d849b8c0cb))
-* always show banner and version before any output or error ([e4047f7](https://github.com/etalab-ia/rag-facile/commit/e4047f77e93a45321e21acd0faeba413e8fbf063))
-* always show banner before help text or error messages ([77ea4ae](https://github.com/etalab-ia/rag-facile/commit/77ea4ae943deeb9cbbc286b1615fc3168bbaa1c8))
-* always show banner before help text or error messages ([199de21](https://github.com/etalab-ia/rag-facile/commit/199de217886e5cc0d4f782be155db847f6333be4))
-* handle Albert API 429 rate limit with auto-retry in chat loop ([c315710](https://github.com/etalab-ia/rag-facile/commit/c315710a3405769024b6ed4e9d0e20f105db9e32))
-* include preset public collections in generated standalone config ([6d6d73b](https://github.com/etalab-ia/rag-facile/commit/6d6d73b102bfded860964af004655119a3107754))
-* include preset public collections in generated standalone config ([83d2c45](https://github.com/etalab-ia/rag-facile/commit/83d2c45ab2e7691d48988d25a55e81c491ee667d))
-* inject memory into first user turn instead of system prompt ([13699ec](https://github.com/etalab-ia/rag-facile/commit/13699ec67ab815702d364619429fb7deea3ab327))
-* language-first wizard order and localised chat UI ([fc332c5](https://github.com/etalab-ia/rag-facile/commit/fc332c56e3cd6b1692df841da7af1d8ff839d779))
-* localise no-workspace hint in welcome panel ([4d3658d](https://github.com/etalab-ia/rag-facile/commit/4d3658daede61a7804e0b83e108bf896298d9a5e))
-* rate limit retry loops indefinitely until Ctrl+C ([baa82b3](https://github.com/etalab-ia/rag-facile/commit/baa82b35afbda10210a84b1a675a7756016c44b5))
-* setup closing message shows both just run and rag-facile with real path ([6a619f6](https://github.com/etalab-ia/rag-facile/commit/6a619f6f655d3229f8e8558a514fba21465836d9))
-* skip session commit silently when .rag-facile/ is gitignored ([4969317](https://github.com/etalab-ia/rag-facile/commit/4969317f19e92fabd8247b146d1327b2cd24c2ea))
-* stop wizard falling through to second question on Ctrl+C ([0777307](https://github.com/etalab-ia/rag-facile/commit/0777307205b90937311207a413dcfe1716eb6deb))
-* suppress smolagents error output and clean up workspace display ([e4f0fbb](https://github.com/etalab-ia/rag-facile/commit/e4f0fbba2c2d848790adb0493eed4aea48f2a61a))
-
-## [0.16.0](https://github.com/etalab-ia/rag-facile/compare/v0.15.0...v0.16.0) (2026-02-18)
+## [0.17.0](https://github.com/etalab-ia/ragtime/compare/v0.16.0...v0.17.0) (2026-02-20)
 
 
 ### Features
 
-* add query expansion system (multi-query + HyDE) ([ef5418e](https://github.com/etalab-ia/rag-facile/commit/ef5418ef7d8ad3ac00bd3d5a591ec56815b6e7d7))
-* add query expansion system with multi-query and HyDE strategies ([7c44a3f](https://github.com/etalab-ia/rag-facile/commit/7c44a3f6149cd311280c4dc307d1e6145a65ff56))
-* bundle pipeline packages under rag_facile namespace for library distribution ([2271dc7](https://github.com/etalab-ia/rag-facile/commit/2271dc7daac78e07fc125a5d2053fca1b8ba9ef8))
-* bundle pipeline packages under rag_facile namespace for library distribution ([0867970](https://github.com/etalab-ia/rag-facile/commit/0867970e6b352cf1cafb9a6c6eb83129c2917569))
-* initialize git repo and add .gitignore on workspace setup ([3ff2fb0](https://github.com/etalab-ia/rag-facile/commit/3ff2fb09fdeb5cd9f246882a33d3b21b5d5fb18b))
-* initialize git repo and add .gitignore on workspace setup ([3a7fb7d](https://github.com/etalab-ia/rag-facile/commit/3a7fb7d23ab725e0ac65fb8f4520a7115d894a67))
+* add --debug flag to show agent tool calls ([54a9a4a](https://github.com/etalab-ia/ragtime/commit/54a9a4a4cb1e70b76a9bf60bbab86fcdfae5ba05))
+* add get_docs tool with bundled documentation ([b315d6f](https://github.com/etalab-ia/ragtime/commit/b315d6fca7b9262267235c6d8bd609c31ef40a6c))
+* auto initial commit after ragtime setup ([4d83f3e](https://github.com/etalab-ia/ragtime/commit/4d83f3ef6c74083119a40aaee05aa85152a78150))
+* chat workspace init — first-run wizard ([465094c](https://github.com/etalab-ia/ragtime/commit/465094c2be08792b23da414b644535ccf732e99e))
+* chat workspace init — first-run wizard ([051301c](https://github.com/etalab-ia/ragtime/commit/051301c999bb5a8ada2332ef816c5c32ead8be27))
+* codebase awareness tools (get_agents_md, get_recent_git_activity) ([4f845e6](https://github.com/etalab-ia/ragtime/commit/4f845e6200beb330ab04d2d5302989c1cc8507da))
+* codebase awareness tools (get_agents_md, get_recent_git_activity) ([771ab25](https://github.com/etalab-ia/ragtime/commit/771ab25de3cdbbb96ff38ee07e002a0740bb0d8e))
+* git-backed session memory with post-session summarisation ([18502bc](https://github.com/etalab-ia/ragtime/commit/18502bc879489c052ef29975fda8cead6701c4ef))
+* git-backed session memory with post-session summarisation ([46e3928](https://github.com/etalab-ia/ragtime/commit/46e3928432a02fe65b805353d32654dc3bb9f3eb))
+* ragtime chat — smolagents harness spike ([e912a0e](https://github.com/etalab-ia/ragtime/commit/e912a0e7bd40e56064a89763dc6073fc9c30713c))
+* ragtime chat — smolagents harness spike ([4764f55](https://github.com/etalab-ia/ragtime/commit/4764f55892749871f0a89dbeaf77a00e0ce63817))
+* rationalise CLI UX — grouped help panels, simpler setup, smarter just run ([f846b93](https://github.com/etalab-ia/ragtime/commit/f846b933d4bf182b3f70adbd8b925f09ea9e2959))
+* rationalise CLI UX — grouped help panels, simpler setup, smarter just run ([03a0f7f](https://github.com/etalab-ia/ragtime/commit/03a0f7f548a99947cf163b9f286baea039668ed4))
+* skills system with 5 built-in skills + npx skills integration ([aefe01a](https://github.com/etalab-ia/ragtime/commit/aefe01a22870685d11d7048fcf00a2ed55574d15))
+* skills system with 5 built-in skills + npx skills integration ([72b1f3d](https://github.com/etalab-ia/ragtime/commit/72b1f3d61fc322cfce56bcf98b600f5a986b4dbf))
+* tool call notifications + skill bootstrap on explicit load ([6c019cd](https://github.com/etalab-ia/ragtime/commit/6c019cd3f5f01c56efc74da9ff43d5b0b4a914c3))
 
 
 ### Bug Fixes
 
-* add pkgutil namespace __init__.py and fix hatchling packages config ([d850889](https://github.com/etalab-ia/rag-facile/commit/d85088912fe9afd601ae605e6f093ed49ed6299a))
-* address PR [#125](https://github.com/etalab-ia/rag-facile/issues/125) review comments ([c2d7988](https://github.com/etalab-ia/rag-facile/commit/c2d7988249a9e331fd2b79fcd6a202b6ba62b132))
-* **docs:** correct reranker model — openweight-rerank is BAAI/bge-reranker-v2-m3 ([2b61048](https://github.com/etalab-ia/rag-facile/commit/2b61048a12d9f2f89679fe42ce3c951f4576d82d))
-* preset strategies not applied — stale bundled TOML files ([f3cd9e4](https://github.com/etalab-ia/rag-facile/commit/f3cd9e40dacbdf0cae2c5c4bed0d1c7b0119cb93))
-* stop generating pipeline packages in monorepo, add src/ to standalone ([174e855](https://github.com/etalab-ia/rag-facile/commit/174e85500a96a0ad56d7850104ee7b2969f3a2cb))
+* address PR [#132](https://github.com/etalab-ia/ragtime/issues/132) review comments ([c684454](https://github.com/etalab-ia/ragtime/commit/c684454c4b7bd63f484543513830ae8b68be77d4))
+* address PR [#133](https://github.com/etalab-ia/ragtime/issues/133) review comments ([79dd1dc](https://github.com/etalab-ia/ragtime/commit/79dd1dc68946d5c0a3a0cef64f06bd71abdf96a5))
+* address PR [#134](https://github.com/etalab-ia/ragtime/issues/134) review comments ([fc4ba80](https://github.com/etalab-ia/ragtime/commit/fc4ba803f68c5be48e5cad93e686125ca93e6e22))
+* address PR [#135](https://github.com/etalab-ia/ragtime/issues/135) review comments ([67665fe](https://github.com/etalab-ia/ragtime/commit/67665fef517807845b7e5c5c8767b7bbfb23dccc))
+* address PR [#136](https://github.com/etalab-ia/ragtime/issues/136) review comments ([625edbb](https://github.com/etalab-ia/ragtime/commit/625edbba77da23451d1d38069e9d90d849b8c0cb))
+* always show banner and version before any output or error ([e4047f7](https://github.com/etalab-ia/ragtime/commit/e4047f77e93a45321e21acd0faeba413e8fbf063))
+* always show banner before help text or error messages ([77ea4ae](https://github.com/etalab-ia/ragtime/commit/77ea4ae943deeb9cbbc286b1615fc3168bbaa1c8))
+* always show banner before help text or error messages ([199de21](https://github.com/etalab-ia/ragtime/commit/199de217886e5cc0d4f782be155db847f6333be4))
+* handle Albert API 429 rate limit with auto-retry in chat loop ([c315710](https://github.com/etalab-ia/ragtime/commit/c315710a3405769024b6ed4e9d0e20f105db9e32))
+* include preset public collections in generated standalone config ([6d6d73b](https://github.com/etalab-ia/ragtime/commit/6d6d73b102bfded860964af004655119a3107754))
+* include preset public collections in generated standalone config ([83d2c45](https://github.com/etalab-ia/ragtime/commit/83d2c45ab2e7691d48988d25a55e81c491ee667d))
+* inject memory into first user turn instead of system prompt ([13699ec](https://github.com/etalab-ia/ragtime/commit/13699ec67ab815702d364619429fb7deea3ab327))
+* language-first wizard order and localised chat UI ([fc332c5](https://github.com/etalab-ia/ragtime/commit/fc332c56e3cd6b1692df841da7af1d8ff839d779))
+* localise no-workspace hint in welcome panel ([4d3658d](https://github.com/etalab-ia/ragtime/commit/4d3658daede61a7804e0b83e108bf896298d9a5e))
+* rate limit retry loops indefinitely until Ctrl+C ([baa82b3](https://github.com/etalab-ia/ragtime/commit/baa82b35afbda10210a84b1a675a7756016c44b5))
+* setup closing message shows both just run and ragtime with real path ([6a619f6](https://github.com/etalab-ia/ragtime/commit/6a619f6f655d3229f8e8558a514fba21465836d9))
+* skip session commit silently when .ragtime/ is gitignored ([4969317](https://github.com/etalab-ia/ragtime/commit/4969317f19e92fabd8247b146d1327b2cd24c2ea))
+* stop wizard falling through to second question on Ctrl+C ([0777307](https://github.com/etalab-ia/ragtime/commit/0777307205b90937311207a413dcfe1716eb6deb))
+* suppress smolagents error output and clean up workspace display ([e4f0fbb](https://github.com/etalab-ia/ragtime/commit/e4f0fbba2c2d848790adb0493eed4aea48f2a61a))
+
+## [0.16.0](https://github.com/etalab-ia/ragtime/compare/v0.15.0...v0.16.0) (2026-02-18)
+
+
+### Features
+
+* add query expansion system (multi-query + HyDE) ([ef5418e](https://github.com/etalab-ia/ragtime/commit/ef5418ef7d8ad3ac00bd3d5a591ec56815b6e7d7))
+* add query expansion system with multi-query and HyDE strategies ([7c44a3f](https://github.com/etalab-ia/ragtime/commit/7c44a3f6149cd311280c4dc307d1e6145a65ff56))
+* bundle pipeline packages under rag_facile namespace for library distribution ([2271dc7](https://github.com/etalab-ia/ragtime/commit/2271dc7daac78e07fc125a5d2053fca1b8ba9ef8))
+* bundle pipeline packages under rag_facile namespace for library distribution ([0867970](https://github.com/etalab-ia/ragtime/commit/0867970e6b352cf1cafb9a6c6eb83129c2917569))
+* initialize git repo and add .gitignore on workspace setup ([3ff2fb0](https://github.com/etalab-ia/ragtime/commit/3ff2fb09fdeb5cd9f246882a33d3b21b5d5fb18b))
+* initialize git repo and add .gitignore on workspace setup ([3a7fb7d](https://github.com/etalab-ia/ragtime/commit/3a7fb7d23ab725e0ac65fb8f4520a7115d894a67))
+
+
+### Bug Fixes
+
+* add pkgutil namespace __init__.py and fix hatchling packages config ([d850889](https://github.com/etalab-ia/ragtime/commit/d85088912fe9afd601ae605e6f093ed49ed6299a))
+* address PR [#125](https://github.com/etalab-ia/ragtime/issues/125) review comments ([c2d7988](https://github.com/etalab-ia/ragtime/commit/c2d7988249a9e331fd2b79fcd6a202b6ba62b132))
+* **docs:** correct reranker model — openweight-rerank is BAAI/bge-reranker-v2-m3 ([2b61048](https://github.com/etalab-ia/ragtime/commit/2b61048a12d9f2f89679fe42ce3c951f4576d82d))
+* preset strategies not applied — stale bundled TOML files ([f3cd9e4](https://github.com/etalab-ia/ragtime/commit/f3cd9e40dacbdf0cae2c5c4bed0d1c7b0119cb93))
+* stop generating pipeline packages in monorepo, add src/ to standalone ([174e855](https://github.com/etalab-ia/ragtime/commit/174e85500a96a0ad56d7850104ee7b2969f3a2cb))
 
 
 ### Documentation
 
-* add missing paper title in rag-science Key Papers table ([74e6085](https://github.com/etalab-ia/rag-facile/commit/74e6085121cce4460832500f5158c60cba3d2dd7))
-* add RAG science guides (end-user + contributor reference) ([31acdaf](https://github.com/etalab-ia/rag-facile/commit/31acdafe74996a29979abc1659fcb1b0488cfd0e))
-* add RAG science guides (end-user + contributor reference) ([eb1ac01](https://github.com/etalab-ia/rag-facile/commit/eb1ac018c1b3bd03ae1a768dd87cde960631e090))
-* clarify albert-client is outside rag_facile.* namespace ([41c8226](https://github.com/etalab-ia/rag-facile/commit/41c8226fbb2dbdf06829eb9794692175c67fd345))
-* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace ([9e86742](https://github.com/etalab-ia/rag-facile/commit/9e867423c65252fb21e27348740f60174ab9630a))
-* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace (PR [#121](https://github.com/etalab-ia/rag-facile/issues/121)) ([0fdb02a](https://github.com/etalab-ia/rag-facile/commit/0fdb02a80e8eff90e63d64f4dbda2928399b8c36))
-* update imports and project structures for rag_facile namespace ([a6f8e84](https://github.com/etalab-ia/rag-facile/commit/a6f8e840080761faa8ecde7b31175904c3d3e637))
-* update presets and documentation for query expansion ([dd9492e](https://github.com/etalab-ia/rag-facile/commit/dd9492e0b60cefdc3dfc521b7bd6092450835611))
+* add missing paper title in rag-science Key Papers table ([74e6085](https://github.com/etalab-ia/ragtime/commit/74e6085121cce4460832500f5158c60cba3d2dd7))
+* add RAG science guides (end-user + contributor reference) ([31acdaf](https://github.com/etalab-ia/ragtime/commit/31acdafe74996a29979abc1659fcb1b0488cfd0e))
+* add RAG science guides (end-user + contributor reference) ([eb1ac01](https://github.com/etalab-ia/ragtime/commit/eb1ac018c1b3bd03ae1a768dd87cde960631e090))
+* clarify albert-client is outside rag_facile.* namespace ([41c8226](https://github.com/etalab-ia/ragtime/commit/41c8226fbb2dbdf06829eb9794692175c67fd345))
+* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace ([9e86742](https://github.com/etalab-ia/ragtime/commit/9e867423c65252fb21e27348740f60174ab9630a))
+* update CONTRIBUTING, AGENTS, TEST_PLAN for rag_facile namespace (PR [#121](https://github.com/etalab-ia/ragtime/issues/121)) ([0fdb02a](https://github.com/etalab-ia/ragtime/commit/0fdb02a80e8eff90e63d64f4dbda2928399b8c36))
+* update imports and project structures for rag_facile namespace ([a6f8e84](https://github.com/etalab-ia/ragtime/commit/a6f8e840080761faa8ecde7b31175904c3d3e637))
+* update presets and documentation for query expansion ([dd9492e](https://github.com/etalab-ia/ragtime/commit/dd9492e0b60cefdc3dfc521b7bd6092450835611))
 
-## [0.15.0](https://github.com/etalab-ia/rag-facile/compare/v0.14.0...v0.15.0) (2026-02-17)
-
-
-### Features
-
-* add CI smoke test — scaffold, build and launch Chainlit app ([b70fd49](https://github.com/etalab-ia/rag-facile/commit/b70fd498d96121f611e3c259183fc69315820b83))
-* add CI smoke test — scaffold, build and launch Chainlit app ([2ffa86f](https://github.com/etalab-ia/rag-facile/commit/2ffa86f63d723911083eb04c4bdd104a14e23c82))
-* add public collections as RAG sources ([7c0fee8](https://github.com/etalab-ia/rag-facile/commit/7c0fee833db7039db55dadf4bb7a242f7501e8af))
-* **albert-client:** log API errors with gh issue command for 5xx ([3721c65](https://github.com/etalab-ia/rag-facile/commit/3721c656d8a4237a4a609e4b615eef1c928ccfba))
-* **albert-client:** log API errors with gh issue command for 5xx ([cff3299](https://github.com/etalab-ia/rag-facile/commit/cff3299909b73317dd2b2b5aee404316acc61122))
-* move frontend choice behind --expert flag ([88bb4b9](https://github.com/etalab-ia/rag-facile/commit/88bb4b9ad0d94a1de4a718554df7f14f90b720b4))
-* move frontend choice behind --expert flag in setup command ([5ed23bb](https://github.com/etalab-ia/rag-facile/commit/5ed23bbe9b215400c5f1c450becaf9b61da57d8b))
-
-
-### Bug Fixes
-
-* add collection ID logging to pipeline search ([8091901](https://github.com/etalab-ia/rag-facile/commit/80919018c426d6799618607457caadda434fdce1))
-* address Gemini review comments on public collections ([c69cd6b](https://github.com/etalab-ia/rag-facile/commit/c69cd6bfcd7f00e36fb48bcbaaefbb9493768907))
-* align pipeline tests with true RAG upload behavior ([8685147](https://github.com/etalab-ia/rag-facile/commit/8685147a712b902570198594d5490e05decdc282))
-* alphabetical option ordering in generate-dataset and uninstall ([14c4b0f](https://github.com/etalab-ia/rag-facile/commit/14c4b0fce3acf368dc51aa5118143fa81b31cf02))
-* alphabetical option ordering in setup command ([e52eb56](https://github.com/etalab-ia/rag-facile/commit/e52eb56d36d5669942b21349df482521a00ce85b))
-* ignore Chainlit translation files in nested paths ([ab50b8c](https://github.com/etalab-ia/rag-facile/commit/ab50b8c7a6ddeb4f8164ad34187467cf83e7a619))
-* ignore Chainlit translation files in nested paths ([1e62d7c](https://github.com/etalab-ia/rag-facile/commit/1e62d7cf59707793e369574a46358d6838a3e756))
-* make curl command in gh issue dynamic based on HTTP method ([119cff2](https://github.com/etalab-ia/rag-facile/commit/119cff2068ea25e2cb883969bee9b7b97e577f2d))
-* remove JSON file type from Albert ingestion provider ([17fd077](https://github.com/etalab-ia/rag-facile/commit/17fd07714edfcb89f9bacf3384a5f95b6395f473))
-* remove JSON file type from Albert ingestion provider ([60fb436](https://github.com/etalab-ia/rag-facile/commit/60fb436e1a909ed75803edf860e80dbd68e5a124))
-* respect disabled collection toggles in chat apps ([5500b9b](https://github.com/etalab-ia/rag-facile/commit/5500b9b19e4a767fee6003d7b26a896bde31c314))
-* respect disabled collection toggles in chat apps ([a7f03cb](https://github.com/etalab-ia/rag-facile/commit/a7f03cb73817aef32ca56f42348fed3d2e9b211d))
-* restrict file uploads to supported formats in Chainlit app ([fb56f4c](https://github.com/etalab-ia/rag-facile/commit/fb56f4c3bf45ece042bd8c8105b0c5cba357a03d))
-
-## [0.14.0](https://github.com/etalab-ia/rag-facile/compare/v0.13.0...v0.14.0) (2026-02-17)
+## [0.15.0](https://github.com/etalab-ia/ragtime/compare/v0.14.0...v0.15.0) (2026-02-17)
 
 
 ### Features
 
-* add `rag-facile uninstall` and `rag-facile upgrade` commands ([6dcb688](https://github.com/etalab-ia/rag-facile/commit/6dcb688d10f35264948e9946b0f7e3103af2b6f0))
-* add `rag-facile uninstall` and `rag-facile upgrade` commands ([5c39988](https://github.com/etalab-ia/rag-facile/commit/5c3998898d247f809d229e924692875bfc6eb2e1))
+* add CI smoke test — scaffold, build and launch Chainlit app ([b70fd49](https://github.com/etalab-ia/ragtime/commit/b70fd498d96121f611e3c259183fc69315820b83))
+* add CI smoke test — scaffold, build and launch Chainlit app ([2ffa86f](https://github.com/etalab-ia/ragtime/commit/2ffa86f63d723911083eb04c4bdd104a14e23c82))
+* add public collections as RAG sources ([7c0fee8](https://github.com/etalab-ia/ragtime/commit/7c0fee833db7039db55dadf4bb7a242f7501e8af))
+* **albert-client:** log API errors with gh issue command for 5xx ([3721c65](https://github.com/etalab-ia/ragtime/commit/3721c656d8a4237a4a609e4b615eef1c928ccfba))
+* **albert-client:** log API errors with gh issue command for 5xx ([cff3299](https://github.com/etalab-ia/ragtime/commit/cff3299909b73317dd2b2b5aee404316acc61122))
+* move frontend choice behind --expert flag ([88bb4b9](https://github.com/etalab-ia/ragtime/commit/88bb4b9ad0d94a1de4a718554df7f14f90b720b4))
+* move frontend choice behind --expert flag in setup command ([5ed23bb](https://github.com/etalab-ia/ragtime/commit/5ed23bbe9b215400c5f1c450becaf9b61da57d8b))
 
 
 ### Bug Fixes
 
-* bundle context and reranking to correct paths for standalone setup ([9f753d9](https://github.com/etalab-ia/rag-facile/commit/9f753d9eca6934eb2c1ba9ecde370614dc7ac7f3))
-* bundle context and reranking to correct paths for standalone setup ([a4bf035](https://github.com/etalab-ia/rag-facile/commit/a4bf0353508ae743b91296d3ede7af80c21f7422))
-* default uninstall removes CLI only, --all for toolchain ([3bb4d52](https://github.com/etalab-ia/rag-facile/commit/3bb4d525d893dc9ccf7d8cd24ab92aa8f3973dc8))
-* display CLI commands in alphabetical order ([37a2d57](https://github.com/etalab-ia/rag-facile/commit/37a2d570dbd3b15be99e665a4fe7ad8b9fb1c9ef))
+* add collection ID logging to pipeline search ([8091901](https://github.com/etalab-ia/ragtime/commit/80919018c426d6799618607457caadda434fdce1))
+* address Gemini review comments on public collections ([c69cd6b](https://github.com/etalab-ia/ragtime/commit/c69cd6bfcd7f00e36fb48bcbaaefbb9493768907))
+* align pipeline tests with true RAG upload behavior ([8685147](https://github.com/etalab-ia/ragtime/commit/8685147a712b902570198594d5490e05decdc282))
+* alphabetical option ordering in generate-dataset and uninstall ([14c4b0f](https://github.com/etalab-ia/ragtime/commit/14c4b0fce3acf368dc51aa5118143fa81b31cf02))
+* alphabetical option ordering in setup command ([e52eb56](https://github.com/etalab-ia/ragtime/commit/e52eb56d36d5669942b21349df482521a00ce85b))
+* ignore Chainlit translation files in nested paths ([ab50b8c](https://github.com/etalab-ia/ragtime/commit/ab50b8c7a6ddeb4f8164ad34187467cf83e7a619))
+* ignore Chainlit translation files in nested paths ([1e62d7c](https://github.com/etalab-ia/ragtime/commit/1e62d7cf59707793e369574a46358d6838a3e756))
+* make curl command in gh issue dynamic based on HTTP method ([119cff2](https://github.com/etalab-ia/ragtime/commit/119cff2068ea25e2cb883969bee9b7b97e577f2d))
+* remove JSON file type from Albert ingestion provider ([17fd077](https://github.com/etalab-ia/ragtime/commit/17fd07714edfcb89f9bacf3384a5f95b6395f473))
+* remove JSON file type from Albert ingestion provider ([60fb436](https://github.com/etalab-ia/ragtime/commit/60fb436e1a909ed75803edf860e80dbd68e5a124))
+* respect disabled collection toggles in chat apps ([5500b9b](https://github.com/etalab-ia/ragtime/commit/5500b9b19e4a767fee6003d7b26a896bde31c314))
+* respect disabled collection toggles in chat apps ([a7f03cb](https://github.com/etalab-ia/ragtime/commit/a7f03cb73817aef32ca56f42348fed3d2e9b211d))
+* restrict file uploads to supported formats in Chainlit app ([fb56f4c](https://github.com/etalab-ia/ragtime/commit/fb56f4c3bf45ece042bd8c8105b0c5cba357a03d))
 
-## [0.13.0](https://github.com/etalab-ia/rag-facile/compare/v0.12.1...v0.13.0) (2026-02-17)
+## [0.14.0](https://github.com/etalab-ia/ragtime/compare/v0.13.0...v0.14.0) (2026-02-17)
 
 
 ### Features
 
-* add --expert flag to setup command and rename PDF pipeline to Local ([4c8b584](https://github.com/etalab-ia/rag-facile/commit/4c8b584bf156cadd212277d104bc41699699186a))
-* add --expert flag to setup command and rename PDF pipeline to Local ([3605a5a](https://github.com/etalab-ia/rag-facile/commit/3605a5a12555b1e961994c3243b0b7559f55a8da))
-* add interactive collection badges to chat apps ([fadd438](https://github.com/etalab-ia/rag-facile/commit/fadd4385bc532dd1093e7b2131d69adb151ca377))
-* add support for public Albert collections as RAG sources ([6d9ec12](https://github.com/etalab-ia/rag-facile/commit/6d9ec12b07b6a8429190c15f02609074e81dabc4))
-* add support for public Albert collections as RAG sources ([4fc5903](https://github.com/etalab-ia/rag-facile/commit/4fc5903088262b3046319e692fb5323cfbf550ac))
+* add `ragtime uninstall` and `ragtime upgrade` commands ([6dcb688](https://github.com/etalab-ia/ragtime/commit/6dcb688d10f35264948e9946b0f7e3103af2b6f0))
+* add `ragtime uninstall` and `ragtime upgrade` commands ([5c39988](https://github.com/etalab-ia/ragtime/commit/5c3998898d247f809d229e924692875bfc6eb2e1))
 
 
 ### Bug Fixes
 
-* add missing open_browser.py script for reflex-chat auto-open ([b2f20be](https://github.com/etalab-ia/rag-facile/commit/b2f20be35ce2abaca278b7dca72ece07922d3a48))
-* bypass moon for app dev server to prevent dangling processes ([cbc9b59](https://github.com/etalab-ia/rag-facile/commit/cbc9b59ecff653fc7daf0960558182278f85aa8e))
-* bypass moon for app dev server to prevent dangling processes ([a9a05c4](https://github.com/etalab-ia/rag-facile/commit/a9a05c48c6ed576c3b1adc5189e84dc128efa7d2))
-* remove --public flag, add real MediaTech collection IDs to presets ([c301381](https://github.com/etalab-ia/rag-facile/commit/c3013814b4a857548c28d74886ad4c8a6f0dde21))
-* resolve CI test failure from Rich ANSI codes in assertion ([79bc659](https://github.com/etalab-ia/rag-facile/commit/79bc65911313e1e1913f39b3b86f4ab2b47266b0))
-* restore browser opener in reflex-chat moon.yml ([f6bbae2](https://github.com/etalab-ia/rag-facile/commit/f6bbae22324e955dd69e6b6e02af3b07874b724d))
+* bundle context and reranking to correct paths for standalone setup ([9f753d9](https://github.com/etalab-ia/ragtime/commit/9f753d9eca6934eb2c1ba9ecde370614dc7ac7f3))
+* bundle context and reranking to correct paths for standalone setup ([a4bf035](https://github.com/etalab-ia/ragtime/commit/a4bf0353508ae743b91296d3ede7af80c21f7422))
+* default uninstall removes CLI only, --all for toolchain ([3bb4d52](https://github.com/etalab-ia/ragtime/commit/3bb4d525d893dc9ccf7d8cd24ab92aa8f3973dc8))
+* display CLI commands in alphabetical order ([37a2d57](https://github.com/etalab-ia/ragtime/commit/37a2d570dbd3b15be99e665a4fe7ad8b9fb1c9ef))
 
-## [0.12.1](https://github.com/etalab-ia/rag-facile/compare/v0.12.0...v0.12.1) (2026-02-16)
+## [0.13.0](https://github.com/etalab-ia/ragtime/compare/v0.12.1...v0.13.0) (2026-02-17)
+
+
+### Features
+
+* add --expert flag to setup command and rename PDF pipeline to Local ([4c8b584](https://github.com/etalab-ia/ragtime/commit/4c8b584bf156cadd212277d104bc41699699186a))
+* add --expert flag to setup command and rename PDF pipeline to Local ([3605a5a](https://github.com/etalab-ia/ragtime/commit/3605a5a12555b1e961994c3243b0b7559f55a8da))
+* add interactive collection badges to chat apps ([fadd438](https://github.com/etalab-ia/ragtime/commit/fadd4385bc532dd1093e7b2131d69adb151ca377))
+* add support for public Albert collections as RAG sources ([6d9ec12](https://github.com/etalab-ia/ragtime/commit/6d9ec12b07b6a8429190c15f02609074e81dabc4))
+* add support for public Albert collections as RAG sources ([4fc5903](https://github.com/etalab-ia/ragtime/commit/4fc5903088262b3046319e692fb5323cfbf550ac))
 
 
 ### Bug Fixes
 
-* add GIT_WORK_TREE workaround for moon in bare repo worktrees ([a45e1e3](https://github.com/etalab-ia/rag-facile/commit/a45e1e3b84bd98939ce1ef5b5d9d2c45ee5b706e))
-* add GIT_WORK_TREE workaround for moon in bare repo worktrees ([1563b56](https://github.com/etalab-ia/rag-facile/commit/1563b566e822f0f84d6ffcbb1d73fc79ba7bb50d))
-* add missing context and reranking packages to standalone setup ([a6e880e](https://github.com/etalab-ia/rag-facile/commit/a6e880e12faa950710ddbb84679b5f68defa9dc4))
-* add missing context and reranking packages to standalone setup ([75c0264](https://github.com/etalab-ia/rag-facile/commit/75c0264596af13f714350aee3631ed2d4de9f0ce))
+* add missing open_browser.py script for reflex-chat auto-open ([b2f20be](https://github.com/etalab-ia/ragtime/commit/b2f20be35ce2abaca278b7dca72ece07922d3a48))
+* bypass moon for app dev server to prevent dangling processes ([cbc9b59](https://github.com/etalab-ia/ragtime/commit/cbc9b59ecff653fc7daf0960558182278f85aa8e))
+* bypass moon for app dev server to prevent dangling processes ([a9a05c4](https://github.com/etalab-ia/ragtime/commit/a9a05c48c6ed576c3b1adc5189e84dc128efa7d2))
+* remove --public flag, add real MediaTech collection IDs to presets ([c301381](https://github.com/etalab-ia/ragtime/commit/c3013814b4a857548c28d74886ad4c8a6f0dde21))
+* resolve CI test failure from Rich ANSI codes in assertion ([79bc659](https://github.com/etalab-ia/ragtime/commit/79bc65911313e1e1913f39b3b86f4ab2b47266b0))
+* restore browser opener in reflex-chat moon.yml ([f6bbae2](https://github.com/etalab-ia/ragtime/commit/f6bbae22324e955dd69e6b6e02af3b07874b724d))
+
+## [0.12.1](https://github.com/etalab-ia/ragtime/compare/v0.12.0...v0.12.1) (2026-02-16)
+
+
+### Bug Fixes
+
+* add GIT_WORK_TREE workaround for moon in bare repo worktrees ([a45e1e3](https://github.com/etalab-ia/ragtime/commit/a45e1e3b84bd98939ce1ef5b5d9d2c45ee5b706e))
+* add GIT_WORK_TREE workaround for moon in bare repo worktrees ([1563b56](https://github.com/etalab-ia/ragtime/commit/1563b566e822f0f84d6ffcbb1d73fc79ba7bb50d))
+* add missing context and reranking packages to standalone setup ([a6e880e](https://github.com/etalab-ia/ragtime/commit/a6e880e12faa950710ddbb84679b5f68defa9dc4))
+* add missing context and reranking packages to standalone setup ([75c0264](https://github.com/etalab-ia/ragtime/commit/75c0264596af13f714350aee3631ed2d4de9f0ce))
 
 
 ### Documentation
 
-* fix install instructions for macOS/zsh compatibility ([8c27ef3](https://github.com/etalab-ia/rag-facile/commit/8c27ef31f24911ff5f72c276251ef5289a0affe6))
-* fix install instructions for macOS/zsh compatibility ([1d336f6](https://github.com/etalab-ia/rag-facile/commit/1d336f6e987f9807ef257f0b07f0aa7a227680c3))
+* fix install instructions for macOS/zsh compatibility ([8c27ef3](https://github.com/etalab-ia/ragtime/commit/8c27ef31f24911ff5f72c276251ef5289a0affe6))
+* fix install instructions for macOS/zsh compatibility ([1d336f6](https://github.com/etalab-ia/ragtime/commit/1d336f6e987f9807ef257f0b07f0aa7a227680c3))
 
-## [0.12.0](https://github.com/etalab-ia/rag-facile/compare/v0.11.1...v0.12.0) (2026-02-16)
-
-
-### Features
-
-* true RAG pipeline with auto-managed collections and tuned presets ([e912ca5](https://github.com/etalab-ia/rag-facile/commit/e912ca521dc31c4389c6eea8e6b190369ff15f86))
-* true RAG pipeline with auto-managed collections and tuned presets ([4fa5cd2](https://github.com/etalab-ia/rag-facile/commit/4fa5cd2359fc8349caf035a6069915f760b3172c))
-
-
-### Bug Fixes
-
-* address review comments on context injection and session naming ([b89e69e](https://github.com/etalab-ia/rag-facile/commit/b89e69ef9eb6ed05021ec048c437b45d5ac2820b))
-* increase retrieval depth for better recall on long sections ([48de5c4](https://github.com/etalab-ia/rag-facile/commit/48de5c4c94052f1cb9329deb7bf55779525b54df))
-* make Collection model fields optional for create response ([8e18529](https://github.com/etalab-ia/rag-facile/commit/8e185297eae58010f809f4b856fb8382aa9395f1))
-* use date-sorted release badge to avoid shields.io semver bug ([54586ef](https://github.com/etalab-ia/rag-facile/commit/54586efc80f858955ed3efd174199d4d27a53426))
-* use date-sorted release badge to avoid shields.io semver bug ([8d6175a](https://github.com/etalab-ia/rag-facile/commit/8d6175a7e882072fa3f67004ed45f1a14d734660))
-
-## [0.11.1](https://github.com/etalab-ia/rag-facile/compare/v0.11.0...v0.11.1) (2026-02-15)
-
-
-### Bug Fixes
-
-* address review comments on process_query and rerank_chunks ([06de58b](https://github.com/etalab-ia/rag-facile/commit/06de58ba6887829936b81c651f1f5dbf7f23e2ad))
-
-## [0.11.0](https://github.com/etalab-ia/rag-facile/compare/v0.10.1...v0.11.0) (2026-02-15)
+## [0.12.0](https://github.com/etalab-ia/ragtime/compare/v0.11.1...v0.12.0) (2026-02-16)
 
 
 ### Features
 
-* Add initial `ragfacile.toml` configuration file for RAG system settings. ([482ad12](https://github.com/etalab-ia/rag-facile/commit/482ad12a58ecacf99c4bd9afa09989504fdc5d4e))
-* add retrieval-albert package and remove Chroma placeholder ([32a93af](https://github.com/etalab-ia/rag-facile/commit/32a93af64a53dd3a02ce3bb01bb55927fb47e5f8))
-* add retrieval-albert package and remove Chroma placeholder ([7834dce](https://github.com/etalab-ia/rag-facile/commit/7834dce74b6738dd08370ba4b713baa2ac4088c6))
-* display config show in RAG pipeline order with descriptions ([c810ccb](https://github.com/etalab-ia/rag-facile/commit/c810ccb3ce77b9d1527a79acd2e6310bf70f3539))
-* display config show in RAG pipeline order with descriptions ([5955e82](https://github.com/etalab-ia/rag-facile/commit/5955e8298f87c625789d339ca3d246e8ed793784))
-* local PDF fallback when Albert parse API fails ([67350f2](https://github.com/etalab-ia/rag-facile/commit/67350f2eeb9490a8f656273ab2dd847be9654e0a))
-* multi-format file support for retrieval-albert, update TEST_PLAN ([7ab2bc3](https://github.com/etalab-ia/rag-facile/commit/7ab2bc32a950273c4684f87dea2077ce17252f62))
-* uniform table widths in config show ([4466dba](https://github.com/etalab-ia/rag-facile/commit/4466dba7251b3d19e8a09299463cfa18f025538d))
+* true RAG pipeline with auto-managed collections and tuned presets ([e912ca5](https://github.com/etalab-ia/ragtime/commit/e912ca521dc31c4389c6eea8e6b190369ff15f86))
+* true RAG pipeline with auto-managed collections and tuned presets ([4fa5cd2](https://github.com/etalab-ia/ragtime/commit/4fa5cd2359fc8349caf035a6069915f760b3172c))
 
 
 ### Bug Fixes
 
-* add interactive retrieval module selection to setup command ([2bba840](https://github.com/etalab-ia/rag-facile/commit/2bba840b791779ad944b989554e784c0b43ca858))
-* address code review comments from Gemini Code Assist ([63a788f](https://github.com/etalab-ia/rag-facile/commit/63a788ff3bfcb484f28961f25a70250c3307d252))
-* address Gemini Code Assist review comments ([9ed3b9c](https://github.com/etalab-ia/rag-facile/commit/9ed3b9c59cc9bd2402c9c0324e038ee5cda8e779))
-* address Gemini review - sort __all__, simplify dotted_key logic ([783e3c2](https://github.com/etalab-ia/rag-facile/commit/783e3c20b4007b15ae57b7f0b5d2369fd8b558c3))
-* chainlit repeating all responses + handle malformed SSE ([531f056](https://github.com/etalab-ia/rag-facile/commit/531f05657ff5779e1bcf1836cea2629d2f5dac7e))
-* display storage backend in config show command ([bac5bb9](https://github.com/etalab-ia/rag-facile/commit/bac5bb9a90441136865fc9239d343702fe9cb786))
-* make Albert RAG first choice, remove broken Chainlit config gen ([a4332bc](https://github.com/etalab-ia/rag-facile/commit/a4332bcb33a6c1735a7f491a6369a4216f4c6324))
-* make retrieval-albert interchangeable with retrieval-basic ([4f993cc](https://github.com/etalab-ia/rag-facile/commit/4f993cce42c381de04b0e9b035bd9b91852842ae))
-* monorepo templates conditionally use retrieval-basic or retrieval-albert ([1ffa0cf](https://github.com/etalab-ia/rag-facile/commit/1ffa0cf7bcc33175fc7c4de5528f73485e556262))
-* reflex app crashes on malformed SSE events from Albert API ([6c41d7d](https://github.com/etalab-ia/rag-facile/commit/6c41d7dc12998c780ccb110f14285cac24aa56de))
-* rename albert_rag provider for clarity ([33ef440](https://github.com/etalab-ia/rag-facile/commit/33ef440e61c36c340d9e846231c86e6f9e6a5fa7))
-* rename Reflex app package dir after moon generate ([e501d21](https://github.com/etalab-ia/rag-facile/commit/e501d2153a0f625537f999d7aff47430f3f56812))
-* restrict file types to Albert API-supported formats ([dc25e79](https://github.com/etalab-ia/rag-facile/commit/dc25e79601cd2c1ade8716d87c5c46b5ee4730e4))
-* update golden master modules.yml from stale pdf_context ([1a551a7](https://github.com/etalab-ia/rag-facile/commit/1a551a796af2280fb725992823a6537489e32a1d))
-* update setup command to use unified retrieval template ([65d11ba](https://github.com/etalab-ia/rag-facile/commit/65d11baac91808fa17ca9daa5cf11a286f19470d))
-* use Albert API model aliases instead of raw model IDs ([ea5c5b9](https://github.com/etalab-ia/rag-facile/commit/ea5c5b9681d86cb00abe7172afea1afb93616a40))
+* address review comments on context injection and session naming ([b89e69e](https://github.com/etalab-ia/ragtime/commit/b89e69ef9eb6ed05021ec048c437b45d5ac2820b))
+* increase retrieval depth for better recall on long sections ([48de5c4](https://github.com/etalab-ia/ragtime/commit/48de5c4c94052f1cb9329deb7bf55779525b54df))
+* make Collection model fields optional for create response ([8e18529](https://github.com/etalab-ia/ragtime/commit/8e185297eae58010f809f4b856fb8382aa9395f1))
+* use date-sorted release badge to avoid shields.io semver bug ([54586ef](https://github.com/etalab-ia/ragtime/commit/54586efc80f858955ed3efd174199d4d27a53426))
+* use date-sorted release badge to avoid shields.io semver bug ([8d6175a](https://github.com/etalab-ia/ragtime/commit/8d6175a7e882072fa3f67004ed45f1a14d734660))
+
+## [0.11.1](https://github.com/etalab-ia/ragtime/compare/v0.11.0...v0.11.1) (2026-02-15)
+
+
+### Bug Fixes
+
+* address review comments on process_query and rerank_chunks ([06de58b](https://github.com/etalab-ia/ragtime/commit/06de58ba6887829936b81c651f1f5dbf7f23e2ad))
+
+## [0.11.0](https://github.com/etalab-ia/ragtime/compare/v0.10.1...v0.11.0) (2026-02-15)
+
+
+### Features
+
+* Add initial `ragtime.toml` configuration file for RAG system settings. ([482ad12](https://github.com/etalab-ia/ragtime/commit/482ad12a58ecacf99c4bd9afa09989504fdc5d4e))
+* add retrieval-albert package and remove Chroma placeholder ([32a93af](https://github.com/etalab-ia/ragtime/commit/32a93af64a53dd3a02ce3bb01bb55927fb47e5f8))
+* add retrieval-albert package and remove Chroma placeholder ([7834dce](https://github.com/etalab-ia/ragtime/commit/7834dce74b6738dd08370ba4b713baa2ac4088c6))
+* display config show in RAG pipeline order with descriptions ([c810ccb](https://github.com/etalab-ia/ragtime/commit/c810ccb3ce77b9d1527a79acd2e6310bf70f3539))
+* display config show in RAG pipeline order with descriptions ([5955e82](https://github.com/etalab-ia/ragtime/commit/5955e8298f87c625789d339ca3d246e8ed793784))
+* local PDF fallback when Albert parse API fails ([67350f2](https://github.com/etalab-ia/ragtime/commit/67350f2eeb9490a8f656273ab2dd847be9654e0a))
+* multi-format file support for retrieval-albert, update TEST_PLAN ([7ab2bc3](https://github.com/etalab-ia/ragtime/commit/7ab2bc32a950273c4684f87dea2077ce17252f62))
+* uniform table widths in config show ([4466dba](https://github.com/etalab-ia/ragtime/commit/4466dba7251b3d19e8a09299463cfa18f025538d))
+
+
+### Bug Fixes
+
+* add interactive retrieval module selection to setup command ([2bba840](https://github.com/etalab-ia/ragtime/commit/2bba840b791779ad944b989554e784c0b43ca858))
+* address code review comments from Gemini Code Assist ([63a788f](https://github.com/etalab-ia/ragtime/commit/63a788ff3bfcb484f28961f25a70250c3307d252))
+* address Gemini Code Assist review comments ([9ed3b9c](https://github.com/etalab-ia/ragtime/commit/9ed3b9c59cc9bd2402c9c0324e038ee5cda8e779))
+* address Gemini review - sort __all__, simplify dotted_key logic ([783e3c2](https://github.com/etalab-ia/ragtime/commit/783e3c20b4007b15ae57b7f0b5d2369fd8b558c3))
+* chainlit repeating all responses + handle malformed SSE ([531f056](https://github.com/etalab-ia/ragtime/commit/531f05657ff5779e1bcf1836cea2629d2f5dac7e))
+* display storage backend in config show command ([bac5bb9](https://github.com/etalab-ia/ragtime/commit/bac5bb9a90441136865fc9239d343702fe9cb786))
+* make Albert RAG first choice, remove broken Chainlit config gen ([a4332bc](https://github.com/etalab-ia/ragtime/commit/a4332bcb33a6c1735a7f491a6369a4216f4c6324))
+* make retrieval-albert interchangeable with retrieval-basic ([4f993cc](https://github.com/etalab-ia/ragtime/commit/4f993cce42c381de04b0e9b035bd9b91852842ae))
+* monorepo templates conditionally use retrieval-basic or retrieval-albert ([1ffa0cf](https://github.com/etalab-ia/ragtime/commit/1ffa0cf7bcc33175fc7c4de5528f73485e556262))
+* reflex app crashes on malformed SSE events from Albert API ([6c41d7d](https://github.com/etalab-ia/ragtime/commit/6c41d7dc12998c780ccb110f14285cac24aa56de))
+* rename albert_rag provider for clarity ([33ef440](https://github.com/etalab-ia/ragtime/commit/33ef440e61c36c340d9e846231c86e6f9e6a5fa7))
+* rename Reflex app package dir after moon generate ([e501d21](https://github.com/etalab-ia/ragtime/commit/e501d2153a0f625537f999d7aff47430f3f56812))
+* restrict file types to Albert API-supported formats ([dc25e79](https://github.com/etalab-ia/ragtime/commit/dc25e79601cd2c1ade8716d87c5c46b5ee4730e4))
+* update golden master modules.yml from stale pdf_context ([1a551a7](https://github.com/etalab-ia/ragtime/commit/1a551a796af2280fb725992823a6537489e32a1d))
+* update setup command to use unified retrieval template ([65d11ba](https://github.com/etalab-ia/ragtime/commit/65d11baac91808fa17ca9daa5cf11a286f19470d))
+* use Albert API model aliases instead of raw model IDs ([ea5c5b9](https://github.com/etalab-ia/ragtime/commit/ea5c5b9681d86cb00abe7172afea1afb93616a40))
 
 
 ### Documentation
 
-* update for Albert RAG component and retrieval modules ([052792c](https://github.com/etalab-ia/rag-facile/commit/052792cc3daf658c314a9bc153ec745eeb822ebc))
+* update for Albert RAG component and retrieval modules ([052792c](https://github.com/etalab-ia/ragtime/commit/052792cc3daf658c314a9bc153ec745eeb822ebc))
 
 
 ### Code Refactoring
 
-* consolidate citation config and unify schema terminology ([065e41b](https://github.com/etalab-ia/rag-facile/commit/065e41bdfbc8cbec9cc26dca1e013567718ed8e8))
+* consolidate citation config and unify schema terminology ([065e41b](https://github.com/etalab-ia/ragtime/commit/065e41bdfbc8cbec9cc26dca1e013567718ed8e8))
 
-## [0.10.1](https://github.com/etalab-ia/rag-facile/compare/v0.10.0...v0.10.1) (2026-02-13)
+## [0.10.1](https://github.com/etalab-ia/ragtime/compare/v0.10.0...v0.10.1) (2026-02-13)
 
 
 ### Bug Fixes
 
-* align albert-client version with Albert API (v0.4.0) and enable component tags ([4725817](https://github.com/etalab-ia/rag-facile/commit/472581754ce7eab053e31152ec5506947bf11a70))
-* align albert-client version with Albert API (v0.4.0) and enable component tags ([63daa9f](https://github.com/etalab-ia/rag-facile/commit/63daa9f31e390d22ce37b8706bcc920acf11cedb))
-* update extra-files to match renamed packages and sync versions ([9d721fd](https://github.com/etalab-ia/rag-facile/commit/9d721fd4dd2e7ee927b20715212356e86b339a66))
-* update extra-files to match renamed packages and sync versions ([3437926](https://github.com/etalab-ia/rag-facile/commit/3437926a45a8fac2abc9e3bc624285c945540288))
+* align albert-client version with Albert API (v0.4.0) and enable component tags ([4725817](https://github.com/etalab-ia/ragtime/commit/472581754ce7eab053e31152ec5506947bf11a70))
+* align albert-client version with Albert API (v0.4.0) and enable component tags ([63daa9f](https://github.com/etalab-ia/ragtime/commit/63daa9f31e390d22ce37b8706bcc920acf11cedb))
+* update extra-files to match renamed packages and sync versions ([9d721fd](https://github.com/etalab-ia/ragtime/commit/9d721fd4dd2e7ee927b20715212356e86b339a66))
+* update extra-files to match renamed packages and sync versions ([3437926](https://github.com/etalab-ia/ragtime/commit/3437926a45a8fac2abc9e3bc624285c945540288))
 
-## [0.10.0](https://github.com/etalab-ia/rag-facile/compare/v0.9.0...v0.10.0) (2026-02-13)
+## [0.10.0](https://github.com/etalab-ia/ragtime/compare/v0.9.0...v0.10.0) (2026-02-13)
 
 
 ### Features
 
-* add .envrc support to standalone workspaces ([57e6ed3](https://github.com/etalab-ia/rag-facile/commit/57e6ed369dba02fb09139c41cf8b806b33c50f21))
-* add direnv support for automatic .env loading ([6e1ca21](https://github.com/etalab-ia/rag-facile/commit/6e1ca2117807a631963f171dbc23491a127d1588))
-* add workflow to sync templates on release PRs ([8a3e381](https://github.com/etalab-ia/rag-facile/commit/8a3e381ca836a94a4936d50ed608b72062a5697e))
-* **albert-client:** update to v0.4.0 API spec ([246fc11](https://github.com/etalab-ia/rag-facile/commit/246fc11ce3b171a9bcba741dce3fe94a52f15e56))
-* **albert-client:** update to v0.4.0 API spec ([46b348b](https://github.com/etalab-ia/rag-facile/commit/46b348b1098fe4fe2097c0742edf9c60921fccf0))
-* automate template synchronization on release ([2960013](https://github.com/etalab-ia/rag-facile/commit/2960013a0ac4eab9f2beceecb7ac38085b69eb17))
-* component-first architecture refactoring ([e289d15](https://github.com/etalab-ia/rag-facile/commit/e289d157ac2d45c2b82d47be1fdef775874c6281))
-* component-first architecture refactoring with auth fixes ([23425ff](https://github.com/etalab-ia/rag-facile/commit/23425ffd7745c3cd06c03d5e508cb5bed04da618))
+* add .envrc support to standalone workspaces ([57e6ed3](https://github.com/etalab-ia/ragtime/commit/57e6ed369dba02fb09139c41cf8b806b33c50f21))
+* add direnv support for automatic .env loading ([6e1ca21](https://github.com/etalab-ia/ragtime/commit/6e1ca2117807a631963f171dbc23491a127d1588))
+* add workflow to sync templates on release PRs ([8a3e381](https://github.com/etalab-ia/ragtime/commit/8a3e381ca836a94a4936d50ed608b72062a5697e))
+* **albert-client:** update to v0.4.0 API spec ([246fc11](https://github.com/etalab-ia/ragtime/commit/246fc11ce3b171a9bcba741dce3fe94a52f15e56))
+* **albert-client:** update to v0.4.0 API spec ([46b348b](https://github.com/etalab-ia/ragtime/commit/46b348b1098fe4fe2097c0742edf9c60921fccf0))
+* automate template synchronization on release ([2960013](https://github.com/etalab-ia/ragtime/commit/2960013a0ac4eab9f2beceecb7ac38085b69eb17))
+* component-first architecture refactoring ([e289d15](https://github.com/etalab-ia/ragtime/commit/e289d157ac2d45c2b82d47be1fdef775874c6281))
+* component-first architecture refactoring with auth fixes ([23425ff](https://github.com/etalab-ia/ragtime/commit/23425ffd7745c3cd06c03d5e508cb5bed04da618))
 
 
 ### Bug Fixes
 
-* add explicit exclusions to type-check moon task ([4dc84a1](https://github.com/etalab-ia/rag-facile/commit/4dc84a13669d0295189228fe0ce6da9e8d2add51))
-* add missing authentication headers to Albert API requests ([1cd1fc6](https://github.com/etalab-ia/rag-facile/commit/1cd1fc62f55e4545d516e2f33b03b6dd7811f906))
-* add OpenAI SDK exclusions to generated workspace pyproject.toml ([3b022da](https://github.com/etalab-ia/rag-facile/commit/3b022da984005ebc64eb261a9291413606f39da1))
-* correct generate-dataset command in test plan ([9dcbbd5](https://github.com/etalab-ia/rag-facile/commit/9dcbbd50bb9f4fdcba335d4d5489518f46bcc3ef))
-* use correct AlbertClient API method names ([f52b3d1](https://github.com/etalab-ia/rag-facile/commit/f52b3d18641b2cb0cbfca6bb0e979afb88422f8e))
-* use ragfacile.toml config as fallback for OPENAI_MODEL ([7f80f2f](https://github.com/etalab-ia/rag-facile/commit/7f80f2f2dae55abd462447a458b36fd7bdf07f37))
+* add explicit exclusions to type-check moon task ([4dc84a1](https://github.com/etalab-ia/ragtime/commit/4dc84a13669d0295189228fe0ce6da9e8d2add51))
+* add missing authentication headers to Albert API requests ([1cd1fc6](https://github.com/etalab-ia/ragtime/commit/1cd1fc62f55e4545d516e2f33b03b6dd7811f906))
+* add OpenAI SDK exclusions to generated workspace pyproject.toml ([3b022da](https://github.com/etalab-ia/ragtime/commit/3b022da984005ebc64eb261a9291413606f39da1))
+* correct generate-dataset command in test plan ([9dcbbd5](https://github.com/etalab-ia/ragtime/commit/9dcbbd50bb9f4fdcba335d4d5489518f46bcc3ef))
+* use correct AlbertClient API method names ([f52b3d1](https://github.com/etalab-ia/ragtime/commit/f52b3d18641b2cb0cbfca6bb0e979afb88422f8e))
+* use ragtime.toml config as fallback for OPENAI_MODEL ([7f80f2f](https://github.com/etalab-ia/ragtime/commit/7f80f2f2dae55abd462447a458b36fd7bdf07f37))
 
 
 ### Documentation
 
-* add comprehensive test plan for component-first architecture ([07146d9](https://github.com/etalab-ia/rag-facile/commit/07146d905c3eeb2034853918c7e29205b53b53c2))
-* add Windows upgrade commands ([b46a1c2](https://github.com/etalab-ia/rag-facile/commit/b46a1c25ea69c6158cde06a914a62250d12e0829))
-* **albert-client:** document model aliases and api version ([c606fe4](https://github.com/etalab-ia/rag-facile/commit/c606fe4f56bba506508ba27433270ee1a3c1da9b))
-* **albert-client:** improve docstrings and address PR review ([cbf5dce](https://github.com/etalab-ia/rag-facile/commit/cbf5dce13e6d861d64b859e824f39c46becd8b5d))
-* fix redundant code fences in README files ([b96f4f0](https://github.com/etalab-ia/rag-facile/commit/b96f4f0c9b86c428d83c0ea3d7519fb494f599e1))
-* refactor README into focused documentation files ([c53e312](https://github.com/etalab-ia/rag-facile/commit/c53e312b011ba60d2e40cc7ad389a48f73cd70ba))
-* refactor README into focused documentation files ([68c06a7](https://github.com/etalab-ia/rag-facile/commit/68c06a762179dbcf6df4f1a30643f8683bdc8cb2))
-* remove historical Issue 46 investigation files ([f35589b](https://github.com/etalab-ia/rag-facile/commit/f35589b3de5fc7d703e1c301526c0959d43a1ba8))
-* update test plan to document config precedence for OPENAI_MODEL ([cbcbc1a](https://github.com/etalab-ia/rag-facile/commit/cbcbc1a8d08d1e59490e82410c4c3fc6e64feb33))
-* update test plan to reflect automatic template regeneration ([a2bee94](https://github.com/etalab-ia/rag-facile/commit/a2bee941d9733ce6ef11f1c206f1af44769edfe7))
-* update test plan to use just commands consistently ([3a0b838](https://github.com/etalab-ia/rag-facile/commit/3a0b838466eb66b25bf91176140bc048c53179be))
-* use just run instead of raw uv commands in documentation ([6bfa9b3](https://github.com/etalab-ia/rag-facile/commit/6bfa9b376568b67993c5db00ada781d38f951e09))
-* use just run instead of raw uv commands in documentation ([49f3c2d](https://github.com/etalab-ia/rag-facile/commit/49f3c2ddcaa529c2af169691ffd181c69959b276))
+* add comprehensive test plan for component-first architecture ([07146d9](https://github.com/etalab-ia/ragtime/commit/07146d905c3eeb2034853918c7e29205b53b53c2))
+* add Windows upgrade commands ([b46a1c2](https://github.com/etalab-ia/ragtime/commit/b46a1c25ea69c6158cde06a914a62250d12e0829))
+* **albert-client:** document model aliases and api version ([c606fe4](https://github.com/etalab-ia/ragtime/commit/c606fe4f56bba506508ba27433270ee1a3c1da9b))
+* **albert-client:** improve docstrings and address PR review ([cbf5dce](https://github.com/etalab-ia/ragtime/commit/cbf5dce13e6d861d64b859e824f39c46becd8b5d))
+* fix redundant code fences in README files ([b96f4f0](https://github.com/etalab-ia/ragtime/commit/b96f4f0c9b86c428d83c0ea3d7519fb494f599e1))
+* refactor README into focused documentation files ([c53e312](https://github.com/etalab-ia/ragtime/commit/c53e312b011ba60d2e40cc7ad389a48f73cd70ba))
+* refactor README into focused documentation files ([68c06a7](https://github.com/etalab-ia/ragtime/commit/68c06a762179dbcf6df4f1a30643f8683bdc8cb2))
+* remove historical Issue 46 investigation files ([f35589b](https://github.com/etalab-ia/ragtime/commit/f35589b3de5fc7d703e1c301526c0959d43a1ba8))
+* update test plan to document config precedence for OPENAI_MODEL ([cbcbc1a](https://github.com/etalab-ia/ragtime/commit/cbcbc1a8d08d1e59490e82410c4c3fc6e64feb33))
+* update test plan to reflect automatic template regeneration ([a2bee94](https://github.com/etalab-ia/ragtime/commit/a2bee941d9733ce6ef11f1c206f1af44769edfe7))
+* update test plan to use just commands consistently ([3a0b838](https://github.com/etalab-ia/ragtime/commit/3a0b838466eb66b25bf91176140bc048c53179be))
+* use just run instead of raw uv commands in documentation ([6bfa9b3](https://github.com/etalab-ia/ragtime/commit/6bfa9b376568b67993c5db00ada781d38f951e09))
+* use just run instead of raw uv commands in documentation ([49f3c2d](https://github.com/etalab-ia/ragtime/commit/49f3c2ddcaa529c2af169691ffd181c69959b276))
 
-## [0.9.0](https://github.com/etalab-ia/rag-facile/compare/v0.8.0...v0.9.0) (2026-02-11)
+## [0.9.0](https://github.com/etalab-ia/ragtime/compare/v0.8.0...v0.9.0) (2026-02-11)
 
 
 ### Features
 
-* add config management CLI commands ([4b87b59](https://github.com/etalab-ia/rag-facile/commit/4b87b59c9468a8dfbbf28affee546a51f08b440b))
-* add rag-config package with complete RAG pipeline configuration ([2a48da4](https://github.com/etalab-ia/rag-facile/commit/2a48da40c281d0aa57ddc9e2edd091cae490b63c))
-* integrate config presets into workspace setup command ([657dc02](https://github.com/etalab-ia/rag-facile/commit/657dc028e3401612a0fa6d3baee2e05c605b1b08))
-* integrate config system into apps (Phase 4) ([4b6c2dc](https://github.com/etalab-ia/rag-facile/commit/4b6c2dcc9f817d9eb59bd06efba4ebb1895c5b0b))
-* integrate rag-config package into workspace generation ([dc58587](https://github.com/etalab-ia/rag-facile/commit/dc58587195cf90c784f07f66b815b364fa865a8e))
-* integrate rag-config system into workspace generation + module renaming ([7e44788](https://github.com/etalab-ia/rag-facile/commit/7e44788c42bbbc66ae50d6464c36ef37a9c0b572))
-* RAG configuration management system ([2a5974d](https://github.com/etalab-ia/rag-facile/commit/2a5974db8f4b69f7596652e3109818d968070fbe))
-* RAG Configuration System - Phases 4 & 5 (App Integration + Setup Integration) ([f5fce7a](https://github.com/etalab-ia/rag-facile/commit/f5fce7a997f1cdeb923c1fd62155c767a53255c3))
+* add config management CLI commands ([4b87b59](https://github.com/etalab-ia/ragtime/commit/4b87b59c9468a8dfbbf28affee546a51f08b440b))
+* add rag-config package with complete RAG pipeline configuration ([2a48da4](https://github.com/etalab-ia/ragtime/commit/2a48da40c281d0aa57ddc9e2edd091cae490b63c))
+* integrate config presets into workspace setup command ([657dc02](https://github.com/etalab-ia/ragtime/commit/657dc028e3401612a0fa6d3baee2e05c605b1b08))
+* integrate config system into apps (Phase 4) ([4b6c2dc](https://github.com/etalab-ia/ragtime/commit/4b6c2dcc9f817d9eb59bd06efba4ebb1895c5b0b))
+* integrate rag-config package into workspace generation ([dc58587](https://github.com/etalab-ia/ragtime/commit/dc58587195cf90c784f07f66b815b364fa865a8e))
+* integrate rag-config system into workspace generation + module renaming ([7e44788](https://github.com/etalab-ia/ragtime/commit/7e44788c42bbbc66ae50d6464c36ef37a9c0b572))
+* RAG configuration management system ([2a5974d](https://github.com/etalab-ia/ragtime/commit/2a5974db8f4b69f7596652e3109818d968070fbe))
+* RAG Configuration System - Phases 4 & 5 (App Integration + Setup Integration) ([f5fce7a](https://github.com/etalab-ia/ragtime/commit/f5fce7a997f1cdeb923c1fd62155c767a53255c3))
 
 
 ### Bug Fixes
 
-* address Gemini Code Assist review feedback ([d0d0d5d](https://github.com/etalab-ia/rag-facile/commit/d0d0d5d263f3fa07d974576985649b9754e884c6))
-* create .env file at workspace root in monorepo mode ([8ae7867](https://github.com/etalab-ia/rag-facile/commit/8ae786717f4ae2b69c7f641db1a859e40d1e6628))
-* move base URL to presets and remove setup prompt ([cfc65cc](https://github.com/etalab-ia/rag-facile/commit/cfc65cc29a91ec5ea17c5c90b6914b753798d463))
-* resolve ty type checking issues in setup and reflex app ([92f8c25](https://github.com/etalab-ia/rag-facile/commit/92f8c254e4bed900eb3d2f40bc3865264b622e0b))
-* set balanced preset as default selection in prompt ([8f054a5](https://github.com/etalab-ia/rag-facile/commit/8f054a5da0ae1176fe9dd1cdfe7ae9681452f3ad))
-* update test to expect new template name after module renaming ([1d5e916](https://github.com/etalab-ia/rag-facile/commit/1d5e9161eb5cf235df83608aed3e73e07ced814d))
-* update workspace generation for phase-based package structure ([8beb8d3](https://github.com/etalab-ia/rag-facile/commit/8beb8d3f392e18a0216042f7e85fa50fa67e3a99))
+* address Gemini Code Assist review feedback ([d0d0d5d](https://github.com/etalab-ia/ragtime/commit/d0d0d5d263f3fa07d974576985649b9754e884c6))
+* create .env file at workspace root in monorepo mode ([8ae7867](https://github.com/etalab-ia/ragtime/commit/8ae786717f4ae2b69c7f641db1a859e40d1e6628))
+* move base URL to presets and remove setup prompt ([cfc65cc](https://github.com/etalab-ia/ragtime/commit/cfc65cc29a91ec5ea17c5c90b6914b753798d463))
+* resolve ty type checking issues in setup and reflex app ([92f8c25](https://github.com/etalab-ia/ragtime/commit/92f8c254e4bed900eb3d2f40bc3865264b622e0b))
+* set balanced preset as default selection in prompt ([8f054a5](https://github.com/etalab-ia/ragtime/commit/8f054a5da0ae1176fe9dd1cdfe7ae9681452f3ad))
+* update test to expect new template name after module renaming ([1d5e916](https://github.com/etalab-ia/ragtime/commit/1d5e9161eb5cf235df83608aed3e73e07ced814d))
+* update workspace generation for phase-based package structure ([8beb8d3](https://github.com/etalab-ia/ragtime/commit/8beb8d3f392e18a0216042f7e85fa50fa67e3a99))
 
 
 ### Documentation
 
-* comprehensive documentation for RAG configuration system ([13c3043](https://github.com/etalab-ia/rag-facile/commit/13c30437f584e454718a51eb6fb546e02b43ad8b))
-* comprehensive documentation for RAG configuration system ([b7b0eec](https://github.com/etalab-ia/rag-facile/commit/b7b0eecb4e23300bbec1c322b3b3aaf054ac1d21))
-* translate French content to English and add config system documentation ([87f67cd](https://github.com/etalab-ia/rag-facile/commit/87f67cd8fed4dd85ff591af6fbdda6939c8f17ed))
+* comprehensive documentation for RAG configuration system ([13c3043](https://github.com/etalab-ia/ragtime/commit/13c30437f584e454718a51eb6fb546e02b43ad8b))
+* comprehensive documentation for RAG configuration system ([b7b0eec](https://github.com/etalab-ia/ragtime/commit/b7b0eecb4e23300bbec1c322b3b3aaf054ac1d21))
+* translate French content to English and add config system documentation ([87f67cd](https://github.com/etalab-ia/ragtime/commit/87f67cd8fed4dd85ff591af6fbdda6939c8f17ed))
 
-## [0.8.0](https://github.com/etalab-ia/rag-facile/compare/v0.7.0...v0.8.0) (2026-02-09)
+## [0.8.0](https://github.com/etalab-ia/ragtime/compare/v0.7.0...v0.8.0) (2026-02-09)
 
 
 ### Features
 
-* Add Albert Client SDK - Complete Python SDK for Albert API ([ebf3d55](https://github.com/etalab-ia/rag-facile/commit/ebf3d55fa603cf1f9fcfed0024dae6f646080d0f))
-* add albert-client package template for monorepo workspaces ([1e99698](https://github.com/etalab-ia/rag-facile/commit/1e9969868d0c3228cef8d04b76cd2e1c3975048f))
-* add albert-client SDK Phase 1 (core client + OpenAI passthrough) ([0424d2c](https://github.com/etalab-ia/rag-facile/commit/0424d2c1b8adf9f0eb6bcb9d3a2fcc35f28da5a1))
-* add OPENAI_API_KEY fallback for AlbertClient initialization ([418b5f2](https://github.com/etalab-ia/rag-facile/commit/418b5f233d3432ea8d331ec0a3c9158d589fe5f9))
-* implement Phase 2 (Search + Rerank) for Albert Client SDK ([675ad56](https://github.com/etalab-ia/rag-facile/commit/675ad56815574b385edd42042f379d84740ec592))
-* implement Phase 3 (Collections & Documents) for Albert Client SDK ([f7d29af](https://github.com/etalab-ia/rag-facile/commit/f7d29af15ae09bc1b5be3402331d382641a0b41a))
-* implement Phase 4 (Tools & Monitoring) for Albert Client SDK ([4b0abba](https://github.com/etalab-ia/rag-facile/commit/4b0abba2fe3cd0e0d6433f3915f31bd38ebe36d3))
+* Add Albert Client SDK - Complete Python SDK for Albert API ([ebf3d55](https://github.com/etalab-ia/ragtime/commit/ebf3d55fa603cf1f9fcfed0024dae6f646080d0f))
+* add albert-client package template for monorepo workspaces ([1e99698](https://github.com/etalab-ia/ragtime/commit/1e9969868d0c3228cef8d04b76cd2e1c3975048f))
+* add albert-client SDK Phase 1 (core client + OpenAI passthrough) ([0424d2c](https://github.com/etalab-ia/ragtime/commit/0424d2c1b8adf9f0eb6bcb9d3a2fcc35f28da5a1))
+* add OPENAI_API_KEY fallback for AlbertClient initialization ([418b5f2](https://github.com/etalab-ia/ragtime/commit/418b5f233d3432ea8d331ec0a3c9158d589fe5f9))
+* implement Phase 2 (Search + Rerank) for Albert Client SDK ([675ad56](https://github.com/etalab-ia/ragtime/commit/675ad56815574b385edd42042f379d84740ec592))
+* implement Phase 3 (Collections & Documents) for Albert Client SDK ([f7d29af](https://github.com/etalab-ia/ragtime/commit/f7d29af15ae09bc1b5be3402331d382641a0b41a))
+* implement Phase 4 (Tools & Monitoring) for Albert Client SDK ([4b0abba](https://github.com/etalab-ia/ragtime/commit/4b0abba2fe3cd0e0d6433f3915f31bd38ebe36d3))
 
 
 ### Bug Fixes
 
-* add albert-client to workspace dependencies and test dependencies ([8d405f8](https://github.com/etalab-ia/rag-facile/commit/8d405f8c4ef54915350ba87a4792475567e1b710))
-* bundle albert-client with CLI for standalone workspaces ([d36c744](https://github.com/etalab-ia/rag-facile/commit/d36c7445e64ee5fa06f4a1e7252042f306a980ea))
-* centralize ruff config and remove unused resources directory ([552d071](https://github.com/etalab-ia/rag-facile/commit/552d07105c097ce881e83b0946f1db2ef2ebb13f))
-* correct API usage in documentation examples ([122beaa](https://github.com/etalab-ia/rag-facile/commit/122beaaaee26265b58643682c6b11fdb61fc34ca))
-* regenerate templates with albert-client dependency ([094be96](https://github.com/etalab-ia/rag-facile/commit/094be96021a8c1e5e9fffd5f43a569af7b0c1d78))
-* rename app.py to match Reflex app_name requirement in standalone workspaces ([9c20691](https://github.com/etalab-ia/rag-facile/commit/9c2069187bbe548128487198a093aa2757df31c6))
-* use correct Albert API model aliases in documentation ([a9fcd03](https://github.com/etalab-ia/rag-facile/commit/a9fcd035e851f307a3576d04802cce1a28c85dca))
+* add albert-client to workspace dependencies and test dependencies ([8d405f8](https://github.com/etalab-ia/ragtime/commit/8d405f8c4ef54915350ba87a4792475567e1b710))
+* bundle albert-client with CLI for standalone workspaces ([d36c744](https://github.com/etalab-ia/ragtime/commit/d36c7445e64ee5fa06f4a1e7252042f306a980ea))
+* centralize ruff config and remove unused resources directory ([552d071](https://github.com/etalab-ia/ragtime/commit/552d07105c097ce881e83b0946f1db2ef2ebb13f))
+* correct API usage in documentation examples ([122beaa](https://github.com/etalab-ia/ragtime/commit/122beaaaee26265b58643682c6b11fdb61fc34ca))
+* regenerate templates with albert-client dependency ([094be96](https://github.com/etalab-ia/ragtime/commit/094be96021a8c1e5e9fffd5f43a569af7b0c1d78))
+* rename app.py to match Reflex app_name requirement in standalone workspaces ([9c20691](https://github.com/etalab-ia/ragtime/commit/9c2069187bbe548128487198a093aa2757df31c6))
+* use correct Albert API model aliases in documentation ([a9fcd03](https://github.com/etalab-ia/ragtime/commit/a9fcd035e851f307a3576d04802cce1a28c85dca))
 
 
 ### Documentation
 
-* add Albert Client SDK documentation ([eeb5d8d](https://github.com/etalab-ia/rag-facile/commit/eeb5d8d7332910812e10bc0862f4fecbd0eb7436))
-* add Albert Client SDK with audience-focused documentation ([6a3a51e](https://github.com/etalab-ia/rag-facile/commit/6a3a51e7e3c8126ca34ed08ec4054cded5ead16b))
-* improve type safety documentation in albert-client SDK ([dc7d2af](https://github.com/etalab-ia/rag-facile/commit/dc7d2afddf9de71b5fb289d5e6b453a93f6c299d))
+* add Albert Client SDK documentation ([eeb5d8d](https://github.com/etalab-ia/ragtime/commit/eeb5d8d7332910812e10bc0862f4fecbd0eb7436))
+* add Albert Client SDK with audience-focused documentation ([6a3a51e](https://github.com/etalab-ia/ragtime/commit/6a3a51e7e3c8126ca34ed08ec4054cded5ead16b))
+* improve type safety documentation in albert-client SDK ([dc7d2af](https://github.com/etalab-ia/ragtime/commit/dc7d2afddf9de71b5fb289d5e6b453a93f6c299d))
 
-## [0.7.0](https://github.com/etalab-ia/rag-facile/compare/v0.6.1...v0.7.0) (2026-02-07)
+## [0.7.0](https://github.com/etalab-ia/ragtime/compare/v0.6.1...v0.7.0) (2026-02-07)
 
 
 ### Features
 
-* add --version flag to rag-facile CLI ([daadefe](https://github.com/etalab-ia/rag-facile/commit/daadefe020b6f06c0dd9f166540d82ee16a3c5c3))
-* add just sync task to install dependencies and pre-commit hooks ([2e5dd71](https://github.com/etalab-ia/rag-facile/commit/2e5dd71ef385bc7ad87d4b665c27db2c69b2d5bb))
-* add proxy support to install script for corporate/restricted networks ([0a90cc3](https://github.com/etalab-ia/rag-facile/commit/0a90cc305b1747183b0dac12aa8f169008f54626))
-* add Windows support with proto as unified dependency manager ([5c0ee40](https://github.com/etalab-ia/rag-facile/commit/5c0ee403200d52ad1909d0c2e50fc565ea2ab56f))
-* add Windows support with proto as unified dependency manager ([6cd5300](https://github.com/etalab-ia/rag-facile/commit/6cd5300f3fee0362314f9e1c9b555e3279c90f04))
+* add --version flag to ragtime CLI ([daadefe](https://github.com/etalab-ia/ragtime/commit/daadefe020b6f06c0dd9f166540d82ee16a3c5c3))
+* add just sync task to install dependencies and pre-commit hooks ([2e5dd71](https://github.com/etalab-ia/ragtime/commit/2e5dd71ef385bc7ad87d4b665c27db2c69b2d5bb))
+* add proxy support to install script for corporate/restricted networks ([0a90cc3](https://github.com/etalab-ia/ragtime/commit/0a90cc305b1747183b0dac12aa8f169008f54626))
+* add Windows support with proto as unified dependency manager ([5c0ee40](https://github.com/etalab-ia/ragtime/commit/5c0ee403200d52ad1909d0c2e50fc565ea2ab56f))
+* add Windows support with proto as unified dependency manager ([6cd5300](https://github.com/etalab-ia/ragtime/commit/6cd5300f3fee0362314f9e1c9b555e3279c90f04))
 
 
 ### Bug Fixes
 
-* add .prototools to workspace templates and pin Python 3.13.11 ([0df9943](https://github.com/etalab-ia/rag-facile/commit/0df99431bc71aadcb7be5fb5caeac55ea8c0459d))
-* add comprehensive error handling for SSL certificate issues in proto installation ([75522f9](https://github.com/etalab-ia/rag-facile/commit/75522f967279d16f0ff216e22d2a066af88e6e2f))
-* add explicit permissions block to test-install workflow ([be62466](https://github.com/etalab-ia/rag-facile/commit/be624666be8f455232865c2280ae2a19dfdc83d7))
-* add fallback curl without SSL verification for corporate proxies ([6bc2e7e](https://github.com/etalab-ia/rag-facile/commit/6bc2e7e104846a0be045d05c0607a5e869fb8649))
-* add proto paths to GITHUB_PATH and force UTF-8 encoding on Windows ([a84d042](https://github.com/etalab-ia/rag-facile/commit/a84d0429a205c92a89deaa6c6f51a8facb0cebca))
-* add uv tools directory to PATH on Windows ([6a3654e](https://github.com/etalab-ia/rag-facile/commit/6a3654e3fd6c60abd32bdb9e5fd65265380050d8))
-* add verbose output and error logging to installer tests ([1c1c0e3](https://github.com/etalab-ia/rag-facile/commit/1c1c0e305b5b28ce46581aea1ce6abe6cd395bd4))
-* address review feedback on PR [#53](https://github.com/etalab-ia/rag-facile/issues/53) ([78e0710](https://github.com/etalab-ia/rag-facile/commit/78e07105190fd3b3c8ec39969cb1ff223fbbfb0f))
-* address review feedback on PR [#54](https://github.com/etalab-ia/rag-facile/issues/54) ([0be49f8](https://github.com/etalab-ia/rag-facile/commit/0be49f8222dd06038f8b6d983d0bb8647d9f0e06))
-* catch all exceptions when printing CLI banner ([8b0ed8b](https://github.com/etalab-ia/rag-facile/commit/8b0ed8bb16c0f151861888f57d8a121bb6ee86d9))
-* correct just plugin URL from moonrepo to Phault repository ([24e06af](https://github.com/etalab-ia/rag-facile/commit/24e06afc4dc953f498f3efb68ced26717c6bab7d))
-* export PATH to GitHub Actions environment for CI/CD ([eadf6b3](https://github.com/etalab-ia/rag-facile/commit/eadf6b32d92335f0a35580067de07a3244fa291d))
-* handle Windows encoding issues in CI and CLI ([e672345](https://github.com/etalab-ia/rag-facile/commit/e672345e2a03279f0897119ecdcb8d41e382bcd9))
-* improve error handling by downloading proto installer to temp file ([9016286](https://github.com/etalab-ia/rag-facile/commit/9016286f45514869f64a6435cb6a0b6e5e6572d4))
-* move proxy env vars to installer step to avoid checkout failures ([ee33c05](https://github.com/etalab-ia/rag-facile/commit/ee33c059a29b3105676a123b016af06a851514cd))
-* pass RAG_FACILE_BRANCH env var to installers in workflow ([5936cc5](https://github.com/etalab-ia/rag-facile/commit/5936cc514c1a3c2e9cd3cdb6b027d09a2603d486))
-* pin Python 3.13.11 across all toolchain configurations ([19f68b6](https://github.com/etalab-ia/rag-facile/commit/19f68b6c0b8060b841e2bd415a6a116e0de0530b))
-* preserve proxy environment variables when running proto installer ([f7271cc](https://github.com/etalab-ia/rag-facile/commit/f7271ccdd79e4177f294d24357d1154a77cce03b))
-* prevent install.sh from exiting when no proxy is detected ([7418f99](https://github.com/etalab-ia/rag-facile/commit/7418f99159578a3f125e2f4dda5ecafabc78c00c))
-* remove macOS Intel (macos-12) test - runners not available ([ba2a511](https://github.com/etalab-ia/rag-facile/commit/ba2a511c1f96a734053cf81d63afe5cbcbef2618))
-* remove nested PowerShell call in Windows CI test ([b61a826](https://github.com/etalab-ia/rag-facile/commit/b61a82663cc13ff78eb06a0ef2412155f0ecac12))
-* remove proxy simulation jobs from test-install workflow ([7eb2b9e](https://github.com/etalab-ia/rag-facile/commit/7eb2b9e1fdfaf2a7de4c9dcb55b6233c0baf1eea))
-* replace process substitution with file download for installer ([051698d](https://github.com/etalab-ia/rag-facile/commit/051698d89932aad5a5b6bd89fc3ae9296caaa492))
-* resolve issue [#46](https://github.com/etalab-ia/rag-facile/issues/46) - add proxy support for proto plugin installation ([c1aa693](https://github.com/etalab-ia/rag-facile/commit/c1aa693431af04f7278348be682981c12484b36b))
-* simplify test-install workflow to only verify tool installation ([2d313f8](https://github.com/etalab-ia/rag-facile/commit/2d313f81df3d5ec0a5e646fefb724f75adb9bfba))
-* source shell profile in workflow verification steps ([95761d5](https://github.com/etalab-ia/rag-facile/commit/95761d580855bfe0c29088604cd1ebb311687335))
-* update install script to reference current setup command ([c06a947](https://github.com/etalab-ia/rag-facile/commit/c06a947c5593a0ea36db6c2a8aa85468211787cc))
-* update install script to reference current setup command ([6ac8d99](https://github.com/etalab-ia/rag-facile/commit/6ac8d99464116745aabbec2c94515fc3d00edffa))
-* use correct GitHub raw content URL format with refs/heads ([93087e0](https://github.com/etalab-ia/rag-facile/commit/93087e0756f5bb0964ec9c28a16f2b0787713c2d))
-* use GITHUB_ENV to persist PATH across workflow steps ([64343cf](https://github.com/etalab-ia/rag-facile/commit/64343cf11a3da89c82b0555ffe0f9a75adb62476))
-* use GITHUB_PATH for uv tools directory in CI ([86b4d35](https://github.com/etalab-ia/rag-facile/commit/86b4d357528de0eafcdd817742eaa6d66702d3c3))
-* use github.head.ref for PR testing to avoid 404 errors ([5589820](https://github.com/etalab-ia/rag-facile/commit/558982041502d921e99859420aca837aee12ea47))
-* use static directory names in reflex-chat template for Windows compatibility ([87a4f1f](https://github.com/etalab-ia/rag-facile/commit/87a4f1fc5bb6b50660f2f0b6e5b898b0b0063d64))
-* use subexpression syntax for variable interpolation in PowerShell install script ([d0221e6](https://github.com/etalab-ia/rag-facile/commit/d0221e61e6365fd4ca05b92c7c2236e75b99cc55))
+* add .prototools to workspace templates and pin Python 3.13.11 ([0df9943](https://github.com/etalab-ia/ragtime/commit/0df99431bc71aadcb7be5fb5caeac55ea8c0459d))
+* add comprehensive error handling for SSL certificate issues in proto installation ([75522f9](https://github.com/etalab-ia/ragtime/commit/75522f967279d16f0ff216e22d2a066af88e6e2f))
+* add explicit permissions block to test-install workflow ([be62466](https://github.com/etalab-ia/ragtime/commit/be624666be8f455232865c2280ae2a19dfdc83d7))
+* add fallback curl without SSL verification for corporate proxies ([6bc2e7e](https://github.com/etalab-ia/ragtime/commit/6bc2e7e104846a0be045d05c0607a5e869fb8649))
+* add proto paths to GITHUB_PATH and force UTF-8 encoding on Windows ([a84d042](https://github.com/etalab-ia/ragtime/commit/a84d0429a205c92a89deaa6c6f51a8facb0cebca))
+* add uv tools directory to PATH on Windows ([6a3654e](https://github.com/etalab-ia/ragtime/commit/6a3654e3fd6c60abd32bdb9e5fd65265380050d8))
+* add verbose output and error logging to installer tests ([1c1c0e3](https://github.com/etalab-ia/ragtime/commit/1c1c0e305b5b28ce46581aea1ce6abe6cd395bd4))
+* address review feedback on PR [#53](https://github.com/etalab-ia/ragtime/issues/53) ([78e0710](https://github.com/etalab-ia/ragtime/commit/78e07105190fd3b3c8ec39969cb1ff223fbbfb0f))
+* address review feedback on PR [#54](https://github.com/etalab-ia/ragtime/issues/54) ([0be49f8](https://github.com/etalab-ia/ragtime/commit/0be49f8222dd06038f8b6d983d0bb8647d9f0e06))
+* catch all exceptions when printing CLI banner ([8b0ed8b](https://github.com/etalab-ia/ragtime/commit/8b0ed8bb16c0f151861888f57d8a121bb6ee86d9))
+* correct just plugin URL from moonrepo to Phault repository ([24e06af](https://github.com/etalab-ia/ragtime/commit/24e06afc4dc953f498f3efb68ced26717c6bab7d))
+* export PATH to GitHub Actions environment for CI/CD ([eadf6b3](https://github.com/etalab-ia/ragtime/commit/eadf6b32d92335f0a35580067de07a3244fa291d))
+* handle Windows encoding issues in CI and CLI ([e672345](https://github.com/etalab-ia/ragtime/commit/e672345e2a03279f0897119ecdcb8d41e382bcd9))
+* improve error handling by downloading proto installer to temp file ([9016286](https://github.com/etalab-ia/ragtime/commit/9016286f45514869f64a6435cb6a0b6e5e6572d4))
+* move proxy env vars to installer step to avoid checkout failures ([ee33c05](https://github.com/etalab-ia/ragtime/commit/ee33c059a29b3105676a123b016af06a851514cd))
+* pass RAG_FACILE_BRANCH env var to installers in workflow ([5936cc5](https://github.com/etalab-ia/ragtime/commit/5936cc514c1a3c2e9cd3cdb6b027d09a2603d486))
+* pin Python 3.13.11 across all toolchain configurations ([19f68b6](https://github.com/etalab-ia/ragtime/commit/19f68b6c0b8060b841e2bd415a6a116e0de0530b))
+* preserve proxy environment variables when running proto installer ([f7271cc](https://github.com/etalab-ia/ragtime/commit/f7271ccdd79e4177f294d24357d1154a77cce03b))
+* prevent install.sh from exiting when no proxy is detected ([7418f99](https://github.com/etalab-ia/ragtime/commit/7418f99159578a3f125e2f4dda5ecafabc78c00c))
+* remove macOS Intel (macos-12) test - runners not available ([ba2a511](https://github.com/etalab-ia/ragtime/commit/ba2a511c1f96a734053cf81d63afe5cbcbef2618))
+* remove nested PowerShell call in Windows CI test ([b61a826](https://github.com/etalab-ia/ragtime/commit/b61a82663cc13ff78eb06a0ef2412155f0ecac12))
+* remove proxy simulation jobs from test-install workflow ([7eb2b9e](https://github.com/etalab-ia/ragtime/commit/7eb2b9e1fdfaf2a7de4c9dcb55b6233c0baf1eea))
+* replace process substitution with file download for installer ([051698d](https://github.com/etalab-ia/ragtime/commit/051698d89932aad5a5b6bd89fc3ae9296caaa492))
+* resolve issue [#46](https://github.com/etalab-ia/ragtime/issues/46) - add proxy support for proto plugin installation ([c1aa693](https://github.com/etalab-ia/ragtime/commit/c1aa693431af04f7278348be682981c12484b36b))
+* simplify test-install workflow to only verify tool installation ([2d313f8](https://github.com/etalab-ia/ragtime/commit/2d313f81df3d5ec0a5e646fefb724f75adb9bfba))
+* source shell profile in workflow verification steps ([95761d5](https://github.com/etalab-ia/ragtime/commit/95761d580855bfe0c29088604cd1ebb311687335))
+* update install script to reference current setup command ([c06a947](https://github.com/etalab-ia/ragtime/commit/c06a947c5593a0ea36db6c2a8aa85468211787cc))
+* update install script to reference current setup command ([6ac8d99](https://github.com/etalab-ia/ragtime/commit/6ac8d99464116745aabbec2c94515fc3d00edffa))
+* use correct GitHub raw content URL format with refs/heads ([93087e0](https://github.com/etalab-ia/ragtime/commit/93087e0756f5bb0964ec9c28a16f2b0787713c2d))
+* use GITHUB_ENV to persist PATH across workflow steps ([64343cf](https://github.com/etalab-ia/ragtime/commit/64343cf11a3da89c82b0555ffe0f9a75adb62476))
+* use GITHUB_PATH for uv tools directory in CI ([86b4d35](https://github.com/etalab-ia/ragtime/commit/86b4d357528de0eafcdd817742eaa6d66702d3c3))
+* use github.head.ref for PR testing to avoid 404 errors ([5589820](https://github.com/etalab-ia/ragtime/commit/558982041502d921e99859420aca837aee12ea47))
+* use static directory names in reflex-chat template for Windows compatibility ([87a4f1f](https://github.com/etalab-ia/ragtime/commit/87a4f1fc5bb6b50660f2f0b6e5b898b0b0063d64))
+* use subexpression syntax for variable interpolation in PowerShell install script ([d0221e6](https://github.com/etalab-ia/ragtime/commit/d0221e61e6365fd4ca05b92c7c2236e75b99cc55))
 
 
 ### Documentation
 
-* docs:  ([3064ed2](https://github.com/etalab-ia/rag-facile/commit/3064ed21f0ea4d2c53fa045735e1279f4abfc8b9))
-* add comprehensive Windows support documentation ([871e8fd](https://github.com/etalab-ia/rag-facile/commit/871e8fd6c61cf8294178868072307143573f508a))
-* add Linux and macOS CI/CD testing guides with comprehensive workflow ([a2b9189](https://github.com/etalab-ia/rag-facile/commit/a2b9189019b51ffdfe268bac460fdea0717e002c))
-* align documentation wording on just and moon commands ([d8f8a66](https://github.com/etalab-ia/rag-facile/commit/d8f8a66cb02c4901679e9c8558f316865ec5deb9))
-* align documentation wording on just and moon commands ([581feb8](https://github.com/etalab-ia/rag-facile/commit/581feb89f58126148ac7b86ea8b044033e687dc2))
-* reorganize documentation into dedicated docs directory ([1e43a1f](https://github.com/etalab-ia/rag-facile/commit/1e43a1f1d1b11f632c7e6dcf471b1397edaf6f99))
-* update AGENTS.md with comprehensive current project knowledge ([cf15658](https://github.com/etalab-ia/rag-facile/commit/cf15658ff58ae592b3a119619cfa8b36c54c51b0))
+* docs:  ([3064ed2](https://github.com/etalab-ia/ragtime/commit/3064ed21f0ea4d2c53fa045735e1279f4abfc8b9))
+* add comprehensive Windows support documentation ([871e8fd](https://github.com/etalab-ia/ragtime/commit/871e8fd6c61cf8294178868072307143573f508a))
+* add Linux and macOS CI/CD testing guides with comprehensive workflow ([a2b9189](https://github.com/etalab-ia/ragtime/commit/a2b9189019b51ffdfe268bac460fdea0717e002c))
+* align documentation wording on just and moon commands ([d8f8a66](https://github.com/etalab-ia/ragtime/commit/d8f8a66cb02c4901679e9c8558f316865ec5deb9))
+* align documentation wording on just and moon commands ([581feb8](https://github.com/etalab-ia/ragtime/commit/581feb89f58126148ac7b86ea8b044033e687dc2))
+* reorganize documentation into dedicated docs directory ([1e43a1f](https://github.com/etalab-ia/ragtime/commit/1e43a1f1d1b11f632c7e6dcf471b1397edaf6f99))
+* update AGENTS.md with comprehensive current project knowledge ([cf15658](https://github.com/etalab-ia/ragtime/commit/cf15658ff58ae592b3a119619cfa8b36c54c51b0))
 
-## [0.6.1](https://github.com/etalab-ia/rag-facile/compare/v0.6.0...v0.6.1) (2026-02-05)
+## [0.6.1](https://github.com/etalab-ia/ragtime/compare/v0.6.0...v0.6.1) (2026-02-05)
 
 
 ### Bug Fixes
 
-* update remaining eval.providers references in test_document_preprocessor.py ([f0a423f](https://github.com/etalab-ia/rag-facile/commit/f0a423f1d1f5de28b07a0022a93edad649b8e29a))
+* update remaining eval.providers references in test_document_preprocessor.py ([f0a423f](https://github.com/etalab-ia/ragtime/commit/f0a423f1d1f5de28b07a0022a93edad649b8e29a))
 
-## [0.6.0](https://github.com/etalab-ia/rag-facile/compare/v0.5.0...v0.6.0) (2026-02-04)
+## [0.6.0](https://github.com/etalab-ia/ragtime/compare/v0.5.0...v0.6.0) (2026-02-04)
 
 
 ### Features
 
-* add --debug flag and strengthen Albert sample count requirement ([a2a85d3](https://github.com/etalab-ia/rag-facile/commit/a2a85d30d292765e1522bfffc2cb1086b316ceb8))
-* add Albert API provider for eval generate command ([467f8be](https://github.com/etalab-ia/rag-facile/commit/467f8be563b68cb3bd22f32f1ba75aa4b52407a7))
-* add comprehensive logging for provider interactions and debugging ([a6d5f14](https://github.com/etalab-ia/rag-facile/commit/a6d5f146194cafd70eb151403c1642cbea8bfa2d))
-* add debug output for provider IDs during eval generate ([52e48d7](https://github.com/etalab-ia/rag-facile/commit/52e48d7ae4a509a9332ed1c39430bad236443eaf))
-* add document preprocessing with PDF extraction for eval providers ([e97504b](https://github.com/etalab-ia/rag-facile/commit/e97504b0af3a12a9dbfc6f71802738fb0b50583f))
-* add new PDF sample files for testing and demonstration purposes. ([da9ea82](https://github.com/etalab-ia/rag-facile/commit/da9ea826e218492165082063461ae52b69bbb0e7))
-* comprehensive eval generate improvements (PDF extraction, logging, debug flag) ([a6e431a](https://github.com/etalab-ia/rag-facile/commit/a6e431a75e7eeb722740c44442894a554c56a25c))
-* **eval:** add Data Foundry synthetic Q/A generation ([6371225](https://github.com/etalab-ia/rag-facile/commit/63712250a8ea6883aff5caddeea0979e66b0e2cc))
-* **eval:** add Data Foundry synthetic Q/A generation ([0fc3f4a](https://github.com/etalab-ia/rag-facile/commit/0fc3f4aa77a42e96c23e4f01a5f2927c3f924048))
+* add --debug flag and strengthen Albert sample count requirement ([a2a85d3](https://github.com/etalab-ia/ragtime/commit/a2a85d30d292765e1522bfffc2cb1086b316ceb8))
+* add Albert API provider for eval generate command ([467f8be](https://github.com/etalab-ia/ragtime/commit/467f8be563b68cb3bd22f32f1ba75aa4b52407a7))
+* add comprehensive logging for provider interactions and debugging ([a6d5f14](https://github.com/etalab-ia/ragtime/commit/a6d5f146194cafd70eb151403c1642cbea8bfa2d))
+* add debug output for provider IDs during eval generate ([52e48d7](https://github.com/etalab-ia/ragtime/commit/52e48d7ae4a509a9332ed1c39430bad236443eaf))
+* add document preprocessing with PDF extraction for eval providers ([e97504b](https://github.com/etalab-ia/ragtime/commit/e97504b0af3a12a9dbfc6f71802738fb0b50583f))
+* add new PDF sample files for testing and demonstration purposes. ([da9ea82](https://github.com/etalab-ia/ragtime/commit/da9ea826e218492165082063461ae52b69bbb0e7))
+* comprehensive eval generate improvements (PDF extraction, logging, debug flag) ([a6e431a](https://github.com/etalab-ia/ragtime/commit/a6e431a75e7eeb722740c44442894a554c56a25c))
+* **eval:** add Data Foundry synthetic Q/A generation ([6371225](https://github.com/etalab-ia/ragtime/commit/63712250a8ea6883aff5caddeea0979e66b0e2cc))
+* **eval:** add Data Foundry synthetic Q/A generation ([0fc3f4a](https://github.com/etalab-ia/ragtime/commit/0fc3f4aa77a42e96c23e4f01a5f2927c3f924048))
 
 
 ### Bug Fixes
 
-* **eval:** delete folder after generation to avoid storage limits ([2f53765](https://github.com/etalab-ia/rag-facile/commit/2f5376520cfbdce9ecfc258b7e424f07af0beb40))
-* remove extra blank lines in cli README ([fc3eb90](https://github.com/etalab-ia/rag-facile/commit/fc3eb9079acfdc72ac7ee995168380d2db24f0d8))
-* remove search and sources (list) commands from eval ([d171427](https://github.com/etalab-ia/rag-facile/commit/d1714277615370f7be1719427290d082e48cecb0))
-* resolve ruff formatting issues ([b457b5c](https://github.com/etalab-ia/rag-facile/commit/b457b5ccde42421337f791aee76a31b6091cb494))
-* strengthen Albert provider prompt to enforce JSONL-only output ([d735430](https://github.com/etalab-ia/rag-facile/commit/d735430f1740718449b2eeb50612e3bc4526baa5))
-* strengthen Letta provider prompt to enforce JSONL-only output ([c6f1bba](https://github.com/etalab-ia/rag-facile/commit/c6f1bbae1474eb8b1829f95beb3fd791c4c392a3))
+* **eval:** delete folder after generation to avoid storage limits ([2f53765](https://github.com/etalab-ia/ragtime/commit/2f5376520cfbdce9ecfc258b7e424f07af0beb40))
+* remove extra blank lines in cli README ([fc3eb90](https://github.com/etalab-ia/ragtime/commit/fc3eb9079acfdc72ac7ee995168380d2db24f0d8))
+* remove search and sources (list) commands from eval ([d171427](https://github.com/etalab-ia/ragtime/commit/d1714277615370f7be1719427290d082e48cecb0))
+* resolve ruff formatting issues ([b457b5c](https://github.com/etalab-ia/ragtime/commit/b457b5ccde42421337f791aee76a31b6091cb494))
+* strengthen Albert provider prompt to enforce JSONL-only output ([d735430](https://github.com/etalab-ia/ragtime/commit/d735430f1740718449b2eeb50612e3bc4526baa5))
+* strengthen Letta provider prompt to enforce JSONL-only output ([c6f1bba](https://github.com/etalab-ia/ragtime/commit/c6f1bbae1474eb8b1829f95beb3fd791c4c392a3))
 
 
 ### Performance Improvements
 
-* **eval:** use buffer for efficient streaming JSON parsing ([58fad11](https://github.com/etalab-ia/rag-facile/commit/58fad11adadf032c5a296923406b4086518807cb))
+* **eval:** use buffer for efficient streaming JSON parsing ([58fad11](https://github.com/etalab-ia/ragtime/commit/58fad11adadf032c5a296923406b4086518807cb))
 
 
 ### Documentation
 
-* add Albert API provider documentation ([b1f56d4](https://github.com/etalab-ia/rag-facile/commit/b1f56d45197ee81ff12111a65dad9f612afb1ea4))
-* add eval generate command documentation ([027cb19](https://github.com/etalab-ia/rag-facile/commit/027cb19f5c445279ce996769648b474ec1a9c6c6))
-* update documentation for eval generate improvements ([041b8fc](https://github.com/etalab-ia/rag-facile/commit/041b8fcfb31f00fd00144a3ec805c174887633b4))
+* add Albert API provider documentation ([b1f56d4](https://github.com/etalab-ia/ragtime/commit/b1f56d45197ee81ff12111a65dad9f612afb1ea4))
+* add eval generate command documentation ([027cb19](https://github.com/etalab-ia/ragtime/commit/027cb19f5c445279ce996769648b474ec1a9c6c6))
+* update documentation for eval generate improvements ([041b8fc](https://github.com/etalab-ia/ragtime/commit/041b8fcfb31f00fd00144a3ec805c174887633b4))
 
-## [0.5.0](https://github.com/etalab-ia/rag-facile/compare/v0.4.0...v0.5.0) (2026-02-03)
-
-
-### Features
-
-* add dataset filtering by task and language to search commands ([bc5c52d](https://github.com/etalab-ia/rag-facile/commit/bc5c52d48cc9bec6daa88a6dfacf17176319bfcb))
-* add dataset filtering by task and language to search commands ([f3f95e2](https://github.com/etalab-ia/rag-facile/commit/f3f95e2f955d8cc3a75ac57e9f7d7b95e18ee4ce))
-
-
-### Bug Fixes
-
-* handle edge cases and follow PEP 8 in CLI ([b3cd4e3](https://github.com/etalab-ia/rag-facile/commit/b3cd4e3da31533a475744c08cd0853896fd573e7))
-* remove duplicate 0.4.0 from CHANGELOG ([1f903dd](https://github.com/etalab-ia/rag-facile/commit/1f903dd17248e2a060ec1df01f0436498dfe14b4))
-* show help when subcommands are missing ([bc3e862](https://github.com/etalab-ia/rag-facile/commit/bc3e862e7ed9419bd320c3363cfb52a1b3d23ac7))
-
-## [0.4.0](https://github.com/etalab-ia/rag-facile/compare/v0.3.0...v0.4.0) (2026-02-03)
+## [0.5.0](https://github.com/etalab-ia/ragtime/compare/v0.4.0...v0.5.0) (2026-02-03)
 
 
 ### Features
 
-* add standalone project structure option for simpler setup ([962ebd2](https://github.com/etalab-ia/rag-facile/commit/962ebd235b593da28764bb84a58d79e311a05209))
+* add dataset filtering by task and language to search commands ([bc5c52d](https://github.com/etalab-ia/ragtime/commit/bc5c52d48cc9bec6daa88a6dfacf17176319bfcb))
+* add dataset filtering by task and language to search commands ([f3f95e2](https://github.com/etalab-ia/ragtime/commit/f3f95e2f955d8cc3a75ac57e9f7d7b95e18ee4ce))
 
 
 ### Bug Fixes
 
-* ask project structure before frontend selection ([816c046](https://github.com/etalab-ia/rag-facile/commit/816c04662efb7f7f653505138791765a24d14ccf))
-* make standalone test more robust for CI ([a0f89e3](https://github.com/etalab-ia/rag-facile/commit/a0f89e309afed26661eb45df28c8842dfaa3302b))
+* handle edge cases and follow PEP 8 in CLI ([b3cd4e3](https://github.com/etalab-ia/ragtime/commit/b3cd4e3da31533a475744c08cd0853896fd573e7))
+* remove duplicate 0.4.0 from CHANGELOG ([1f903dd](https://github.com/etalab-ia/ragtime/commit/1f903dd17248e2a060ec1df01f0436498dfe14b4))
+* show help when subcommands are missing ([bc3e862](https://github.com/etalab-ia/ragtime/commit/bc3e862e7ed9419bd320c3363cfb52a1b3d23ac7))
+
+## [0.4.0](https://github.com/etalab-ia/ragtime/compare/v0.3.0...v0.4.0) (2026-02-03)
+
+
+### Features
+
+* add standalone project structure option for simpler setup ([962ebd2](https://github.com/etalab-ia/ragtime/commit/962ebd235b593da28764bb84a58d79e311a05209))
+
+
+### Bug Fixes
+
+* ask project structure before frontend selection ([816c046](https://github.com/etalab-ia/ragtime/commit/816c04662efb7f7f653505138791765a24d14ccf))
+* make standalone test more robust for CI ([a0f89e3](https://github.com/etalab-ia/ragtime/commit/a0f89e309afed26661eb45df28c8842dfaa3302b))
 
 
 ### Documentation
 
-* add project structure comparison (Simple vs Monorepo) ([9a21910](https://github.com/etalab-ia/rag-facile/commit/9a219105a986d412e08606b73b7b19a41e809282))
+* add project structure comparison (Simple vs Monorepo) ([9a21910](https://github.com/etalab-ia/ragtime/commit/9a219105a986d412e08606b73b7b19a41e809282))
 
-## [0.3.0](https://github.com/etalab-ia/rag-facile/compare/v0.2.0...v0.3.0) (2026-02-03)
+## [0.3.0](https://github.com/etalab-ia/ragtime/compare/v0.2.0...v0.3.0) (2026-02-03)
 
 
 ### Features
 
-* Add Albert API integration and update project documentation for simplified setup with `just` commands. ([5ba73a3](https://github.com/etalab-ia/rag-facile/commit/5ba73a33373dff8645a8108e7241a771cb5e08ef))
-* add bootstrap installer and auto-download templates ([66a2015](https://github.com/etalab-ia/rag-facile/commit/66a2015ab374cd607d1b098db800d7479d91dcd3))
-* add bootstrap installer and bundle templates in CLI ([c876a4e](https://github.com/etalab-ia/rag-facile/commit/c876a4e935d5072d4485dae4a50547cf8a81bc11))
-* add chainlit-chat template and generator ([abfb788](https://github.com/etalab-ia/rag-facile/commit/abfb788876b3086b87b76926b76d91a83a1a10e5))
-* Add default recipe to justfiles to display help ([eb27ecf](https://github.com/etalab-ia/rag-facile/commit/eb27ecf873dfb6adbbe95898486dddda5baa412c))
-* add direnv configuration ([b5cb2a7](https://github.com/etalab-ia/rag-facile/commit/b5cb2a72148f682448b5332da6a1abd061aeaba6))
-* add direnv configuration and remove .envrc from gitignore. ([d2df794](https://github.com/etalab-ia/rag-facile/commit/d2df7944fe439eb1c667b3000ab4e5e23fd0c073))
-* add gritql template generation for chainlit-chat ([0075244](https://github.com/etalab-ia/rag-facile/commit/00752442b59e38743ff02ea64de5811608c6a8c1))
-* add just commands for template generation and instantiation ([1f2619d](https://github.com/etalab-ia/rag-facile/commit/1f2619db30dc1a29f665b5b5950e5544f9966d53))
-* add justfile to run reflex-chat ([a1ac644](https://github.com/etalab-ia/rag-facile/commit/a1ac644fb18dc0b3df9c396a03e8053ea7289255))
-* add moon tasks, Justfile, and CONTRIBUTING.md ([0d07041](https://github.com/etalab-ia/rag-facile/commit/0d07041a0d73c86281cb0007eb86b91e9ea4d4f2))
-* add reflex-chat app and downgrade to Python 3.13 ([7395391](https://github.com/etalab-ia/rag-facile/commit/7395391aeab4acc28494cd3c4a79b0f2c19c1b00))
-* add reflex-chat application and Albert API integration ([aa8be55](https://github.com/etalab-ia/rag-facile/commit/aa8be55eca1b8ccd58d91cd5eec7269e479ab9ba))
-* Add script to automatically open browser to localhost:3000 and integrate it into the `dev` task in `moon.yml`. ([1858c6a](https://github.com/etalab-ia/rag-facile/commit/1858c6a328d76975ec04c385d09a0a023e43a1d9))
-* auto-install proto and moon if not present ([4aea431](https://github.com/etalab-ia/rag-facile/commit/4aea4316944822b3f63de46992d4684313b1edb9))
-* auto-run uv sync and start dev server after generation ([92d0090](https://github.com/etalab-ia/rag-facile/commit/92d00901e2d66ee1e903861ce3c6552afd8fc531))
-* bundle templates in CLI package distribution ([6408718](https://github.com/etalab-ia/rag-facile/commit/6408718d8902f0c13684e5d88ff229898758e19d))
-* complete rf generate workspace command ([06a7cae](https://github.com/etalab-ia/rag-facile/commit/06a7cae9bbea65f4bedbf475ba8b9049b087721c))
-* Enhance `create-app` justfile recipe to normalize app type inputs and support shorthands. ([ccc40b8](https://github.com/etalab-ia/rag-facile/commit/ccc40b856e3d301bde9479f8fd8cc5db45385749))
-* extract pdf-context package and fix templates ([9cac265](https://github.com/etalab-ia/rag-facile/commit/9cac2657e3d441ab7f5c6dc9e98b545f90fce527))
-* extract pdf-context package and fix templates ([fd021ee](https://github.com/etalab-ia/rag-facile/commit/fd021eeef2d283996e58c730a8af705ead5d8886))
-* generalize hybrid codemod pipeline to support multiple apps ([4dfff91](https://github.com/etalab-ia/rag-facile/commit/4dfff914cb65adb44cdfb57126577e0a5bb90056))
-* implement chainlit-chat and project cleanup ([5d34133](https://github.com/etalab-ia/rag-facile/commit/5d341334b5779f7315eab362b48551345b61a87e))
-* implement chainlit-chat app, update AGENTS.md, and rename project to rag-facile ([afe1d9c](https://github.com/etalab-ia/rag-facile/commit/afe1d9c4b17d488929d78b388719e337cb531676))
-* implement hybrid Factory + Tera architecture for modular template generation ([fb8e0db](https://github.com/etalab-ia/rag-facile/commit/fb8e0db7d6cbeb4be3006dcc2e7ad82db7d42ef4))
-* implement hybrid LibCST + ast-grep pipeline for chainlit-chat ([6634c86](https://github.com/etalab-ia/rag-facile/commit/6634c86c9f59813ee14f9d922d47bc0db29842e3))
-* implement hybrid LibCST + ast-grep pipeline for template generation ([ba385ba](https://github.com/etalab-ia/rag-facile/commit/ba385ba275932dc158f504b684ed47931b5eb8cf))
-* implement Init + Patch architecture for workspace generation ([7d8ff6a](https://github.com/etalab-ia/rag-facile/commit/7d8ff6a5cfe4e9c144dc5404d78b1300792f4d5f))
-* Implement PDF upload and context integration for the Reflex chat application. ([492b051](https://github.com/etalab-ia/rag-facile/commit/492b0515ca08caa43aaf85bd1d525fbbe03f1942))
-* Implement UI for displaying attached files in the chat input and refine the action bar's styling and layout. ([16b6318](https://github.com/etalab-ia/rag-facile/commit/16b63188fe9af9d53441e6a2bd50501892e9dfc8))
-* Initial RAG starter kit setup ([80ce74e](https://github.com/etalab-ia/rag-facile/commit/80ce74ea33d62580b2fd6edb46d56ba65b62db66))
-* Initial setup of RAG starter kit (v0.1.0) ([6135ebb](https://github.com/etalab-ia/rag-facile/commit/6135ebb283fa0c3baf3fe23bf4fbc1a72a45b42c))
-* integrate release-please for unified monorepo versioning ([e703ff1](https://github.com/etalab-ia/rag-facile/commit/e703ff18e7710fa12e9e48c1b8f9e01cfc7e35b3))
-* integrate release-please for unified monorepo versioning ([89cc602](https://github.com/etalab-ia/rag-facile/commit/89cc60278f2da72fed737bff0cfeec3299e33a48))
-* make CLI installable via uv tool install ([27db58a](https://github.com/etalab-ia/rag-facile/commit/27db58a871f0cff1da0c8b8a19840c4eea5333bd))
-* make CLI installable via uv tool install ([63ec4ab](https://github.com/etalab-ia/rag-facile/commit/63ec4ab2cb4a993c6b9914db098ce03e0eb0867c))
-* parameterize env vars and fix grit usage ([72be38a](https://github.com/etalab-ia/rag-facile/commit/72be38a8723e2295f1697fe4842be0469488cfa0))
-* prompt for env config and create .env file during generation ([6219006](https://github.com/etalab-ia/rag-facile/commit/62190067ad9df600b3997b1e3f9bcc83e4bce688))
-* refactor template generation cli for multi-app support ([88990d2](https://github.com/etalab-ia/rag-facile/commit/88990d2c0bfccfbe2aa57b4438f01dce29d58d2f))
-* **reflex-chat:** Add PDF Context Support and Refined UI ([13c51f5](https://github.com/etalab-ia/rag-facile/commit/13c51f5678083aada30bd242651202ed4d7bcd90))
-* **reflex-chat:** add python-dotenv for .env file loading ([7c49d0d](https://github.com/etalab-ia/rag-facile/commit/7c49d0d63e665671e2816148ec011c995704ec25))
-* rename CLI to rag-facile and add ASCII banner ([01a0165](https://github.com/etalab-ia/rag-facile/commit/01a01656fc140f8a4be1b21dcf8166eddb2730d9))
-* rename CLI to rag-facile and add ASCII banner ([fdf917b](https://github.com/etalab-ia/rag-facile/commit/fdf917b5d51c5ab42b8365015bcc29031c624008))
-* rf generate workspace - one command to running RAG app ([d520536](https://github.com/etalab-ia/rag-facile/commit/d520536882b34ab853cf2d43da028b05b71df192))
-* support RAG_FACILE_BRANCH env var in install.sh ([215ff5a](https://github.com/etalab-ia/rag-facile/commit/215ff5af47896836056954ba6b82a0c9ca998ddf))
-* support reflex-chat in template generation CLI ([06040e1](https://github.com/etalab-ia/rag-facile/commit/06040e1cb891c786ae32c6de695653320d5b8ff5))
-* **templates:** support env var API keys and fix uv sync warning ([a26a598](https://github.com/etalab-ia/rag-facile/commit/a26a59862c7bedd95840673ecb800fdc9e771b95))
-* **templates:** update reflex-chat template with parameterized imports and jinja extensions ([cb8ec7f](https://github.com/etalab-ia/rag-facile/commit/cb8ec7f6cbfd95934439472cfc0b0f98ee97e4e5))
-* update default OpenAI API key help message, base URL, and model to Albert API endpoints. ([519e96f](https://github.com/etalab-ia/rag-facile/commit/519e96f4033cfc656e314d04fb392c210bb83521))
+* Add Albert API integration and update project documentation for simplified setup with `just` commands. ([5ba73a3](https://github.com/etalab-ia/ragtime/commit/5ba73a33373dff8645a8108e7241a771cb5e08ef))
+* add bootstrap installer and auto-download templates ([66a2015](https://github.com/etalab-ia/ragtime/commit/66a2015ab374cd607d1b098db800d7479d91dcd3))
+* add bootstrap installer and bundle templates in CLI ([c876a4e](https://github.com/etalab-ia/ragtime/commit/c876a4e935d5072d4485dae4a50547cf8a81bc11))
+* add chainlit-chat template and generator ([abfb788](https://github.com/etalab-ia/ragtime/commit/abfb788876b3086b87b76926b76d91a83a1a10e5))
+* Add default recipe to justfiles to display help ([eb27ecf](https://github.com/etalab-ia/ragtime/commit/eb27ecf873dfb6adbbe95898486dddda5baa412c))
+* add direnv configuration ([b5cb2a7](https://github.com/etalab-ia/ragtime/commit/b5cb2a72148f682448b5332da6a1abd061aeaba6))
+* add direnv configuration and remove .envrc from gitignore. ([d2df794](https://github.com/etalab-ia/ragtime/commit/d2df7944fe439eb1c667b3000ab4e5e23fd0c073))
+* add gritql template generation for chainlit-chat ([0075244](https://github.com/etalab-ia/ragtime/commit/00752442b59e38743ff02ea64de5811608c6a8c1))
+* add just commands for template generation and instantiation ([1f2619d](https://github.com/etalab-ia/ragtime/commit/1f2619db30dc1a29f665b5b5950e5544f9966d53))
+* add justfile to run reflex-chat ([a1ac644](https://github.com/etalab-ia/ragtime/commit/a1ac644fb18dc0b3df9c396a03e8053ea7289255))
+* add moon tasks, Justfile, and CONTRIBUTING.md ([0d07041](https://github.com/etalab-ia/ragtime/commit/0d07041a0d73c86281cb0007eb86b91e9ea4d4f2))
+* add reflex-chat app and downgrade to Python 3.13 ([7395391](https://github.com/etalab-ia/ragtime/commit/7395391aeab4acc28494cd3c4a79b0f2c19c1b00))
+* add reflex-chat application and Albert API integration ([aa8be55](https://github.com/etalab-ia/ragtime/commit/aa8be55eca1b8ccd58d91cd5eec7269e479ab9ba))
+* Add script to automatically open browser to localhost:3000 and integrate it into the `dev` task in `moon.yml`. ([1858c6a](https://github.com/etalab-ia/ragtime/commit/1858c6a328d76975ec04c385d09a0a023e43a1d9))
+* auto-install proto and moon if not present ([4aea431](https://github.com/etalab-ia/ragtime/commit/4aea4316944822b3f63de46992d4684313b1edb9))
+* auto-run uv sync and start dev server after generation ([92d0090](https://github.com/etalab-ia/ragtime/commit/92d00901e2d66ee1e903861ce3c6552afd8fc531))
+* bundle templates in CLI package distribution ([6408718](https://github.com/etalab-ia/ragtime/commit/6408718d8902f0c13684e5d88ff229898758e19d))
+* complete rf generate workspace command ([06a7cae](https://github.com/etalab-ia/ragtime/commit/06a7cae9bbea65f4bedbf475ba8b9049b087721c))
+* Enhance `create-app` justfile recipe to normalize app type inputs and support shorthands. ([ccc40b8](https://github.com/etalab-ia/ragtime/commit/ccc40b856e3d301bde9479f8fd8cc5db45385749))
+* extract pdf-context package and fix templates ([9cac265](https://github.com/etalab-ia/ragtime/commit/9cac2657e3d441ab7f5c6dc9e98b545f90fce527))
+* extract pdf-context package and fix templates ([fd021ee](https://github.com/etalab-ia/ragtime/commit/fd021eeef2d283996e58c730a8af705ead5d8886))
+* generalize hybrid codemod pipeline to support multiple apps ([4dfff91](https://github.com/etalab-ia/ragtime/commit/4dfff914cb65adb44cdfb57126577e0a5bb90056))
+* implement chainlit-chat and project cleanup ([5d34133](https://github.com/etalab-ia/ragtime/commit/5d341334b5779f7315eab362b48551345b61a87e))
+* implement chainlit-chat app, update AGENTS.md, and rename project to ragtime ([afe1d9c](https://github.com/etalab-ia/ragtime/commit/afe1d9c4b17d488929d78b388719e337cb531676))
+* implement hybrid Factory + Tera architecture for modular template generation ([fb8e0db](https://github.com/etalab-ia/ragtime/commit/fb8e0db7d6cbeb4be3006dcc2e7ad82db7d42ef4))
+* implement hybrid LibCST + ast-grep pipeline for chainlit-chat ([6634c86](https://github.com/etalab-ia/ragtime/commit/6634c86c9f59813ee14f9d922d47bc0db29842e3))
+* implement hybrid LibCST + ast-grep pipeline for template generation ([ba385ba](https://github.com/etalab-ia/ragtime/commit/ba385ba275932dc158f504b684ed47931b5eb8cf))
+* implement Init + Patch architecture for workspace generation ([7d8ff6a](https://github.com/etalab-ia/ragtime/commit/7d8ff6a5cfe4e9c144dc5404d78b1300792f4d5f))
+* Implement PDF upload and context integration for the Reflex chat application. ([492b051](https://github.com/etalab-ia/ragtime/commit/492b0515ca08caa43aaf85bd1d525fbbe03f1942))
+* Implement UI for displaying attached files in the chat input and refine the action bar's styling and layout. ([16b6318](https://github.com/etalab-ia/ragtime/commit/16b63188fe9af9d53441e6a2bd50501892e9dfc8))
+* Initial RAG starter kit setup ([80ce74e](https://github.com/etalab-ia/ragtime/commit/80ce74ea33d62580b2fd6edb46d56ba65b62db66))
+* Initial setup of RAG starter kit (v0.1.0) ([6135ebb](https://github.com/etalab-ia/ragtime/commit/6135ebb283fa0c3baf3fe23bf4fbc1a72a45b42c))
+* integrate release-please for unified monorepo versioning ([e703ff1](https://github.com/etalab-ia/ragtime/commit/e703ff18e7710fa12e9e48c1b8f9e01cfc7e35b3))
+* integrate release-please for unified monorepo versioning ([89cc602](https://github.com/etalab-ia/ragtime/commit/89cc60278f2da72fed737bff0cfeec3299e33a48))
+* make CLI installable via uv tool install ([27db58a](https://github.com/etalab-ia/ragtime/commit/27db58a871f0cff1da0c8b8a19840c4eea5333bd))
+* make CLI installable via uv tool install ([63ec4ab](https://github.com/etalab-ia/ragtime/commit/63ec4ab2cb4a993c6b9914db098ce03e0eb0867c))
+* parameterize env vars and fix grit usage ([72be38a](https://github.com/etalab-ia/ragtime/commit/72be38a8723e2295f1697fe4842be0469488cfa0))
+* prompt for env config and create .env file during generation ([6219006](https://github.com/etalab-ia/ragtime/commit/62190067ad9df600b3997b1e3f9bcc83e4bce688))
+* refactor template generation cli for multi-app support ([88990d2](https://github.com/etalab-ia/ragtime/commit/88990d2c0bfccfbe2aa57b4438f01dce29d58d2f))
+* **reflex-chat:** Add PDF Context Support and Refined UI ([13c51f5](https://github.com/etalab-ia/ragtime/commit/13c51f5678083aada30bd242651202ed4d7bcd90))
+* **reflex-chat:** add python-dotenv for .env file loading ([7c49d0d](https://github.com/etalab-ia/ragtime/commit/7c49d0d63e665671e2816148ec011c995704ec25))
+* rename CLI to ragtime and add ASCII banner ([01a0165](https://github.com/etalab-ia/ragtime/commit/01a01656fc140f8a4be1b21dcf8166eddb2730d9))
+* rename CLI to ragtime and add ASCII banner ([fdf917b](https://github.com/etalab-ia/ragtime/commit/fdf917b5d51c5ab42b8365015bcc29031c624008))
+* rf generate workspace - one command to running RAG app ([d520536](https://github.com/etalab-ia/ragtime/commit/d520536882b34ab853cf2d43da028b05b71df192))
+* support RAG_FACILE_BRANCH env var in install.sh ([215ff5a](https://github.com/etalab-ia/ragtime/commit/215ff5af47896836056954ba6b82a0c9ca998ddf))
+* support reflex-chat in template generation CLI ([06040e1](https://github.com/etalab-ia/ragtime/commit/06040e1cb891c786ae32c6de695653320d5b8ff5))
+* **templates:** support env var API keys and fix uv sync warning ([a26a598](https://github.com/etalab-ia/ragtime/commit/a26a59862c7bedd95840673ecb800fdc9e771b95))
+* **templates:** update reflex-chat template with parameterized imports and jinja extensions ([cb8ec7f](https://github.com/etalab-ia/ragtime/commit/cb8ec7f6cbfd95934439472cfc0b0f98ee97e4e5))
+* update default OpenAI API key help message, base URL, and model to Albert API endpoints. ([519e96f](https://github.com/etalab-ia/ragtime/commit/519e96f4033cfc656e314d04fb392c210bb83521))
 
 
 ### Bug Fixes
 
-* Add `ty:ignore[call-non-callable]` comments to suppress type errors in `navbar.py` and `state.py`. ([e33b488](https://github.com/etalab-ia/rag-facile/commit/e33b488b1ad21cdd3e35ac72f33fd0b54b91f7ab))
-* add proto paths to PATH after installation ([6a289ff](https://github.com/etalab-ia/rag-facile/commit/6a289ff1db79522aa3e607c2f6dc265fac848f3f))
-* Add ruff and ty exclusions for template directories ([198a77e](https://github.com/etalab-ia/rag-facile/commit/198a77e77f1ad2ce919eb860335fb4a488d2f19c))
-* Add unzip as a system dependency for Reflex ([bfed9fb](https://github.com/etalab-ia/rag-facile/commit/bfed9fb6990211fb6543637e45300036b70bddfc))
-* add validation to create-app just command ([7ad5bbc](https://github.com/etalab-ia/rag-facile/commit/7ad5bbcc6bf6e4358e4a4560b33580c0ff0a2e88))
-* Address PR review feedback (Python 3.14.2, ruff 0.9.3, rag-facile) ([b6c8ea0](https://github.com/etalab-ia/rag-facile/commit/b6c8ea02afacbed63e1d68971a22f59b0418c517))
-* **cli:** rename main app file and parameterize imports in reflex template ([c95823d](https://github.com/etalab-ia/rag-facile/commit/c95823d9400b5de0a25b6a42efdeef2e9061cb39))
-* configure ty excludes in pyproject.toml ([89641fa](https://github.com/etalab-ia/rag-facile/commit/89641fa4ab11ea72e2a5281d8dc5f7076b7882ca))
-* configure ty to handle metaprogramming false positives ([41f7e3d](https://github.com/etalab-ia/rag-facile/commit/41f7e3db1f698cf59850d69996e746c3ecad693b))
-* exclude template directories from ruff checks ([730ea37](https://github.com/etalab-ia/rag-facile/commit/730ea37a4b9303ba47dfe1dca0f84539543bf0a2))
-* fix test mocks for workspace generation flow ([bab1fbb](https://github.com/etalab-ia/rag-facile/commit/bab1fbb2a6167dfdb9a40be476ad4fc6ceedf5f2))
-* increase engineio max_decode_packets to prevent payload errors ([a9b4a6b](https://github.com/etalab-ia/rag-facile/commit/a9b4a6b81423c78104485372ac46d93d4bbd2dad))
-* Install just in install.sh and update docs ([2643b08](https://github.com/etalab-ia/rag-facile/commit/2643b0852ce1ca1be7e2ddd11c00c82ffa681a84))
-* parameterize imports and add dotenv loading for reflex-chat ([fa7720f](https://github.com/etalab-ia/rag-facile/commit/fa7720f8b51f88a653e96c216b6d5cced5c8eedd))
-* Prevent potential errors by checking if `item.choices` is valid before accessing its elements. ([371ddbc](https://github.com/etalab-ia/rag-facile/commit/371ddbc61cd512c203863609131fd3e093adeb53))
-* Properly escape Just variables in justfile template ([9bf4c52](https://github.com/etalab-ia/rag-facile/commit/9bf4c5206051a30ade18f7e2919e1fcc97d12875))
-* rename README.md to .jinja for full parameterization ([d4e4a66](https://github.com/etalab-ia/rag-facile/commit/d4e4a66ca51861f5b527c2eebc1f652d8faa902a))
-* resolve ast-grep warnings and improve reflex parameterization ([59acb4b](https://github.com/etalab-ia/rag-facile/commit/59acb4b17620595427d1ea8aaf068162607e50a1))
-* resolve IndexError in streaming and add PDF processing support ([42414ce](https://github.com/etalab-ia/rag-facile/commit/42414ce1311d51674dd25616dd21074650829104))
-* resolve linting and formatting issues ([ecf8e84](https://github.com/etalab-ia/rag-facile/commit/ecf8e844fda2449a89cabdc8056f7f1bdb4721ac))
-* resolve type error in chainlit app ([505dde9](https://github.com/etalab-ia/rag-facile/commit/505dde9cb4ff596c4b032c55312a4f307c496b2d))
-* restrict python version to 3.13 for pydantic compatibility ([0657255](https://github.com/etalab-ia/rag-facile/commit/0657255f39ad7f2e0e2c9368b30e7cf1a937224d))
-* set default just task to list commands ([c668c37](https://github.com/etalab-ia/rag-facile/commit/c668c3795b3e4b7aa908735bc7192e19e82928b0))
-* update release-please-config.json ([4250615](https://github.com/etalab-ia/rag-facile/commit/42506157595889fd140d5ee068368b4644dc7b18))
-* use --exclude flag for ty (exclude not valid in config) ([2e917bc](https://github.com/etalab-ia/rag-facile/commit/2e917bc8c1d41c9036f2c122ab43ae2f2081b57e))
-* use --yes flag for proto install to avoid interactive prompt issues ([07f9d63](https://github.com/etalab-ia/rag-facile/commit/07f9d632780b5fc3e8835404aa2739f49a801234))
-* use .jinja extension for parameterized template files ([d44f573](https://github.com/etalab-ia/rag-facile/commit/d44f573f78c3ea1cbc30d20767ebb1eae5ffcdcd))
-* Use Just variable syntax in run recipe ([eddff73](https://github.com/etalab-ia/rag-facile/commit/eddff7311bcde42654cd69341398fd316db29f0e))
-* use moonrepo/setup-toolchain action and pin Python 3.13 ([1deafc1](https://github.com/etalab-ia/rag-facile/commit/1deafc1f68575f627fa885350d7ff2149677b2a6))
-* Use shell variable syntax in justfile to avoid Tera conflicts ([7e986ef](https://github.com/etalab-ia/rag-facile/commit/7e986ef3031096cdeb3467af6410664571b0e1dc))
+* Add `ty:ignore[call-non-callable]` comments to suppress type errors in `navbar.py` and `state.py`. ([e33b488](https://github.com/etalab-ia/ragtime/commit/e33b488b1ad21cdd3e35ac72f33fd0b54b91f7ab))
+* add proto paths to PATH after installation ([6a289ff](https://github.com/etalab-ia/ragtime/commit/6a289ff1db79522aa3e607c2f6dc265fac848f3f))
+* Add ruff and ty exclusions for template directories ([198a77e](https://github.com/etalab-ia/ragtime/commit/198a77e77f1ad2ce919eb860335fb4a488d2f19c))
+* Add unzip as a system dependency for Reflex ([bfed9fb](https://github.com/etalab-ia/ragtime/commit/bfed9fb6990211fb6543637e45300036b70bddfc))
+* add validation to create-app just command ([7ad5bbc](https://github.com/etalab-ia/ragtime/commit/7ad5bbcc6bf6e4358e4a4560b33580c0ff0a2e88))
+* Address PR review feedback (Python 3.14.2, ruff 0.9.3, ragtime) ([b6c8ea0](https://github.com/etalab-ia/ragtime/commit/b6c8ea02afacbed63e1d68971a22f59b0418c517))
+* **cli:** rename main app file and parameterize imports in reflex template ([c95823d](https://github.com/etalab-ia/ragtime/commit/c95823d9400b5de0a25b6a42efdeef2e9061cb39))
+* configure ty excludes in pyproject.toml ([89641fa](https://github.com/etalab-ia/ragtime/commit/89641fa4ab11ea72e2a5281d8dc5f7076b7882ca))
+* configure ty to handle metaprogramming false positives ([41f7e3d](https://github.com/etalab-ia/ragtime/commit/41f7e3db1f698cf59850d69996e746c3ecad693b))
+* exclude template directories from ruff checks ([730ea37](https://github.com/etalab-ia/ragtime/commit/730ea37a4b9303ba47dfe1dca0f84539543bf0a2))
+* fix test mocks for workspace generation flow ([bab1fbb](https://github.com/etalab-ia/ragtime/commit/bab1fbb2a6167dfdb9a40be476ad4fc6ceedf5f2))
+* increase engineio max_decode_packets to prevent payload errors ([a9b4a6b](https://github.com/etalab-ia/ragtime/commit/a9b4a6b81423c78104485372ac46d93d4bbd2dad))
+* Install just in install.sh and update docs ([2643b08](https://github.com/etalab-ia/ragtime/commit/2643b0852ce1ca1be7e2ddd11c00c82ffa681a84))
+* parameterize imports and add dotenv loading for reflex-chat ([fa7720f](https://github.com/etalab-ia/ragtime/commit/fa7720f8b51f88a653e96c216b6d5cced5c8eedd))
+* Prevent potential errors by checking if `item.choices` is valid before accessing its elements. ([371ddbc](https://github.com/etalab-ia/ragtime/commit/371ddbc61cd512c203863609131fd3e093adeb53))
+* Properly escape Just variables in justfile template ([9bf4c52](https://github.com/etalab-ia/ragtime/commit/9bf4c5206051a30ade18f7e2919e1fcc97d12875))
+* rename README.md to .jinja for full parameterization ([d4e4a66](https://github.com/etalab-ia/ragtime/commit/d4e4a66ca51861f5b527c2eebc1f652d8faa902a))
+* resolve ast-grep warnings and improve reflex parameterization ([59acb4b](https://github.com/etalab-ia/ragtime/commit/59acb4b17620595427d1ea8aaf068162607e50a1))
+* resolve IndexError in streaming and add PDF processing support ([42414ce](https://github.com/etalab-ia/ragtime/commit/42414ce1311d51674dd25616dd21074650829104))
+* resolve linting and formatting issues ([ecf8e84](https://github.com/etalab-ia/ragtime/commit/ecf8e844fda2449a89cabdc8056f7f1bdb4721ac))
+* resolve type error in chainlit app ([505dde9](https://github.com/etalab-ia/ragtime/commit/505dde9cb4ff596c4b032c55312a4f307c496b2d))
+* restrict python version to 3.13 for pydantic compatibility ([0657255](https://github.com/etalab-ia/ragtime/commit/0657255f39ad7f2e0e2c9368b30e7cf1a937224d))
+* set default just task to list commands ([c668c37](https://github.com/etalab-ia/ragtime/commit/c668c3795b3e4b7aa908735bc7192e19e82928b0))
+* update release-please-config.json ([4250615](https://github.com/etalab-ia/ragtime/commit/42506157595889fd140d5ee068368b4644dc7b18))
+* use --exclude flag for ty (exclude not valid in config) ([2e917bc](https://github.com/etalab-ia/ragtime/commit/2e917bc8c1d41c9036f2c122ab43ae2f2081b57e))
+* use --yes flag for proto install to avoid interactive prompt issues ([07f9d63](https://github.com/etalab-ia/ragtime/commit/07f9d632780b5fc3e8835404aa2739f49a801234))
+* use .jinja extension for parameterized template files ([d44f573](https://github.com/etalab-ia/ragtime/commit/d44f573f78c3ea1cbc30d20767ebb1eae5ffcdcd))
+* Use Just variable syntax in run recipe ([eddff73](https://github.com/etalab-ia/ragtime/commit/eddff7311bcde42654cd69341398fd316db29f0e))
+* use moonrepo/setup-toolchain action and pin Python 3.13 ([1deafc1](https://github.com/etalab-ia/ragtime/commit/1deafc1f68575f627fa885350d7ff2149677b2a6))
+* Use shell variable syntax in justfile to avoid Tera conflicts ([7e986ef](https://github.com/etalab-ia/ragtime/commit/7e986ef3031096cdeb3467af6410664571b0e1dc))
 
 
 ### Documentation
 
-* Add AGENTS.md with project knowledge ([e96ccb7](https://github.com/etalab-ia/rag-facile/commit/e96ccb79a17f3144f852be71db01936084bdee0d))
-* Add AGENTS.md with project knowledge ([a2c8beb](https://github.com/etalab-ia/rag-facile/commit/a2c8beb379fd82d83cfe8d9e4989b182d300c39f))
-* add CHANGELOG from merged PR history ([16bf483](https://github.com/etalab-ia/rag-facile/commit/16bf483a8642854b927b915ae146960dfb723821))
-* add Docker testing instructions to CONTRIBUTING.md ([2ef49ff](https://github.com/etalab-ia/rag-facile/commit/2ef49ff593069784f9db7cfe40dbce4a9edec8f0))
-* add proto prerequisites to README ([6ea9e2c](https://github.com/etalab-ia/rag-facile/commit/6ea9e2c049756b051767f75b5db2222e92219885))
-* add template generation instructions to root README ([26d2e00](https://github.com/etalab-ia/rag-facile/commit/26d2e00ff1a49273c32ef63c081322175ee7d387))
-* clarify available vs planned application templates ([d3f5bd8](https://github.com/etalab-ia/rag-facile/commit/d3f5bd8361fffc31e324b53273ff83f51a51f67b))
-* clarify available vs planned application templates in README ([a6f6c96](https://github.com/etalab-ia/rag-facile/commit/a6f6c963f0277aecf45b3598b0d0e4ea96bc043f))
-* Document justfile commands in README ([9fd7211](https://github.com/etalab-ia/rag-facile/commit/9fd721193ec9faad2dd2b1649b7d7ceea0dddeac))
-* document RAG_FACILE_BRANCH for testing from branches ([d6a25f3](https://github.com/etalab-ia/rag-facile/commit/d6a25f3fd96754c6173d9f12930e6c2b5729e375))
-* improve template READMEs for standalone use and add CLI README ([c511de2](https://github.com/etalab-ia/rag-facile/commit/c511de2f142054ff2f94c5b347082bf899e6b6f2))
-* update app and template READMEs with just command instructions ([c2d5ca6](https://github.com/etalab-ia/rag-facile/commit/c2d5ca629213e64ab72a293124ec474a60645b70))
-* Update install.sh examples to use pipe syntax ([9309c27](https://github.com/etalab-ia/rag-facile/commit/9309c27eb96a776f6ad6acc5d2e589cd303e98bc))
-* update README and CONTRIBUTING with architecture overview ([2f1fd99](https://github.com/etalab-ia/rag-facile/commit/2f1fd99bdd6a5b30099d2f096e28f420d8408085))
-* Update README with correct run command syntax ([b071f52](https://github.com/etalab-ia/rag-facile/commit/b071f529f56bfc19b442857a2f60cbf11e84d570))
-* update README with simplified install instructions ([6a7c4f8](https://github.com/etalab-ia/rag-facile/commit/6a7c4f8b38138565a615a716769ca8aab5b6f41a))
-* update README with template management and usage instructions ([2a93250](https://github.com/etalab-ia/rag-facile/commit/2a9325022490873ec36b617803de03db2c0c75ac))
-* update root README to reflect the change from apps/chat to apps/chainlit-chat ([7bd4106](https://github.com/etalab-ia/rag-facile/commit/7bd4106c2d39255355cd63ffa3dd4d161b8353fa))
+* Add AGENTS.md with project knowledge ([e96ccb7](https://github.com/etalab-ia/ragtime/commit/e96ccb79a17f3144f852be71db01936084bdee0d))
+* Add AGENTS.md with project knowledge ([a2c8beb](https://github.com/etalab-ia/ragtime/commit/a2c8beb379fd82d83cfe8d9e4989b182d300c39f))
+* add CHANGELOG from merged PR history ([16bf483](https://github.com/etalab-ia/ragtime/commit/16bf483a8642854b927b915ae146960dfb723821))
+* add Docker testing instructions to CONTRIBUTING.md ([2ef49ff](https://github.com/etalab-ia/ragtime/commit/2ef49ff593069784f9db7cfe40dbce4a9edec8f0))
+* add proto prerequisites to README ([6ea9e2c](https://github.com/etalab-ia/ragtime/commit/6ea9e2c049756b051767f75b5db2222e92219885))
+* add template generation instructions to root README ([26d2e00](https://github.com/etalab-ia/ragtime/commit/26d2e00ff1a49273c32ef63c081322175ee7d387))
+* clarify available vs planned application templates ([d3f5bd8](https://github.com/etalab-ia/ragtime/commit/d3f5bd8361fffc31e324b53273ff83f51a51f67b))
+* clarify available vs planned application templates in README ([a6f6c96](https://github.com/etalab-ia/ragtime/commit/a6f6c963f0277aecf45b3598b0d0e4ea96bc043f))
+* Document justfile commands in README ([9fd7211](https://github.com/etalab-ia/ragtime/commit/9fd721193ec9faad2dd2b1649b7d7ceea0dddeac))
+* document RAG_FACILE_BRANCH for testing from branches ([d6a25f3](https://github.com/etalab-ia/ragtime/commit/d6a25f3fd96754c6173d9f12930e6c2b5729e375))
+* improve template READMEs for standalone use and add CLI README ([c511de2](https://github.com/etalab-ia/ragtime/commit/c511de2f142054ff2f94c5b347082bf899e6b6f2))
+* update app and template READMEs with just command instructions ([c2d5ca6](https://github.com/etalab-ia/ragtime/commit/c2d5ca629213e64ab72a293124ec474a60645b70))
+* Update install.sh examples to use pipe syntax ([9309c27](https://github.com/etalab-ia/ragtime/commit/9309c27eb96a776f6ad6acc5d2e589cd303e98bc))
+* update README and CONTRIBUTING with architecture overview ([2f1fd99](https://github.com/etalab-ia/ragtime/commit/2f1fd99bdd6a5b30099d2f096e28f420d8408085))
+* Update README with correct run command syntax ([b071f52](https://github.com/etalab-ia/ragtime/commit/b071f529f56bfc19b442857a2f60cbf11e84d570))
+* update README with simplified install instructions ([6a7c4f8](https://github.com/etalab-ia/ragtime/commit/6a7c4f8b38138565a615a716769ca8aab5b6f41a))
+* update README with template management and usage instructions ([2a93250](https://github.com/etalab-ia/ragtime/commit/2a9325022490873ec36b617803de03db2c0c75ac))
+* update root README to reflect the change from apps/chat to apps/chainlit-chat ([7bd4106](https://github.com/etalab-ia/ragtime/commit/7bd4106c2d39255355cd63ffa3dd4d161b8353fa))
 
 ## [Unreleased]
 
@@ -843,7 +843,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **CLI Enhancements** (#18, #17)
-  - Rename CLI to `rag-facile` for consistency
+  - Rename CLI to `ragtime` for consistency
   - Add ASCII banner on CLI startup for better UX
   - Add Justfile for generated projects to simplify common tasks
   - Make CLI installable via `uv tool install` for easy distribution

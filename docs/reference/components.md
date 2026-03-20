@@ -1,6 +1,6 @@
 # Components Reference
 
-RAG Facile ships with ready-to-use components: an Albert API client, two frontend applications, and pluggable modules.
+Ragtime ships with ready-to-use components: an Albert API client, two frontend applications, and pluggable modules.
 
 ## Albert Client SDK
 
@@ -45,11 +45,11 @@ results = client.search(
 | **Chainlit Chat** | Chat interface for querying ingested documents | 8000 |
 | **Reflex Chat** | Interactive chat with modern UI | 3000 |
 
-Both are available during `rag-facile setup` and are pre-configured to work with the Albert API out of the box.
+Both are available during `ragtime setup` and are pre-configured to work with the Albert API out of the box.
 
 ## Pipeline Packages
 
-RAG Facile organizes the RAG pipeline into dedicated packages, each handling a specific phase:
+Ragtime organizes the RAG pipeline into dedicated packages, each handling a specific phase:
 
 | Package | Phase | Description |
 |---------|-------|-------------|
@@ -66,22 +66,22 @@ RAG Facile organizes the RAG pipeline into dedicated packages, each handling a s
 Manages vector store collections via the Albert API (or local SQLite, planned).
 
 ```python
-from rag_facile.storage import get_provider
+from ragtime.storage import get_provider
 
-provider = get_provider()  # Backend from ragfacile.toml
+provider = get_provider()  # Backend from ragtime.toml
 collection_id = provider.create_collection(client, "my-docs")
 provider.ingest_documents(client, ["report.pdf"], collection_id)
 ```
 
 ### Retrieval → Reranking → Context
 
-Each phase is a self-contained module under `rag_facile.*`. The `pipelines` module orchestrates them:
+Each phase is a self-contained module under `ragtime.*`. The `pipelines` module orchestrates them:
 
 ```python
 # Individual phase modules (used by pipelines internally)
-from rag_facile.retrieval import search_chunks
-from rag_facile.reranking import rerank_chunks
-from rag_facile.context import format_context
+from ragtime.retrieval import search_chunks
+from ragtime.reranking import rerank_chunks
+from ragtime.context import format_context
 
 chunks = search_chunks(client, "energy transition", collection_ids=[1])
 reranked = rerank_chunks(client, "energy transition", chunks)
@@ -90,7 +90,7 @@ context_str = format_context(reranked)
 
 ### Backend Selection
 
-Backend is configured in `ragfacile.toml`:
+Backend is configured in `ragtime.toml`:
 
 ```toml
 [storage]
@@ -98,7 +98,7 @@ provider = "albert-collections"  # or "local-sqlite" (planned)
 ```
 
 To switch backends:
-1. Edit `ragfacile.toml`
+1. Edit `ragtime.toml`
 2. Restart your application
 
 No code changes or reinstallation needed!

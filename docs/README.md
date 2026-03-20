@@ -1,6 +1,6 @@
-# RAG Facile Documentation
+# Ragtime Documentation
 
-Welcome to the RAG Facile documentation. Whether you're setting up your first app, tuning the RAG pipeline, or contributing to the project, you'll find what you need here.
+Welcome to the Ragtime documentation. Whether you're setting up your first app, tuning the RAG pipeline, or contributing to the project, you'll find what you need here.
 
 ## Guides
 
@@ -9,21 +9,21 @@ Welcome to the RAG Facile documentation. Whether you're setting up your first ap
 | **[Getting Started](guides/getting-started.md)** | Installation, project structures, and running your app |
 | **[Understanding the RAG Pipeline](guides/rag-pipeline.md)** | What each pipeline stage does and why it matters |
 | **[Evaluation Guide](guides/evaluation.md)** | Generate synthetic datasets and measure RAG quality |
-| **[Uninstalling](guides/uninstalling.md)** | Remove RAG Facile and its toolchain |
+| **[Uninstalling](guides/uninstalling.md)** | Remove Ragtime and its toolchain |
 
 ### Platform-Specific Setup
 
 | Guide | Description |
 |-------|-------------|
 | **[Windows Setup](guides/windows-setup.md)** | Install on Windows via Git Bash |
-| **[Developer Setup (Windows)](guides/developer-setup-windows.md)** | Contribute to RAG Facile on Windows |
+| **[Developer Setup (Windows)](guides/developer-setup-windows.md)** | Contribute to Ragtime on Windows |
 | **[Proxy & Network Setup](guides/proxy-setup.md)** | Install behind corporate proxies and VPNs |
 
 ## Reference
 
 | Document | Description |
 |----------|-------------|
-| **[`ragfacile.toml` Reference](reference/ragfacile-toml.md)** | Every configuration option, presets comparison, environment overrides |
+| **[`ragtime.toml` Reference](reference/ragfacile-toml.md)** | Every configuration option, presets comparison, environment overrides |
 | **[Components Reference](reference/components.md)** | Albert Client SDK, frontend apps, and modules |
 
 ## Troubleshooting
@@ -42,7 +42,7 @@ Welcome to the RAG Facile documentation. Whether you're setting up your first ap
 
 ## Architecture & Contributing
 
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** — How to contribute to RAG Facile
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** — How to contribute to Ragtime
 - **[AGENTS.md](../AGENTS.md)** — System design and architecture overview
 
 ## Reference Links
@@ -64,6 +64,6 @@ Welcome to the RAG Facile documentation. Whether you're setting up your first ap
 
 ## Quick Links
 
-- **Report an issue:** https://github.com/etalab-ia/rag-facile/issues
-- **Source code:** https://github.com/etalab-ia/rag-facile
-- **Releases:** https://github.com/etalab-ia/rag-facile/releases
+- **Report an issue:** https://github.com/etalab-ia/ragtime/issues
+- **Source code:** https://github.com/etalab-ia/ragtime
+- **Releases:** https://github.com/etalab-ia/ragtime/releases

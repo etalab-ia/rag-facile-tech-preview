@@ -24,10 +24,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/etalab-ia/rag-facile"
-Documentation = "https://github.com/etalab-ia/rag-facile/tree/main/packages/albert-client"
-Repository = "https://github.com/etalab-ia/rag-facile"
-Issues = "https://github.com/etalab-ia/rag-facile/issues"
+Homepage = "https://github.com/etalab-ia/ragtime"
+Documentation = "https://github.com/etalab-ia/ragtime/tree/main/packages/albert-client"
+Repository = "https://github.com/etalab-ia/ragtime"
+Issues = "https://github.com/etalab-ia/ragtime/issues"
 
 [build-system]
 requires = ["hatchling"]

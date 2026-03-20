@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from rag_facile.core.runtime import get_config, has_config_file, reload_config
-from rag_facile.core.schema import RAGConfig
+from ragtime.core.runtime import get_config, has_config_file, reload_config
+from ragtime.core.schema import RAGConfig
 
 
 def test_get_config_returns_config():
@@ -25,7 +25,7 @@ def test_get_config_caching():
 
 def test_reload_config_clears_cache(tmp_path: Path):
     """Test that reload_config clears cache."""
-    from rag_facile.core import save_config
+    from ragtime.core import save_config
 
     config_file = tmp_path / "test_config.toml"
 
@@ -55,7 +55,7 @@ def test_reload_config_clears_cache(tmp_path: Path):
 
 def test_has_config_file(tmp_path: Path):
     """Test checking if config file exists."""
-    config_file = tmp_path / "ragfacile.toml"
+    config_file = tmp_path / "ragtime.toml"
 
     # File doesn't exist yet
     assert not has_config_file(str(config_file))
@@ -69,7 +69,7 @@ def test_has_config_file(tmp_path: Path):
 
 def test_get_config_with_env_override(tmp_path: Path, monkeypatch):
     """Test that get_config respects env var overrides."""
-    from rag_facile.core import save_config
+    from ragtime.core import save_config
 
     config_file = tmp_path / "test_config.toml"
 

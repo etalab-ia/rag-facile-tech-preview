@@ -1,4 +1,4 @@
-"""First-run initialization wizard for the rag-facile chat assistant.
+"""First-run initialization wizard for the ragtime chat assistant.
 
 Called automatically by start_chat() when .agent/ is absent from the workspace.
 Creates the directory structure and profile file that the agent uses
@@ -140,7 +140,7 @@ def run_init_wizard(workspace: Path) -> str:
     """
     console.print(
         Panel(
-            "[bold]Bienvenue dans rag-facile\u00a0![/bold]\n"
+            "[bold]Bienvenue dans ragtime\u00a0![/bold]\n"
             "[dim]Configurons votre assistant IA. Cela prend environ 30 secondes "
             "et ne se fait qu'une seule fois.[/dim]",
             border_style="magenta",

@@ -1,7 +1,7 @@
 [project]
-name = "rag-facile-cli"
+name = "ragtime-cli"
 version = "0.22.0" # x-release-please-version
-description = "RAG Facile CLI - Generate RAG workspaces for French Government"
+description = "Ragtime CLI - Generate RAG workspaces for French Government"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -47,7 +47,7 @@ evaluation = { workspace = true }
 memory = { workspace = true }
 
 [project.scripts]
-rag-facile = "cli.main:app"
+ragtime = "cli.main:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -59,14 +59,14 @@ packages = ["src/cli"]
 [tool.hatch.build.targets.wheel.force-include]
 "../../.moon/templates" = "cli/templates"
 "../../packages/albert-client/src/albert" = "cli/albert_src"
-"../../packages/context/src/rag_facile/context" = "cli/context_src"
-"../../packages/ingestion/src/rag_facile/ingestion" = "cli/ingestion_src"
-"../../packages/pipelines/src/rag_facile/pipelines" = "cli/pipelines_src"
-"../../packages/rag-core/src/rag_facile/core" = "cli/rag_core_src"
-"../../packages/reranking/src/rag_facile/reranking" = "cli/reranking_src"
-"../../packages/retrieval/src/rag_facile/retrieval" = "cli/retrieval_src"
-"../../packages/storage/src/rag_facile/storage" = "cli/storage_src"
-"../../packages/tracing/src/rag_facile/tracing" = "cli/tracing_src"
-"src/cli/templates/ragfacile.toml" = "cli/templates/ragfacile.toml"
+"../../packages/context/src/ragtime/context" = "cli/context_src"
+"../../packages/ingestion/src/ragtime/ingestion" = "cli/ingestion_src"
+"../../packages/pipelines/src/ragtime/pipelines" = "cli/pipelines_src"
+"../../packages/rag-core/src/ragtime/core" = "cli/rag_core_src"
+"../../packages/reranking/src/ragtime/reranking" = "cli/reranking_src"
+"../../packages/retrieval/src/ragtime/retrieval" = "cli/retrieval_src"
+"../../packages/storage/src/ragtime/storage" = "cli/storage_src"
+"../../packages/tracing/src/ragtime/tracing" = "cli/tracing_src"
+"src/cli/templates/ragtime.toml" = "cli/templates/ragtime.toml"
 "../../docs" = "cli/docs"
 "src/cli/skills" = "cli/skills"

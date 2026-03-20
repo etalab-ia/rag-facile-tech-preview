@@ -4,7 +4,7 @@ Provides a unified :class:`RAGPipeline` interface that coordinates
 document ingestion and retrieval.  Chat apps depend on this package
 instead of importing from ingestion or retrieval directly.
 
-Pipeline selection is driven by ``ragfacile.toml``::
+Pipeline selection is driven by ``ragtime.toml``::
 
     [storage]
     provider = "local-sqlite"          # → BasicPipeline
@@ -54,11 +54,11 @@ def _get_or_create_pipeline() -> RAGPipeline:
 def get_pipeline(config: Any | None = None) -> RAGPipeline:
     """Get a configured RAG pipeline.
 
-    Reads ``ragfacile.toml`` to determine which pipeline to instantiate.
+    Reads ``ragtime.toml`` to determine which pipeline to instantiate.
 
     Args:
         config: Optional RAGConfig instance.  If *None*, loads from
-            ragfacile.toml.
+            ragtime.toml.
 
     Returns:
         A :class:`RAGPipeline` instance for the configured backend.

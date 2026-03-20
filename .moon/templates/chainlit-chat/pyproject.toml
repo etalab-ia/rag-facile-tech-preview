@@ -1,12 +1,12 @@
 [project]
 name = "{{ project_name }}"
-version = "0.21.0" # x-release-please-version
+version = "0.22.0" # x-release-please-version
 description = "{{ description }}"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "asyncpg>=0.29.0",
-    "rag-facile-lib",
+    "ragtime-lib",
     "chainlit>=1.3.0",
     "python-dotenv>=1.0.0",
     "supabase>=2.0.0",
@@ -15,14 +15,14 @@ dependencies = [
 ]
 
 [project.scripts]
-chainlit-chat = "rag-facile-lib",
+chainlit-chat = "ragtime-lib",
     "chainlit.cli:run"
 
 [tool.setuptools]
 py-modules = ["app"]
 
 [tool.uv.sources]
-rag-facile-lib = { git = "https://github.com/etalab-ia/rag-facile.git", {{ rag_facile_ref_key }} = "{{ rag_facile_ref_value }}", subdirectory = "packages/rag-facile-lib" }
+ragtime-lib = { git = "https://github.com/etalab-ia/ragtime.git", {{ ragtime_ref_key }} = "{{ ragtime_ref_value }}", subdirectory = "packages/ragtime-lib" }
 
 [tool.uv]
 package = true

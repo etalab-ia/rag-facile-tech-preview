@@ -1,4 +1,4 @@
-# RAG Facile Configuration - HR Preset
+# Ragtime Configuration - HR Preset
 # HR policies: Privacy-aware, clear attribution, natural language queries
 # Use when: Employee handbooks, HR policies, benefits documentation
 
@@ -41,7 +41,7 @@ normalization = "L2"
 provider = "albert-collections"
 collection_naming = "workspace"
 distance_metric = "cosine"
-collections = [784, 785]  # travail-emploi, service-public (discover more with: rag-facile collections list)
+collections = [784, 785]  # travail-emploi, service-public (discover more with: ragtime collections list)
 
 [query]
 strategy = "multi_query"             # HR queries are often informal — expand to formal terms
@@ -109,7 +109,7 @@ include_sources = true  # Show which policies were consulted
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 
 # ==============================================================================
 # PERSISTENCE & DATA LAYER

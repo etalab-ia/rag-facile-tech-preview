@@ -1,4 +1,4 @@
-# RAG Facile Configuration - Accurate Preset
+# Ragtime Configuration - Accurate Preset
 # Quality-optimized: larger models, more retrieval, hallucination detection
 # Use when: Production, critical accuracy, research applications
 
@@ -41,7 +41,7 @@ normalization = "L2"
 provider = "albert-collections"
 collection_naming = "workspace"
 distance_metric = "cosine"
-collections = [785, 1094]  # service-public, data-gouv-datasets-catalog (discover more with: rag-facile collections list)
+collections = [785, 1094]  # service-public, data-gouv-datasets-catalog (discover more with: ragtime collections list)
 
 [query]
 strategy = "multi_query"             # expand acronyms + formal French administrative variants
@@ -108,7 +108,7 @@ include_sources = true
 [tracing]
 enabled = true
 provider = "sqlite"
-database = ".rag-facile/traces.db"
+database = ".ragtime/traces.db"
 
 # ==============================================================================
 # PERSISTENCE & DATA LAYER

@@ -18,8 +18,8 @@ uv pip install -e packages/reranking
 
 ```python
 from albert import AlbertClient
-from rag_facile.reranking import rerank_chunks
-from rag_facile.core import RetrievedChunk
+from ragtime.reranking import rerank_chunks
+from ragtime.core import RetrievedChunk
 
 # Initialize client
 client = AlbertClient(api_key="your-api-key")
@@ -76,9 +76,9 @@ The reranking package is typically used as a middle stage in the RAG pipeline:
 
 ```python
 # Example pipeline
-from rag_facile.retrieval import search_chunks
-from rag_facile.reranking import rerank_chunks
-from rag_facile.context import format_context
+from ragtime.retrieval import search_chunks
+from ragtime.reranking import rerank_chunks
+from ragtime.context import format_context
 
 # 1. Retrieve candidates
 chunks = search_chunks(client, query, collection_id=1, top_k=20)

@@ -1,4 +1,4 @@
-# Supabase local development configuration for rag-facile.
+# Supabase local development configuration for ragtime.
 #
 # Start the local stack:  supabase start
 # Apply migrations:       supabase db push --db-url "$DATABASE_URL"
@@ -7,7 +7,7 @@
 # For self-hosted production, point `supabase db push --db-url` at
 # your remote Postgres instance — no Supabase Cloud required.
 
-project_id = "rag-facile"
+project_id = "ragtime"
 
 [db]
 port = 54322
