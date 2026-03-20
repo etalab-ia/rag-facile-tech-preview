@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.0](https://github.com/etalab-ia/ragtime/compare/v0.22.0...v0.23.0) (2026-03-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename project from rag-facile to ragtime
+
+### Features
+
+* rename project from rag-facile to ragtime ([15a1969](https://github.com/etalab-ia/ragtime/commit/15a1969d67e8f79a79c99d3138381c888287d386))
+
+
+### Bug Fixes
+
+* correct RAGTIME ASCII art banner ([78913bc](https://github.com/etalab-ia/ragtime/commit/78913bcc4c9437513a17cacf27ff979046890a85))
+* correct RAGTIME ASCII art banner in README ([c8376d2](https://github.com/etalab-ia/ragtime/commit/c8376d2f7c5b0356bdd5470869ff1206692e73b3))
+* update workflows and install.sh for ragtime rename ([97dfe03](https://github.com/etalab-ia/ragtime/commit/97dfe037585bf57a2dfb6276f5edc8765401ce87))
+
+
+### Documentation
+
+* fix repo URLs, add alpha status badge ([e30c5ba](https://github.com/etalab-ia/ragtime/commit/e30c5baedccc03059b08e7692233d515fb87cdc0))
+* remove archived status, update to alpha ([a2213a3](https://github.com/etalab-ia/ragtime/commit/a2213a3e18fae443ef69a625de13fa573787203a))
+* remove archived status, update to alpha ([b384f7f](https://github.com/etalab-ia/ragtime/commit/b384f7f07565d9dd56101a1e25976a807d16cab5))
+
 ## [0.22.0](https://github.com/etalab-ia/ragtime-tech-preview/compare/v0.21.0...v0.22.0) (2026-03-17)
 
 
