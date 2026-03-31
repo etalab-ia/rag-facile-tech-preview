@@ -226,6 +226,7 @@ private/
 # rag-facile chat agent state (belongs in user projects, not source repo)
 .agent/
 .rag-facile/  # legacy (pre-v0.19)
+.ragtime/  # chat agent state (v0.19+)
 
 # npx skills — installed per-workspace by users, not tracked in source repo
 .agents/

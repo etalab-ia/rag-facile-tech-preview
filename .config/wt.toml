@@ -1,7 +1,7 @@
 # Worktrunk Project Configuration
 # See: https://worktrunk.dev/config/
 
-[post-create]
+[pre-start]
 # Install Python dependencies after worktree creation (blocking)
 deps = "uv sync"
 
